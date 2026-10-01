@@ -74,6 +74,6 @@ for candidate in python3 python; do
     if command -v "$candidate" >/dev/null 2>&1 && "$candidate" --version >/dev/null 2>&1; then python_ok=1; break; fi
 done
 if [ -z "$python_ok" ] && command -v py >/dev/null 2>&1 && py -3 --version >/dev/null 2>&1; then python_ok=1; fi
-[ -n "$python_ok" ] || info 'Uyarı: Python 3 kurulana kadar kural kontrolleri atlanacak. https://www.python.org/downloads/'
+[ -n "$python_ok" ] || info 'Uyarı: Python 3 bulunamadı. Python kurulana kadar kayıt alınamaz (Waypoint kuralları Python ile denetlenir). Kurulum: https://www.python.org/downloads/'
 info "Waypoint $result."
 info 'Bu klasörde yapay zekâ aracını (Claude Code, Codex, Antigravity…) aç ve ne yapmak istediğini anlat.'

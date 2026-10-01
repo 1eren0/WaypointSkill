@@ -203,7 +203,7 @@ try {
 
     }
 
-    if (-not $pythonOk) { Write-Output 'Uyarı: Python 3 kurulana kadar kural kontrolleri atlanacak. https://www.python.org/downloads/' }
+    if (-not $pythonOk) { Write-Output 'Uyarı: Python 3 bulunamadı. Python kurulana kadar kayıt alınamaz (Waypoint kuralları Python ile denetlenir). Kurulum: https://www.python.org/downloads/' }
 
     Write-Output "Waypoint $result."
 
