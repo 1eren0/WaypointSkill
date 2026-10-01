@@ -60,6 +60,12 @@ if ! git -C "$target" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
     git -C "$target" init >/dev/null || fail 'Git deposu başlatılamadı.'
     info 'Kayıt noktası alabilmek için git kurdum.'
 fi
+old_hooks=$(git -C "$target" config --get core.hooksPath 2>/dev/null || true)
+if [ -n "$old_hooks" ] && [ "$old_hooks" != ".waypoint/hooks" ]; then
+    info "Uyarı: Bu projede önceden başka bir kayıt kontrolü klasörü vardı ($old_hooks). Waypoint onun yerine geçti; eski kontroller artık çalışmayacak."
+elif [ -z "$old_hooks" ] && [ -n "$(find "$target/.git/hooks" -maxdepth 1 -type f ! -name '*.sample' 2>/dev/null | head -n 1)" ]; then
+    info "Uyarı: Bu projenin .git/hooks klasöründe önceden kayıt kontrolleri vardı. Waypoint onların yerine geçti; eski kontroller artık çalışmayacak."
+fi
 git -C "$target" config core.hooksPath .waypoint/hooks || fail 'Git hook yolu ayarlanamadı.'
 chmod +x "$waypoint/hooks"/* 2>/dev/null || true
 

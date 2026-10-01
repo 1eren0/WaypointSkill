@@ -114,6 +114,7 @@ Every change is **small, single-purpose, and reversible**.
 
 Every project goes through these stages; the current stage is recorded in `ILERLEME.md`.
 
+0. **Existing project (code exists, `.waypoint/` forms still blank):** don't start from scratch and don't change any code yet. Read the project (README, package/config files, entry points), then fill the forms: `ILERLEME.md` (goal as you understand it; "Nasıl açılır" with exact commands you actually tried; the existing stack in "Kararlar" as `mevcut`; stage `Yapılıyor`), `HARITA.md` (the important existing functions + diagram). Run the existing tests: if they pass, put the command in "Testleri çalıştırma"; if some already fail, leave it as `...`, list the failures under "Sonra yapılacaklar" and tell me — don't fix them without asking. Commit as `Belge: Waypoint için mevcut proje çıkarıldı`. Then tell me in 3–5 plain lines "Projeyi şöyle anladım: …" and ask what I want to do first; my answer becomes the plan (stage 2).
 1. **Idea → Goal:** For a new project ask me: what will it do, who uses it, what must work to call it "done". Before writing anything, tell me back in 2–3 plain sentences: "Seni şöyle anladım: … Doğru mu?" and wait for my yes. Turn my answers into a 2–3 sentence goal in `ILERLEME.md`. Then research the tech choice and present options.
 2. **Plan:** Split the goal into 3–8 **tasks**, each ending with something I can try ("giriş sayfası açılıyor"). Each task = one or more atomic steps. Simplest working version first, polish last. Show me the plan; don't start without approval.
 3. **Build in atomic steps:** One task at a time; say in 1–2 sentences what you'll do (for a new feature, start with "Seni şöyle anladım: …" and wait if anything is unclear). If the task needs something new, research and get approval first. Each step: write code → write/update tests → run all tests → update `HARITA.md` if needed → commit. If how to start the project changes (new command, new setup step), update **"Nasıl açılır"** in `ILERLEME.md` immediately, with exact copy-pasteable commands.
@@ -129,7 +130,7 @@ Every project goes through these stages; the current stage is recorded in `ILERL
 
 ## Commands I may type
 
-- **Session start (automatic):** do Context gathering steps 1–3; if `ILERLEME.md` is still a blank form, start at stage 1. Then give me 3 lines: what we did last, current stage and task, next concrete step.
+- **Session start (automatic):** do Context gathering steps 1–3; if `ILERLEME.md` is still a blank form, start at stage 0 when the folder already has code, otherwise stage 1. Then give me 3 lines: what we did last, current stage and task, next concrete step.
 - **`neredeyiz` / `kayboldum` / `özet` / `ne yapıyorduk`:** stop and summarize — **Hedef** (1 sentence), **Plan** (tasks, ✅ done, 👉 current), **Şu an** (what and why), **Sıradaki adım** (one concrete step). If "Sonra yapılacaklar" has `❓` lines, end with "Cevap bekleyen N soru var" and list them.
 - **`nasıl açarım`:** show the "Nasıl açılır" steps from `ILERLEME.md` verbatim.
 - **`haritayı göster`:** read `HARITA.md` and draw it for me in the chat as a diagram (boxes = important functions, grouped by file, with a ≤5-word plain-Turkish caption each; arrows = "uses"). Never create a file for it. If your tool can't draw in chat, explain the map in plain Turkish instead.
