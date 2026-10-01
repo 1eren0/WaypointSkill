@@ -42,6 +42,13 @@ Before any work, don't jump to a solution. First decide what you need to know fo
 - After reading, check what's still missing. Ask me only what the files and code can't tell you (one question, with your recommendation); then plan and build.
 - Scale this to the task: a one-word fix needs a quick look, a new feature needs the full pass.
 
+## Sub-agents (only if your tool supports them)
+
+- **Research:** for a medium/large task that needs reading many files or docs, give the reading to a sub-agent and bring back only the findings (what matters, where it is). Keep your own context for planning and building.
+- **Parallel work:** when a task splits into parts that touch **different files**, you may run several sub-agents at the same time, one per part. Before starting, list which files each part touches; parts that share a file run one after another, never at the same time.
+- You stay responsible: review each sub-agent's result, run the tests, and commit each part as its own atomic step. Never let two agents edit the same file at once.
+- Skip sub-agents for small tasks — they cost more than they save.
+
 ## Research
 
 Research **only when needed**:
@@ -83,6 +90,7 @@ I can't tell when a new change breaks an old feature, so tests do it for me.
   - All pass → commit.
   - Any fail → don't commit; fix first. If you can't, tell me plainly: "Yeni değişiklik şunu bozdu: <özellik>" and propose a way forward.
 - Never edit or delete a test just to make it pass. If the feature genuinely changed, tell me first.
+- If the full test run starts taking more than about a minute, tell me and propose splitting it into quick tests (every commit) and the full suite (when a task closes).
 - Put the test command in the "Testleri çalıştırma" section of `ILERLEME.md`, as one line in backticks (e.g. `` `npm test` ``). The pre-commit hook reads it from there.
 - **The pre-commit hook enforces this.** `.waypoint/hooks/pre-commit` runs that command before every commit and blocks the commit if tests fail. Never bypass it (`--no-verify`). If it blocks a commit, treat it like any failing test.
 - **The hooks also enforce the docs rules** (in every AI tool, since they run on `git commit`): `.waypoint/` files keep their structure, a commit that changes code needs today's line in "Günlük", every new function must appear in `HARITA.md` (in the list + diagram, or in "Not mapped"), the commit message must be English and start with its type (a `(Docs)` commit can't contain code, a `(Test)` commit only tests, a `(Fix)` commit needs a test or `(no test: <reason>)` in the message), and a fix commit prints a reminder to record a lesson. Read the ❌ messages and fix exactly what they say.
