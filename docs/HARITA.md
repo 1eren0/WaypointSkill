@@ -27,4 +27,7 @@ flowchart LR
 
 ## Key functions / components
 
+## Not mapped (small helpers)
+<!-- Comma-separated names of small helper functions deliberately left out of the map. -->
+
 ## External dependencies

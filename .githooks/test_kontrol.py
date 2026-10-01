@@ -96,5 +96,70 @@ class IlerlemeTestleri(unittest.TestCase):
         self.assertIn("docs/GUNLUK_ARSIV.md", warnings[0])
 
 
+class BugunKontrolTestleri(unittest.TestCase):
+    def test_bugunun_satiri_varsa_gecer(self):
+        self.assertEqual(kontrol.ilerleme_bugun("## Günlük\n- 2026-10-01: iş\n", "2026-10-01", ["app.js"]), ([], []))
+
+    def test_kod_var_gunluk_satiri_yoksa_hata(self):
+        errors, _ = kontrol.ilerleme_bugun("## Günlük\n", "2026-10-01", ["app.js"])
+        self.assertEqual(len(errors), 1)
+        self.assertIn("2026-10-01", errors[0])
+
+    def test_kod_asamasi_yoksa_gecer(self):
+        self.assertEqual(kontrol.ilerleme_bugun("## Günlük\n", "2026-10-01", ["docs/readme.md", ".githooks/x.py"]), ([], []))
+
+
+class YeniFonksiyonTestleri(unittest.TestCase):
+    def test_js_python_fonksiyon_ve_sinif(self):
+        diff = """diff --git a/app.js b/app.js
++++ b/app.js
++function calistir() {}
++const ok = (x) => x;
++def hesapla(x):
++class Ornek:
+"""
+        self.assertEqual(kontrol.yeni_fonksiyonlar(diff), ["Ornek", "calistir", "hesapla", "ok"])
+
+    def test_silinen_satir_ve_baslik_yok_sayilir(self):
+        diff = "+++ b/file.js\n-function eski() {}\n+const yeni = x => x\n"
+        self.assertEqual(kontrol.yeni_fonksiyonlar(diff), ["yeni"])
+
+    def test_haritada_not_mapped_satiri_yeterli(self):
+        self.assertEqual(kontrol.harita_kapsami("## Not mapped (small helpers)\nfoo, bar\n", ["foo"]), ([], []))
+
+    def test_haritada_yoksa_hata(self):
+        errors, _ = kontrol.harita_kapsami("## Not mapped (small helpers)\n", ["foo"])
+        self.assertEqual(len(errors), 1)
+        self.assertIn("foo", errors[0])
+
+    def test_gercek_harita_sablonu_gecer(self):
+        text = (Path(__file__).parents[1] / "docs" / "HARITA.md").read_text(encoding="utf-8")
+        self.assertEqual(kontrol.harita(text)[0], [])
+
+
+class DersHatirlatmaTestleri(unittest.TestCase):
+    def test_duzeltme_mesajlari_uyari_verir(self):
+        for message in ("Hata düzeltildi", "Giriş butonu düzeltildi"):
+            with self.subTest(message=message):
+                self.assertEqual(kontrol.ders_hatirlatma(message)[0], [])
+                self.assertEqual(len(kontrol.ders_hatirlatma(message)[1]), 1)
+
+    def test_ozellik_ekleme_uyari_vermez(self):
+        self.assertEqual(kontrol.ders_hatirlatma("Giriş butonu eklendi"), ([], []))
+
+
+class YorumSatiriTestleri(unittest.TestCase):
+    def test_yorumdaki_function_kelimesi_sayilmaz(self):
+        diff = "+// this function handles clicks\n+  return value; // helper function x\n"
+        self.assertEqual(kontrol.yeni_fonksiyonlar(diff), [])
+
+    def test_export_function_bulunur(self):
+        self.assertEqual(kontrol.yeni_fonksiyonlar("+export async function girisYap() {}"), ["girisYap"])
+
+    def test_buyuk_i_ile_duzeltme(self):
+        _, uyarilar = kontrol.ders_hatirlatma("İLK HATA DÜZELTİLDİ")
+        self.assertEqual(len(uyarilar), 1)
+
+
 if __name__ == "__main__":
     unittest.main()

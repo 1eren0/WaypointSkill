@@ -78,6 +78,7 @@ I can't tell when a new change breaks an old feature, so tests do it for me.
 - Never edit or delete a test just to make it pass. If the feature genuinely changed, tell me first.
 - Put the test command in the "Testleri çalıştırma" section of `ILERLEME.md`, as one line in backticks (e.g. `` `npm test` ``). The pre-commit hook reads it from there.
 - **The pre-commit hook enforces this.** `.githooks/pre-commit` runs that command before every commit and blocks the commit if tests fail. Never bypass it (`--no-verify`). If it blocks a commit, treat it like any failing test.
+- **The hooks also enforce the docs rules** (in every AI tool, since they run on `git commit`): `docs/` files keep their structure, a commit that changes code needs today's line in "Günlük", every new function must appear in `HARITA.md` (in the list + diagram, or in "Not mapped"), and a fix commit prints a reminder to record a lesson. Read the ❌ messages and fix exactly what they say.
 
 ## Atomicity
 
@@ -98,7 +99,7 @@ Every change is **small, single-purpose, and reversible**.
 ## Project map
 
 - **`HARITA.md` (for you):** see the project's structure without reading all the code, and know what a change will affect. Check the "kullanan / used by" lines before changing anything.
-  - **Important functions only:** core parts of a feature, used from multiple places, or talking to the outside (DB, API). Skip small helpers.
+  - **Important functions only:** core parts of a feature, used from multiple places, or talking to the outside (DB, API). Small helpers go on the one-line "Not mapped (small helpers)" list instead.
   - Short and structured, no prose. Format is in the comment at the top of `HARITA.md`.
   - The "Şema" section is a Mermaid diagram of the same functions, so I can see the map in Obsidian. **Update the diagram and the list together, in the same step.**
   - Max 15 boxes per diagram. When the project outgrows that, switch to one overview diagram (files only) plus one small diagram per file.
