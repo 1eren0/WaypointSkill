@@ -59,7 +59,7 @@ If I say something like "çalışmıyor" / "bozuldu", don't touch code yet. Ask 
 2. Ne olmasını bekliyordun?
 3. Ne oldu? (ekran görüntüsü / hata yazısı)
 
-Then check `DERSLER.md` for similar errors, then fix.
+Then check `DERSLER.md` for similar errors, then fix in this order: **reproduce** the bug first (see it fail yourself), find the real cause, fix it, then **add a test that would have caught it** if the bug is in a feature that has tests. Never claim a bug is fixed if you couldn't reproduce it — say so.
 
 **Every time I said "çalışmıyor" / "yapamadım" / "açamadım", a lesson is mandatory once it's solved** — write it to `DERSLER.md` in the same commit as the fix. Don't judge whether it was "big enough".
 
@@ -91,7 +91,8 @@ Every change is **small, single-purpose, and reversible**.
 - **If a step looks big** (many files, or can't be described in one sentence), split it first.
 - **Commit after every atomic step without asking — this is my standing permission.**
   - Order: tests pass → update `HARITA.md` / `DERSLER.md` if needed → everything in the same commit.
-  - Commit message: Turkish, short, one line. Example: `Giriş butonu eklendi`
+  - **Every commit has exactly one type:** `Kurulum` (setup, tools), `Özellik` (new behaviour), `Düzeltme` (bug fix), `Düzenleme` (refactor: tidy code without changing behaviour) or `Belge` (only `.waypoint/` / docs). Never mix a refactor with a feature or fix in the same commit — do the refactor as its own step first.
+  - Commit message: Turkish, short, one line, starting with the type. Example: `Özellik: Giriş butonu eklendi`, `Düzeltme: Boş görev eklenmesi engellendi`
   - If there's no git repo, run `git init` before the first commit and tell me in one sentence: "Kayıt noktası alabilmek için git kurdum." Right after `git init`, run `git config core.hooksPath .waypoint/hooks` to turn on the checks. If `.waypoint/hooks/` is missing, tell me to reinstall Waypoint.
   - Local commits only. Never push, rewrite history, or run irreversible commands like `reset --hard` without asking.
   - Never commit secrets (passwords, API keys, `.env`); add them to `.gitignore`. Also keep `.obsidian/` in `.gitignore` (Obsidian's settings folder).
@@ -110,10 +111,10 @@ Every change is **small, single-purpose, and reversible**.
 
 Every project goes through these stages; the current stage is recorded in `ILERLEME.md`.
 
-1. **Idea → Goal:** For a new project ask me: what will it do, who uses it, what must work to call it "done". Turn my answers into a 2–3 sentence goal in `ILERLEME.md`. Then research the tech choice and present options.
+1. **Idea → Goal:** For a new project ask me: what will it do, who uses it, what must work to call it "done". Before writing anything, tell me back in 2–3 plain sentences: "Seni şöyle anladım: … Doğru mu?" and wait for my yes. Turn my answers into a 2–3 sentence goal in `ILERLEME.md`. Then research the tech choice and present options.
 2. **Plan:** Split the goal into 3–8 **tasks**, each ending with something I can try ("giriş sayfası açılıyor"). Each task = one or more atomic steps. Simplest working version first, polish last. Show me the plan; don't start without approval.
-3. **Build in atomic steps:** One task at a time; say in 1–2 sentences what you'll do. If the task needs something new, research and get approval first. Each step: write code → write/update tests → run all tests → update `HARITA.md` if needed → commit. If how to start the project changes (new command, new setup step), update **"Nasıl açılır"** in `ILERLEME.md` immediately, with exact copy-pasteable commands.
-4. **Let me test:** When a task is done, tell me step by step how to try it (what to open, click, and expect), using "Nasıl açılır". Not done until I say "çalışıyor". Before handing a task to me, try it yourself and fix what you find. Every bug — whether I report it or you spot it — is fixed as its own atomic step and commit.
+3. **Build in atomic steps:** One task at a time; say in 1–2 sentences what you'll do (for a new feature, start with "Seni şöyle anladım: …" and wait if anything is unclear). If the task needs something new, research and get approval first. Each step: write code → write/update tests → run all tests → update `HARITA.md` if needed → commit. If how to start the project changes (new command, new setup step), update **"Nasıl açılır"** in `ILERLEME.md` immediately, with exact copy-pasteable commands.
+4. **Let me test:** When a task is done, first report honestly what YOU checked: `Doğrulandı` (all checked and passed), `Kısmen doğrulandı` (say what wasn't checked) or `Doğrulanamadı` (say why). Then tell me step by step how to try it (what to open, click, and expect), using "Nasıl açılır". Not done until I say "çalışıyor". Before handing a task to me, try it yourself and fix what you find. Every bug — whether I report it or you spot it — is fixed as its own atomic step and commit.
 5. **Close the task:** Update `ILERLEME.md` and commit. Name the next task, ask "Buna geçelim mi?", and remind me that I can start a fresh session now to save context (tell me the exact command for the tool you're running in, e.g. `/clear` in Claude Code): "Görev bitti, istersen `<komut>` yazıp temiz başlayabilirsin."
 
 ## Focus rules
