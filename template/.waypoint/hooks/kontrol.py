@@ -60,17 +60,17 @@ def harita(text: str) -> tuple[list[str], list[str]]:
         node_names.update(ids.values())
         if len(ids) > 15:
             hatalar.append(
-                f"docs/HARITA.md: {block_number}. Mermaid şemasında {len(ids)} düğüm var; "
+                f".waypoint/HARITA.md: {block_number}. Mermaid şemasında {len(ids)} düğüm var; "
                 "şemayı böl: önce dosyalar, sonra dosya başına küçük şema."
             )
 
     for name, _ in entries:
         name = name.strip()
         if name not in node_names:
-            hatalar.append(f"docs/HARITA.md: '{name}' listede var, şemada yok; işlevi şemaya ekleyin.")
+            hatalar.append(f".waypoint/HARITA.md: '{name}' listede var, şemada yok; işlevi şemaya ekleyin.")
     for node_name in sorted(node_names):
         if node_name not in entry_names and node_name not in entry_files:
-            hatalar.append(f"docs/HARITA.md: '{node_name}' şemada var, listede yok; listeye ekleyin veya düğümü kaldırın.")
+            hatalar.append(f".waypoint/HARITA.md: '{node_name}' şemada var, listede yok; listeye ekleyin veya düğümü kaldırın.")
     return hatalar, []
 
 
@@ -79,7 +79,7 @@ def dersler(text: str) -> tuple[list[str], list[str]]:
     rules = _section(text, "Kurallar")
     count = sum(1 for line in rules.splitlines() if line.startswith("- ") and line != "- ...")
     if count > 20:
-        return [f"docs/DERSLER.md: Kurallar bölümünde {count} kural var; 20'yi aşan kuralları azaltın veya birleştirin."], []
+        return [f".waypoint/DERSLER.md: Kurallar bölümünde {count} kural var; 20'yi aşan kuralları azaltın veya birleştirin."], []
     return [], []
 
 
@@ -95,7 +95,7 @@ def ilerleme(text: str) -> tuple[list[str], list[str]]:
     headings = [line[3:].strip() for line in text.splitlines() if line.startswith("## ")]
     for required in _REQUIRED_HEADINGS:
         if not any(heading.startswith(required) for heading in headings):
-            hatalar.append(f"docs/ILERLEME.md: '{required}' başlığı eksik; bu başlığı ekleyin.")
+            hatalar.append(f".waypoint/ILERLEME.md: '{required}' başlığı eksik; bu başlığı ekleyin.")
 
     daily = _section(text, "Günlük")
     count = sum(
@@ -105,7 +105,7 @@ def ilerleme(text: str) -> tuple[list[str], list[str]]:
     uyarilar = []
     if count > 10:
         uyarilar.append(
-            f"docs/ILERLEME.md: Günlük bölümünde {count} kayıt var; eski kayıtları docs/GUNLUK_ARSIV.md dosyasına taşı."
+            f".waypoint/ILERLEME.md: Günlük bölümünde {count} kayıt var; eski kayıtları .waypoint/GUNLUK_ARSIV.md dosyasına taşı."
         )
     return hatalar, uyarilar
 
@@ -114,7 +114,7 @@ def _is_code_file(name: str) -> bool:
     normalized = name.replace("\\", "/")
     basename = normalized.rsplit("/", 1)[-1]
     return (
-        not normalized.startswith(("docs/", ".githooks/"))
+        not normalized.startswith(".waypoint/")
         and not basename.endswith(".md")
         and basename not in {".gitignore", ".gitattributes"}
     )
@@ -129,7 +129,7 @@ def ilerleme_bugun(ilerleme_text: str, today: str, staged_names: list[str]) -> t
         daily = _section(ilerleme_text, "Günlük")
         if not any(line.startswith(f"- {today}") for line in daily.splitlines()):
             return [
-                f"docs/ILERLEME.md: kod değişti ama Günlük bölümünde bugünün ({today}) satırı yok; '- {today}: ne yapıldı' satırını ekleyip aynı kayda dahil edin."
+                f".waypoint/ILERLEME.md: kod değişti ama Günlük bölümünde bugünün ({today}) satırı yok; '- {today}: ne yapıldı' satırını ekleyip aynı kayda dahil edin."
             ], []
     return [], []
 
@@ -161,7 +161,7 @@ def harita_kapsami(harita_text: str, names: list[str]) -> tuple[list[str], list[
         if not re.search(rf"(?<![\w$]){re.escape(name)}(?![\w$])", harita_text)
     ]
     return [
-        f"docs/HARITA.md: yeni fonksiyon '{name}' haritada yok. Önemliyse listeye ve şemaya ekleyin; küçük bir yardımcıysa '## Not mapped (small helpers)' satırına adını yazın."
+        f".waypoint/HARITA.md: yeni fonksiyon '{name}' haritada yok. Önemliyse listeye ve şemaya ekleyin; küçük bir yardımcıysa '## Not mapped (small helpers)' satırına adını yazın."
         for name in missing
     ], []
 
@@ -170,7 +170,7 @@ def ders_hatirlatma(message_text: str) -> tuple[list[str], list[str]]:
     normalized = message_text.replace("İ", "i").replace("I", "ı").lower()
     if any(word in normalized for word in ("düzelt", "hata", "fix", "bug", "onar")):
         return [], [
-            "Bu bir düzeltme kaydı. Hata 2 denemeden uzun sürdüyse ya da kullanıcı sizi düzelttiyse docs/DERSLER.md dosyasına ders yazın."
+            "Bu bir düzeltme kaydı. Hata 2 denemeden uzun sürdüyse ya da kullanıcı sizi düzelttiyse .waypoint/DERSLER.md dosyasına ders yazın."
         ]
     return [], []
 
@@ -188,7 +188,7 @@ def main() -> int:
     for stream in (sys.stdout, sys.stderr):
         if hasattr(stream, "reconfigure"):
             stream.reconfigure(encoding="utf-8", errors="replace")
-    root = Path(__file__).resolve().parent.parent
+    root = Path(__file__).resolve().parents[2]  # <proje>/.waypoint/hooks/kontrol.py
     if len(sys.argv) == 3 and sys.argv[1] == "--mesaj":
         try:
             message = Path(sys.argv[2]).read_text(encoding="utf-8")
@@ -201,23 +201,23 @@ def main() -> int:
     try:
         staged = _git_output(root, "diff", "--cached", "--name-only", "--diff-filter=ACMR")
     except (subprocess.CalledProcessError, OSError) as exc:
-        print(f"❌ .githooks/kontrol.py: Git deposu okunamadı; hook'u depo içinden çalıştırın. ({exc})")
+        print(f"❌ .waypoint/hooks/kontrol.py: Git deposu okunamadı; hook'u depo içinden çalıştırın. ({exc})")
         return 1
 
     hatalar, uyarilar = gizli_dosyalar(staged)
     today = date.today().isoformat()
-    for path, check in (("docs/HARITA.md", harita), ("docs/DERSLER.md", dersler), ("docs/ILERLEME.md", ilerleme)):
+    for path, check in ((".waypoint/HARITA.md", harita), (".waypoint/DERSLER.md", dersler), (".waypoint/ILERLEME.md", ilerleme)):
         file_path = root / path
         if file_path.is_file():
             file_text = file_path.read_text(encoding="utf-8")
             errors, warnings = check(file_text)
             hatalar.extend(errors)
             uyarilar.extend(warnings)
-            if path == "docs/ILERLEME.md":
+            if path == ".waypoint/ILERLEME.md":
                 errors, warnings = ilerleme_bugun(file_text, today, staged)
                 hatalar.extend(errors)
                 uyarilar.extend(warnings)
-    map_path = root / "docs/HARITA.md"
+    map_path = root / ".waypoint/HARITA.md"
     if map_path.is_file():
         code_paths = [name for name in staged if _is_code_file(name) and not _is_test_file(name)]
         if code_paths:
@@ -234,7 +234,7 @@ def main() -> int:
         print(f"⚠️ {uyari}")
     if hatalar:
         return 1
-    print("✅ .githooks/kontrol.py: Belgeler ve gizli dosya denetimleri geçti.")
+    print("✅ .waypoint/hooks/kontrol.py: Belgeler ve gizli dosya denetimleri geçti.")
     return 0
 
 

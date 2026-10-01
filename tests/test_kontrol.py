@@ -3,7 +3,8 @@ import unittest
 from pathlib import Path
 
 
-MODULE_PATH = Path(__file__).with_name("kontrol.py")
+WAYPOINT = Path(__file__).resolve().parents[1] / "template" / ".waypoint"
+MODULE_PATH = WAYPOINT / "hooks" / "kontrol.py"
 SPEC = importlib.util.spec_from_file_location("kontrol", MODULE_PATH)
 kontrol = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(kontrol)
@@ -25,7 +26,7 @@ class GizliDosyaTestleri(unittest.TestCase):
 
 class HaritaTestleri(unittest.TestCase):
     def test_bos_kit_sablonu_gecer(self):
-        text = (Path(__file__).parents[1] / "docs" / "HARITA.md").read_text(encoding="utf-8")
+        text = (WAYPOINT / "HARITA.md").read_text(encoding="utf-8")
         self.assertEqual(kontrol.harita(text)[0], [])
 
     def test_dosya_kutulu_genel_sema_gecer(self):
@@ -70,7 +71,7 @@ flowchart LR
 
 class DerslerTestleri(unittest.TestCase):
     def test_bos_kit_sablonu_gecer(self):
-        text = (Path(__file__).parents[1] / "docs" / "DERSLER.md").read_text(encoding="utf-8")
+        text = (WAYPOINT / "DERSLER.md").read_text(encoding="utf-8")
         self.assertEqual(kontrol.dersler(text)[0], [])
 
     def test_yirmi_bir_kural_hata(self):
@@ -80,7 +81,7 @@ class DerslerTestleri(unittest.TestCase):
 
 class IlerlemeTestleri(unittest.TestCase):
     def test_bos_kit_sablonu_gecer(self):
-        text = (Path(__file__).parents[1] / "docs" / "ILERLEME.md").read_text(encoding="utf-8")
+        text = (WAYPOINT / "ILERLEME.md").read_text(encoding="utf-8")
         self.assertEqual(kontrol.ilerleme(text)[0], [])
 
     def test_eksik_baslik_hata(self):
@@ -93,7 +94,7 @@ class IlerlemeTestleri(unittest.TestCase):
         errors, warnings = kontrol.ilerleme(headings + "\n" + daily)
         self.assertEqual(errors, [])
         self.assertEqual(len(warnings), 1)
-        self.assertIn("docs/GUNLUK_ARSIV.md", warnings[0])
+        self.assertIn(".waypoint/GUNLUK_ARSIV.md", warnings[0])
 
 
 class BugunKontrolTestleri(unittest.TestCase):
@@ -106,7 +107,7 @@ class BugunKontrolTestleri(unittest.TestCase):
         self.assertIn("2026-10-01", errors[0])
 
     def test_kod_asamasi_yoksa_gecer(self):
-        self.assertEqual(kontrol.ilerleme_bugun("## Günlük\n", "2026-10-01", ["docs/readme.md", ".githooks/x.py"]), ([], []))
+        self.assertEqual(kontrol.ilerleme_bugun("## Günlük\n", "2026-10-01", [".waypoint/HARITA.md", ".waypoint/hooks/x.py", "README.md"]), ([], []))
 
 
 class YeniFonksiyonTestleri(unittest.TestCase):
@@ -133,7 +134,7 @@ class YeniFonksiyonTestleri(unittest.TestCase):
         self.assertIn("foo", errors[0])
 
     def test_gercek_harita_sablonu_gecer(self):
-        text = (Path(__file__).parents[1] / "docs" / "HARITA.md").read_text(encoding="utf-8")
+        text = (WAYPOINT / "HARITA.md").read_text(encoding="utf-8")
         self.assertEqual(kontrol.harita(text)[0], [])
 
 

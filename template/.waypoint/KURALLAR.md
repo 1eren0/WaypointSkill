@@ -13,7 +13,7 @@ I get distracted easily and lose track of where I am. These rules exist to preve
 
 ## Project files
 
-All live in `docs/`. They start as blank forms; fill them in, keeping their section structure.
+All live in `.waypoint/`. They start as blank forms; fill them in, keeping their section structure.
 
 | File | For | Contents | Update when |
 |---|---|---|---|
@@ -21,9 +21,9 @@ All live in `docs/`. They start as blank forms; fill them in, keeping their sect
 | `DERSLER.md` | AI | errors, fixes, rules | a lesson emerges |
 | `HARITA.md` | AI | important functions and their links | a function is added/removed or its links change |
 
-If a file is missing, tell me to copy the `docs/` folder into the project; don't invent a different structure.
+If a file is missing, tell me to reinstall Waypoint (see its README); don't invent a different structure.
 
-**`docs/` is the only place for project knowledge.** Goals, decisions, plans, progress, lessons and the map go into these files — not into any other memory system (PMB, auto-memory, etc.). Those may hold only personal or cross-project facts about me.
+**`.waypoint/` is the only place for project knowledge.** Goals, decisions, plans, progress, lessons and the map go into these files — not into any other memory system (PMB, auto-memory, etc.). Those may hold only personal or cross-project facts about me.
 
 ## Context gathering
 
@@ -77,8 +77,8 @@ I can't tell when a new change breaks an old feature, so tests do it for me.
   - Any fail → don't commit; fix first. If you can't, tell me plainly: "Yeni değişiklik şunu bozdu: <özellik>" and propose a way forward.
 - Never edit or delete a test just to make it pass. If the feature genuinely changed, tell me first.
 - Put the test command in the "Testleri çalıştırma" section of `ILERLEME.md`, as one line in backticks (e.g. `` `npm test` ``). The pre-commit hook reads it from there.
-- **The pre-commit hook enforces this.** `.githooks/pre-commit` runs that command before every commit and blocks the commit if tests fail. Never bypass it (`--no-verify`). If it blocks a commit, treat it like any failing test.
-- **The hooks also enforce the docs rules** (in every AI tool, since they run on `git commit`): `docs/` files keep their structure, a commit that changes code needs today's line in "Günlük", every new function must appear in `HARITA.md` (in the list + diagram, or in "Not mapped"), and a fix commit prints a reminder to record a lesson. Read the ❌ messages and fix exactly what they say.
+- **The pre-commit hook enforces this.** `.waypoint/hooks/pre-commit` runs that command before every commit and blocks the commit if tests fail. Never bypass it (`--no-verify`). If it blocks a commit, treat it like any failing test.
+- **The hooks also enforce the docs rules** (in every AI tool, since they run on `git commit`): `.waypoint/` files keep their structure, a commit that changes code needs today's line in "Günlük", every new function must appear in `HARITA.md` (in the list + diagram, or in "Not mapped"), and a fix commit prints a reminder to record a lesson. Read the ❌ messages and fix exactly what they say.
 
 ## Atomicity
 
@@ -90,7 +90,7 @@ Every change is **small, single-purpose, and reversible**.
 - **Commit after every atomic step without asking — this is my standing permission.**
   - Order: tests pass → update `HARITA.md` / `DERSLER.md` if needed → everything in the same commit.
   - Commit message: Turkish, short, one line. Example: `Giriş butonu eklendi`
-  - If there's no git repo, run `git init` before the first commit and tell me in one sentence: "Kayıt noktası alabilmek için git kurdum." Right after `git init`, run `git config core.hooksPath .githooks` to turn on the test check. If `.githooks/` or `.gitattributes` is missing, tell me to copy them from the kit.
+  - If there's no git repo, run `git init` before the first commit and tell me in one sentence: "Kayıt noktası alabilmek için git kurdum." Right after `git init`, run `git config core.hooksPath .waypoint/hooks` to turn on the checks. If `.waypoint/hooks/` is missing, tell me to reinstall Waypoint.
   - Local commits only. Never push, rewrite history, or run irreversible commands like `reset --hard` without asking.
   - Never commit secrets (passwords, API keys, `.env`); add them to `.gitignore`. Also keep `.obsidian/` in `.gitignore` (Obsidian's settings folder).
 - After committing, report in one line: `✅ Kaydedildi: <commit mesajı>`
@@ -130,6 +130,6 @@ Every project goes through these stages; the current stage is recorded in `ILERL
 - **`bitir` / `bugünlük bu kadar`:**
   - Finish or revert any half-done atomic step.
   - Record any unrecorded lesson in `DERSLER.md`.
-  - Update `ILERLEME.md` (check "Nasıl açılır" is current). If "Günlük" has more than 10 entries, move the older ones to `docs/GUNLUK_ARSIV.md`.
+  - Update `ILERLEME.md` (check "Nasıl açılır" is current). If "Günlük" has more than 10 entries, move the older ones to `.waypoint/GUNLUK_ARSIV.md`.
   - Run tests and commit.
   - Give me a 3-bullet "bugün ne yaptık" summary in plain Turkish.

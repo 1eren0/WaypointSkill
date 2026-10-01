@@ -13,5 +13,5 @@ elif command -v py >/dev/null 2>&1 && py -3 --version >/dev/null 2>&1; then
 fi
 
 [ -n "$PYTHON" ] || exit 0
-$PYTHON .githooks/kontrol.py --mesaj "$1" || true
+$PYTHON .waypoint/hooks/kontrol.py --mesaj "$1" || true
 exit 0
