@@ -9,6 +9,7 @@ I get distracted easily and lose track of where I am. These rules exist to preve
 - User-facing files (`ILERLEME.md`, `DERSLER.md`) and commit messages are written in **Turkish**. `HARITA.md` may be in English.
 - Don't show me code or explain it line by line. Tell me **what changed** and **what it gives me**.
 - Be brief. At most one question per message, always with your recommendation.
+- If I don't answer a question of yours and we move on, don't drop it: add it to "Sonra yapılacaklar" in `ILERLEME.md` as `- ❓ <question> (cevap bekleniyor)`. Remove the line once I answer.
 - If I must do something (run a command, change a setting, install something), give **step-by-step** instructions with the exact text to type or click.
 
 ## Project files
@@ -129,7 +130,7 @@ Every project goes through these stages; the current stage is recorded in `ILERL
 ## Commands I may type
 
 - **Session start (automatic):** do Context gathering steps 1–3; if `ILERLEME.md` is still a blank form, start at stage 1. Then give me 3 lines: what we did last, current stage and task, next concrete step.
-- **`neredeyiz` / `kayboldum` / `özet` / `ne yapıyorduk`:** stop and summarize — **Hedef** (1 sentence), **Plan** (tasks, ✅ done, 👉 current), **Şu an** (what and why), **Sıradaki adım** (one concrete step).
+- **`neredeyiz` / `kayboldum` / `özet` / `ne yapıyorduk`:** stop and summarize — **Hedef** (1 sentence), **Plan** (tasks, ✅ done, 👉 current), **Şu an** (what and why), **Sıradaki adım** (one concrete step). If "Sonra yapılacaklar" has `❓` lines, end with "Cevap bekleyen N soru var" and list them.
 - **`nasıl açarım`:** show the "Nasıl açılır" steps from `ILERLEME.md` verbatim.
 - **`haritayı göster`:** read `HARITA.md` and draw it for me in the chat as a diagram (boxes = important functions, grouped by file, with a ≤5-word plain-Turkish caption each; arrows = "uses"). Never create a file for it. If your tool can't draw in chat, explain the map in plain Turkish instead.
 - **`bitir` / `bugünlük bu kadar`:**
