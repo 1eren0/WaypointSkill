@@ -130,9 +130,24 @@ def dersler(text: str) -> tuple[list[str], list[str]]:
     """Kurallar bölümündeki etkin kural sayısını sınırlar."""
     rules = _section(text, "Kurallar")
     count = sum(1 for line in rules.splitlines() if line.startswith("- ") and line != "- ...")
+    hatalar = []
     if count > 20:
-        return [f".waypoint/DERSLER.md: Kurallar bölümünde {count} kural var; 20'yi aşan kuralları azaltın veya birleştirin."], []
-    return [], []
+        hatalar.append(f".waypoint/DERSLER.md: Kurallar bölümünde {count} kural var; 20'yi aşan kuralları azaltın veya birleştirin.")
+    records = _section(text, "Kayıtlar")
+    lessons = sum(
+        1 for line in records.splitlines()
+        if line.startswith("### ") and "YYYY" not in line
+    )
+    message = (
+        f".waypoint/DERSLER.md: Kayıtlar bölümünde {lessons} ders var; "
+        "kuralı 'Kurallar' bölümünde duran eski dersleri .waypoint/DERS_ARSIV.md dosyasına taşıyın."
+    )
+    if lessons > 30:
+        hatalar.append(message + " Bu yapılmadan kayıt alınamaz.")
+        return hatalar, []
+    if lessons > 20:
+        return hatalar, [message]
+    return hatalar, []
 
 
 _REQUIRED_HEADINGS = (
@@ -142,23 +157,38 @@ _REQUIRED_HEADINGS = (
 
 
 def ilerleme(text: str) -> tuple[list[str], list[str]]:
-    """İlerleme belgesindeki zorunlu başlıkları ve günlük uzunluğunu denetler."""
+    """İlerleme belgesindeki zorunlu başlıkları ve bölüm uzunluklarını denetler."""
     hatalar: list[str] = []
     headings = [line[3:].strip() for line in text.splitlines() if line.startswith("## ")]
     for required in _REQUIRED_HEADINGS:
         if not any(heading.startswith(required) for heading in headings):
             hatalar.append(f".waypoint/ILERLEME.md: '{required}' başlığı eksik; bu başlığı ekleyin.")
 
-    daily = _section(text, "Günlük")
-    count = sum(
-        1 for line in daily.splitlines()
-        if line.startswith("- ") and "YYYY" not in line
-    )
     uyarilar = []
-    if count > 10:
-        uyarilar.append(
-            f".waypoint/ILERLEME.md: Günlük bölümünde {count} kayıt var; eski kayıtları .waypoint/GUNLUK_ARSIV.md dosyasına taşı."
-        )
+    limits = (
+        ("Günlük", 10, 20, "Günlük", "kayıt", "en yeni 10 satır kalsın, eskileri .waypoint/ILERLEME_ARSIV.md dosyasının '## Günlük' bölümüne taşıyın."),
+        ("Plan", 10, 20, "Plan", "biten görev", "biten görevleri .waypoint/ILERLEME_ARSIV.md dosyasının '## Biten görevler' bölümüne taşıyın."),
+        ("Kararlar", 20, 30, "Kararlar", "karar", "en eski kararları .waypoint/ILERLEME_ARSIV.md dosyasının '## Kararlar' bölümüne taşıyın (arşivdeki kararlar geçerliliğini korur)."),
+        ("Sonra yapılacaklar", 15, 25, "'Sonra yapılacaklar'", "madde", "kullanıcıya hangilerinden vazgeçildiğini sorun ve onları .waypoint/ILERLEME_ARSIV.md dosyasının '## Vazgeçilen fikirler' bölümüne taşıyın."),
+    )
+    for heading, warning_limit, error_limit, label, noun, action in limits:
+        section = _section(text, heading)
+        if heading == "Plan":
+            count = sum(
+                1 for line in section.splitlines()
+                if line.startswith(("- [x]", "- [X]")) and "YYYY" not in line and line != "- ..."
+            )
+        else:
+            count = sum(
+                1 for line in section.splitlines()
+                if line.startswith("- ") and "YYYY" not in line and line != "- ..."
+            )
+        if count > warning_limit:
+            message = f".waypoint/ILERLEME.md: {label} bölümünde {count} {noun} var; {action}"
+            if count > error_limit:
+                hatalar.append(message + " Bu yapılmadan kayıt alınamaz.")
+            else:
+                uyarilar.append(message)
     return hatalar, uyarilar
 
 

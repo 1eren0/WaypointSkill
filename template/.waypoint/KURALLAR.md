@@ -48,7 +48,7 @@ Research **only when needed**:
 - Adding something new to the project (payments, maps, auth, an API…)
 - An error not in `DERSLER.md` that 2 attempts didn't fix (check official docs)
 
-Don't re-research anything already in the "Kararlar" section of `ILERLEME.md`. Don't reverse a decision without a concrete new reason.
+Don't re-research anything already in the "Kararlar" section of `ILERLEME.md` — or in the "Kararlar" section of `ILERLEME_ARSIV.md` (archived decisions are still valid). Don't reverse a decision without a concrete new reason.
 
 - Official docs first, then recent sources. Distrust old blog posts and old versions.
 - Goal: not the best option, but the **simplest one that's good enough** for a non-coder — easy setup, good docs, widely used, free or cheap.
@@ -69,7 +69,7 @@ Then check `DERSLER.md` for similar errors, then fix in this order: **reproduce*
 
 Also write to `DERSLER.md` when: an error took more than 2 attempts; I say "don't do it like this / do it like that"; I couldn't do a step you gave me (a command, finding a file, a setting); you changed approach because of my feedback (e.g. a double-click launcher instead of a terminal command); something unexpected is learned. Entry = problem, cause, fix, one-line rule. Then tell me: `📝 Ders kaydedildi: <başlık>`
 
-When the same kind of lesson recurs, promote it to a one-line rule in the "Kurallar" section at the top and delete the old entries. Keep "Kurallar" ≤ 20 lines.
+When the same kind of lesson recurs, promote it to a one-line rule in the "Kurallar" section at the top and delete the old entries. Keep "Kurallar" ≤ 20 lines. When "Kayıtlar" grows past 20 lessons, move old lessons whose rule already sits in "Kurallar" to `.waypoint/DERS_ARSIV.md` (the commit check blocks above 30).
 
 ## Tests
 
@@ -138,6 +138,6 @@ Every project goes through these stages; the current stage is recorded in `ILERL
 - **`bitir` / `bugünlük bu kadar`:**
   - Finish or revert any half-done atomic step.
   - Record any unrecorded lesson in `DERSLER.md`.
-  - Update `ILERLEME.md` (check "Nasıl açılır" is current). If "Günlük" has more than 10 entries, move the older ones to `.waypoint/GUNLUK_ARSIV.md`.
+  - Update `ILERLEME.md` (check "Nasıl açılır" is current). Keep it short by moving old items to `.waypoint/ILERLEME_ARSIV.md` (create it if missing, with sections `## Günlük`, `## Biten görevler`, `## Kararlar`, `## Vazgeçilen fikirler`): Günlük → keep the newest 10; finished `- [x]` tasks → when more than 10; Kararlar → oldest ones when more than 20; "Sonra yapılacaklar" → when more than 15, ask me which ideas I dropped. The commit check warns at these numbers and blocks at Günlük 20 / finished tasks 20 / Kararlar 30 / ideas 25. Archives are only read when needed (e.g. checking an old decision).
   - Run tests and commit.
   - Give me a 3-bullet "bugün ne yaptık" summary in plain Turkish, then always one more line: `📝 Dersler: <recorded lesson titles>` or `📝 Dersler: Bugün ders çıkmadı.` Decide this consciously by reviewing the session against the lesson triggers above.

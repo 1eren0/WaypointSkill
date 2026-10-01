@@ -116,6 +116,15 @@ class DerslerTestleri(unittest.TestCase):
         text = "## Kurallar\n" + "\n".join(f"- kural {i}" for i in range(21)) + "\n## Kayıtlar\n"
         self.assertEqual(len(kontrol.dersler(text)[0]), 1)
 
+    def test_kayit_limitleri_ve_yer_tutucular(self):
+        for count, expected in ((20, "none"), (21, "warning"), (31, "error")):
+            with self.subTest(count=count):
+                records = "\n".join(f"### Ders {i}" for i in range(count))
+                errors, warnings = kontrol.dersler("## Kayıtlar\n### YYYY-AA-GG\n" + records)
+                self.assertEqual((len(errors), len(warnings)), {
+                    "none": (0, 0), "warning": (0, 1), "error": (1, 0)
+                }[expected])
+
 
 class IlerlemeTestleri(unittest.TestCase):
     def test_bos_kit_sablonu_gecer(self):
@@ -132,7 +141,30 @@ class IlerlemeTestleri(unittest.TestCase):
         errors, warnings = kontrol.ilerleme(headings + "\n" + daily)
         self.assertEqual(errors, [])
         self.assertEqual(len(warnings), 1)
-        self.assertIn(".waypoint/GUNLUK_ARSIV.md", warnings[0])
+        self.assertIn(".waypoint/ILERLEME_ARSIV.md", warnings[0])
+
+    def test_bolum_limitleri_uyari_ve_hata(self):
+        headings = "\n".join(f"## {name}" for name in kontrol._REQUIRED_HEADINGS)
+        cases = (
+            ("Günlük", 10, 20, lambda i: f"- kayıt {i}"),
+            ("Plan", 10, 20, lambda i: f"- [x] görev {i}"),
+            ("Kararlar", 20, 30, lambda i: f"- karar {i}"),
+            ("Sonra yapılacaklar", 15, 25, lambda i: f"- fikir {i}"),
+        )
+        for section, warn_limit, error_limit, item in cases:
+            for count, expected in ((warn_limit, (0, 0)), (warn_limit + 1, (0, 1)), (error_limit + 1, (1, 0))):
+                with self.subTest(section=section, count=count):
+                    lines = "\n".join(item(i) for i in range(count))
+                    document = headings.replace(f"## {section}", f"## {section}\n{lines}")
+                    errors, warnings = kontrol.ilerleme(document)
+                    self.assertEqual((len(errors), len(warnings)), expected)
+
+    def test_yer_tutucular_ve_bitmemis_plan_gorevleri_sayilmaz(self):
+        headings = "\n".join(f"## {name}" for name in kontrol._REQUIRED_HEADINGS)
+        text = headings + "\n## Günlük\n- YYYY-AA-GG: şablon\n- ...\n## Plan\n" + "\n".join(
+            f"- [ ] görev {i}" for i in range(25)
+        )
+        self.assertEqual(kontrol.ilerleme(text), ([], []))
 
 
 class BugunKontrolTestleri(unittest.TestCase):
