@@ -1,0 +1,44 @@
+#!/bin/sh
+# Checks project rules, then runs the project's tests before every commit.
+# The test command is the first `backticked` line under "## Testleri çalıştırma"
+# in .waypoint/ILERLEME.md. If it's missing or still "...", there are no tests yet → allow.
+
+cd "$(git rev-parse --show-toplevel)" || exit 1
+
+PYTHON=""
+if command -v python3 >/dev/null 2>&1 && python3 --version >/dev/null 2>&1; then
+  PYTHON="python3"
+elif command -v python >/dev/null 2>&1 && python --version >/dev/null 2>&1; then
+  PYTHON="python"
+elif command -v py >/dev/null 2>&1 && py -3 --version >/dev/null 2>&1; then
+  PYTHON="py -3"
+fi
+
+if [ -n "$PYTHON" ]; then
+  if ! $PYTHON .waypoint/hooks/kontrol.py; then
+    exit 1
+  fi
+else
+  echo "⚠️ Python 3 bulunamadı; proje kuralı denetimleri atlandı."
+fi
+
+FILE=".waypoint/ILERLEME.md"
+[ -f "$FILE" ] || exit 0
+
+CMD=$(awk '
+  /^## / { insec = ($0 ~ /^## Testleri/) ; next }
+  insec && match($0, /`[^`]+`/) { print substr($0, RSTART+1, RLENGTH-2); exit }
+' "$FILE")
+
+case "$CMD" in
+  ""|"..."|"…") exit 0 ;;
+esac
+
+OUT=$(sh -c "$CMD" 2>&1)
+STATUS=$?
+if [ $STATUS -ne 0 ]; then
+  echo "❌ Testler geçmedi, kayıt engellendi. Komut: $CMD"
+  echo "$OUT" | tail -n 30
+  exit 1
+fi
+exit 0
