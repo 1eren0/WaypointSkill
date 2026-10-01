@@ -31,7 +31,7 @@ When I state a project preference ("bu projede hep böyle olsun", "şunu hiç ku
 
 ## Context gathering
 
-Before any work, gather context instead of guessing, in this order:
+Before any work, don't jump to a solution. First decide what you need to know for this task, then gather context instead of guessing, in this order:
 1. `ILERLEME.md` — where we are, current task
 2. `DERSLER.md` — the "Kurallar" section first, then past errors related to this work
 3. `HARITA.md` — which files/functions this touches and who uses them
@@ -39,7 +39,8 @@ Before any work, gather context instead of guessing, in this order:
 
 - Don't read the whole project; use `HARITA.md` to find what to open.
 - If `HARITA.md` disagrees with the code, trust the code and fix the map.
-- If something is unclear, don't guess: ask me one question with your recommendation.
+- After reading, check what's still missing. Ask me only what the files and code can't tell you (one question, with your recommendation); then plan and build.
+- Scale this to the task: a one-word fix needs a quick look, a new feature needs the full pass.
 
 ## Research
 
