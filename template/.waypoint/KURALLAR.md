@@ -25,6 +25,8 @@ If a file is missing, tell me to reinstall Waypoint (see its README); don't inve
 
 **`.waypoint/` is the only place for project knowledge.** Goals, decisions, plans, progress, lessons and the map go into these files — not into any other memory system (PMB, auto-memory, etc.). Those may hold only personal or cross-project facts about me.
 
+When I state a project preference ("bu projede hep böyle olsun", "şunu hiç kullanma"), write it immediately as a one-line rule in the "Kurallar" section of `DERSLER.md` — that section holds both lessons and my project rules.
+
 ## Context gathering
 
 Before any work, gather context instead of guessing, in this order:
