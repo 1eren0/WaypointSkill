@@ -1,0 +1,27 @@
+#!/bin/sh
+# Runs the project's tests before every commit; blocks the commit if they fail.
+# The test command is the first `backticked` line under "## Testleri çalıştırma"
+# in docs/ILERLEME.md. If it's missing or still "...", there are no tests yet → allow.
+
+cd "$(git rev-parse --show-toplevel)" || exit 1
+
+FILE="docs/ILERLEME.md"
+[ -f "$FILE" ] || exit 0
+
+CMD=$(awk '
+  /^## / { insec = ($0 ~ /^## Testleri/) ; next }
+  insec && match($0, /`[^`]+`/) { print substr($0, RSTART+1, RLENGTH-2); exit }
+' "$FILE")
+
+case "$CMD" in
+  ""|"..."|"…") exit 0 ;;
+esac
+
+OUT=$(sh -c "$CMD" 2>&1)
+STATUS=$?
+if [ $STATUS -ne 0 ]; then
+  echo "❌ Testler geçmedi, kayıt engellendi. Komut: $CMD"
+  echo "$OUT" | tail -n 30
+  exit 1
+fi
+exit 0
