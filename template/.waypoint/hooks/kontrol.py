@@ -244,27 +244,27 @@ def _is_test_file(name: str) -> bool:
 def kayit_turu(message_text: str, staged_names: list[str], test_komutu_var: bool) -> tuple[list[str], list[str]]:
     lines = [line for line in message_text.splitlines() if line.strip() and not line.startswith("#")]
     if not lines:
-        return ["Kayıt mesajı İngilizce olmalı ve türle başlamalı: '(Setup)', '(Create)', '(Update)', '(Fix)', '(Refactor)', '(Test)' veya '(Docs)'. Örnek: '(Create) Add login button', '(Fix) Prevent empty tasks'"], []
+        return ["Kayıt mesajı İngilizce olmalı ve Conventional Commits biçiminde başlamalı: 'feat:', 'fix:', 'docs:', 'refactor:', 'test:', 'chore:', 'style:' veya 'perf:'. Örnek: 'feat: add login button', 'fix: prevent empty tasks'"], []
     subject = lines[0]
     if subject.startswith(("Merge ", 'Revert "', "fixup!", "squash!")):
         return [], []
-    match = re.match(r"^\((Setup|Create|Update|Fix|Refactor|Test|Docs)\) ([A-Z0-9]\S*)", subject)
+    match = re.match(r"^(feat|fix|docs|refactor|test|chore|style|perf)(?:\([\w./-]+\))?!?: (\S.*)", subject)
     if not match:
-        return ["Kayıt mesajı İngilizce olmalı ve türle başlamalı: '(Setup)', '(Create)', '(Update)', '(Fix)', '(Refactor)', '(Test)' veya '(Docs)'. Örnek: '(Create) Add login button', '(Fix) Prevent empty tasks'"], []
+        return ["Kayıt mesajı İngilizce olmalı ve Conventional Commits biçiminde başlamalı: 'feat:', 'fix:', 'docs:', 'refactor:', 'test:', 'chore:', 'style:' veya 'perf:'. Örnek: 'feat: add login button', 'fix: prevent empty tasks'"], []
     kind = match.group(1)
     code_names = [name for name in staged_names if _is_code_file(name)]
-    description = subject[len(match.group(1)) + 3:]
+    description = match.group(2)
     if any(char in description for char in "ğĞışŞİ"):
         return ["Kayıt mesajı İngilizce olmalı; Türkçe açıklamayı İngilizceye çevirin."], []
     test_names = [name for name in code_names if _is_test_file(name)]
-    if kind == "Docs" and code_names:
-        return ["'(Docs)' türü yalnız .waypoint/ ve .md dosyaları içindir; türü düzeltin ya da kod değişikliğini ayrı kayda alın."], []
-    if kind == "Test" and any(not _is_test_file(name) for name in code_names):
-        return ["'(Test)' türü yalnız test dosyaları içindir; diğer kod değişikliklerini ayrı kayda alın."], []
-    if (kind == "Fix" and test_komutu_var and code_names
+    if kind == "docs" and code_names:
+        return ["'docs:' türü yalnız .waypoint/ ve .md dosyaları içindir; türü düzeltin ya da kod değişikliğini ayrı kayda alın."], []
+    if kind == "test" and any(not _is_test_file(name) for name in code_names):
+        return ["'test:' türü yalnız test dosyaları içindir; diğer kod değişikliklerini ayrı kayda alın."], []
+    if (kind == "fix" and test_komutu_var and code_names
             and not test_names
             and "no test:" not in message_text.lower() and "test yok:" not in message_text.lower()):
-        return ["'(Fix)' kaydında bu hatayı yakalayan bir test olmalı. Test ekleyin; test yazılamıyorsa mesaja '(no test: <reason>)' ekleyin."], []
+        return ["'fix:' kaydında bu hatayı yakalayan bir test olmalı. Test ekleyin; test yazılamıyorsa mesaja '(no test: <reason>)' ekleyin."], []
     return [], []
 
 

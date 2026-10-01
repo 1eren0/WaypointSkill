@@ -220,17 +220,20 @@ class DersHatirlatmaTestleri(unittest.TestCase):
 
 
     def test_fix_turu_uyari_verir(self):
-        self.assertEqual(len(kontrol.ders_hatirlatma("(Fix) Handle crash")[1]), 1)
+        self.assertEqual(len(kontrol.ders_hatirlatma("fix: Handle crash")[1]), 1)
 
 
 class KayitTuruTestleri(unittest.TestCase):
     def test_gecerli_turler(self):
-        for kind in ("Setup", "Create", "Update", "Fix", "Refactor", "Test", "Docs"):
+        for kind in ("feat", "fix", "docs", "refactor", "test", "chore", "style", "perf"):
             with self.subTest(kind=kind):
-                self.assertEqual(kontrol.kayit_turu(f"({kind}) Add example", [], False), ([], []))
+                self.assertEqual(kontrol.kayit_turu(f"{kind}: add example", [], False), ([], []))
 
-    def test_kucuk_harfli_aciklama_hata(self):
-        self.assertEqual(len(kontrol.kayit_turu("(Create) add example", [], False)[0]), 1)
+    def test_kapsamli_tur_gecer(self):
+        self.assertEqual(kontrol.kayit_turu("feat(auth): add login", [], False), ([], []))
+
+    def test_eski_parantezli_bicim_hata(self):
+        self.assertEqual(len(kontrol.kayit_turu("(Create) Add example", [], False)[0]), 1)
 
     def test_tur_yoksa_hata(self):
         self.assertEqual(len(kontrol.kayit_turu("Bir de\u011fi\u015fiklik", [], False)[0]), 1)
@@ -239,35 +242,35 @@ class KayitTuruTestleri(unittest.TestCase):
         self.assertEqual(kontrol.kayit_turu("Merge branch 'deney/x'", [], False), ([], []))
 
     def test_yorum_satirlari_atlanir(self):
-        self.assertEqual(kontrol.kayit_turu("# yorum\n\n(Create) Added", [], False), ([], []))
+        self.assertEqual(kontrol.kayit_turu("# yorum\n\nfeat: Added", [], False), ([], []))
 
     def test_eski_turkce_on_ek_hata(self):
         self.assertEqual(len(kontrol.kayit_turu("Özellik: X", [], False)[0]), 1)
 
     def test_belge_kodla_hata(self):
-        self.assertEqual(len(kontrol.kayit_turu("(Docs) Explain", ["app.js"], False)[0]), 1)
+        self.assertEqual(len(kontrol.kayit_turu("docs: Explain", ["app.js"], False)[0]), 1)
 
     def test_belge_waypoint_serbest(self):
-        self.assertEqual(kontrol.kayit_turu("(Docs) Explain", [".waypoint/ILERLEME.md"], False), ([], []))
+        self.assertEqual(kontrol.kayit_turu("docs: Explain", [".waypoint/ILERLEME.md"], False), ([], []))
 
     def test_test_turu_yalniz_test_dosyasi(self):
-        self.assertEqual(kontrol.kayit_turu("(Test) Add coverage", ["tests/test_a.py"], False), ([], []))
-        self.assertEqual(len(kontrol.kayit_turu("(Test) Add coverage", ["app.py"], False)[0]), 1)
+        self.assertEqual(kontrol.kayit_turu("test: Add coverage", ["tests/test_a.py"], False), ([], []))
+        self.assertEqual(len(kontrol.kayit_turu("test: Add coverage", ["app.py"], False)[0]), 1)
 
     def test_duzeltme_test_gerekir(self):
-        self.assertEqual(len(kontrol.kayit_turu("(Fix) Prevent crash", ["app.js"], True)[0]), 1)
+        self.assertEqual(len(kontrol.kayit_turu("fix: Prevent crash", ["app.js"], True)[0]), 1)
 
     def test_duzeltme_test_dosyasi_ile_serbest(self):
-        self.assertEqual(kontrol.kayit_turu("(Fix) Prevent crash", ["app.js", "test_app.js"], True), ([], []))
+        self.assertEqual(kontrol.kayit_turu("fix: Prevent crash", ["app.js", "test_app.js"], True), ([], []))
 
     def test_duzeltme_test_yok_aciklamasi_ile_serbest(self):
-        self.assertEqual(kontrol.kayit_turu("(Fix) Prevent crash\n\n(no test: CSS only)", ["app.js"], True), ([], []))
+        self.assertEqual(kontrol.kayit_turu("fix: Prevent crash\n\n(no test: CSS only)", ["app.js"], True), ([], []))
 
     def test_test_komutu_yoksa_serbest(self):
-        self.assertEqual(kontrol.kayit_turu("(Fix) Prevent crash", ["app.js"], False), ([], []))
+        self.assertEqual(kontrol.kayit_turu("fix: Prevent crash", ["app.js"], False), ([], []))
 
     def test_turkce_harfler_aciklamada_hata(self):
-        self.assertEqual(len(kontrol.kayit_turu("(Create) Add ışık", [], False)[0]), 1)
+        self.assertEqual(len(kontrol.kayit_turu("feat: Add ışık", [], False)[0]), 1)
 
     def test_test_komutu_okunur(self):
         self.assertTrue(kontrol.test_komutu("## Testleri \u00e7al\u0131\u015ft\u0131rma\n`node --test`"))

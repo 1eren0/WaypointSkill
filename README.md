@@ -33,7 +33,7 @@ Waypoint bunların her birine bir kural ve bir kontrol koyar. Kurallar rica değ
 | 📒 **İlerleme defteri** | Hedef, plan, kararlar ve günlük tek dosyada. Kod değiştiği gün günlüğe yazılmadan kayıt **alınmaz**. Defter büyüyünce eski kayıtlar arşive taşınır, hep kısa kalır. |
 | 🗺️ **Proje haritası** | Önemli fonksiyonlar ve bağlantıları, Obsidian'da resim olarak görünen bir şemayla. Haritada olmayan yeni fonksiyon kayda **giremez** (JavaScript/TypeScript, Python, Go, Rust, Java, C#, Kotlin, Swift, PHP, Ruby gibi yaygın dillerde). |
 | 📝 **Dersler** | Yapay zekânın hatalarından çıkan kurallar. Düzeltme kayıtlarında ders yazmayı hatırlatır. |
-| 🏷️ **Düzenli kayıtlar** | Her kayıt İngilizce ve türüyle başlar: `(Create) Add expense form`, `(Fix) Prevent empty tasks`, `(Docs) …`. Testsiz hata düzeltmesi kayda **giremez**. |
+| 🏷️ **Düzenli kayıtlar** | Her kayıt İngilizce ve standart [Conventional Commits](https://www.conventionalcommits.org) biçiminde: `feat: add expense form`, `fix: prevent empty tasks`, `docs: …`. Testsiz hata düzeltmesi kayda **giremez**. |
 | 🔤 **Bozuk karakter koruması** | Türkçe harfleri bozulmuş (yanlış kodlanmış) dosyalar ve kayıt mesajları kayda **giremez**. |
 | 🔒 **Gizli bilgi koruması** | `.env`, anahtar, sertifika ve servis hesabı dosyaları kayda **giremez**. Koda gömülü GitHub/AWS/Google/yapay zekâ anahtarları ve özel anahtarlar da yakalanır. |
 | 🇹🇷 **Sade Türkçe** | Yapay zekâ seninle teknik terim kullanmadan, kısa ve net konuşur. |
