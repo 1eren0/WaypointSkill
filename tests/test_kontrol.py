@@ -24,6 +24,44 @@ class GizliDosyaTestleri(unittest.TestCase):
         self.assertEqual(len(errors), 2)
 
 
+class BozukMetinTestleri(unittest.TestCase):
+    def test_temiz_turkce_ve_emoji_gecer(self):
+        self.assertEqual(kontrol.bozuk_metin("x.py", "Türkçe metin ✅ 🧭"), ([], []))
+
+    def test_cp1252_mojibake_satiri_bildirilir(self):
+        bad = "çalışıyor".encode("utf-8").decode("cp1252", errors="ignore")
+        errors, _ = kontrol.bozuk_metin("x.py", "temiz\n" + bad)
+        self.assertEqual(len(errors), 1)
+        self.assertIn("2. satır", errors[0])
+
+    def test_cp1254_mojibake_engellenir(self):
+        bad = "ğüşi".encode("utf-8").decode("cp1254", errors="ignore")
+        self.assertEqual(len(kontrol.bozuk_metin("x.py", bad)[0]), 1)
+
+    def test_yerine_koyma_isareti_engellenir(self):
+        self.assertEqual(len(kontrol.bozuk_metin("x.py", "a\ufffdb")[0]), 1)
+
+
+class BozukDosyaTestleri(unittest.TestCase):
+    def test_gecersiz_utf8_bayt_engellenir(self):
+        self.assertIn("UTF-8 değil", kontrol.bozuk_dosya("x.py", b"\xff")[0][0])
+
+    def test_bom_ve_temiz_utf8_gecer(self):
+        data = b"\xef\xbb\xbf" + "Türkçe".encode("utf-8")
+        self.assertEqual(kontrol.bozuk_dosya("x.py", data), ([], []))
+
+    def test_png_ve_nul_icerik_atlanir(self):
+        self.assertEqual(kontrol.bozuk_dosya("x.png", b"junk\xff"), ([], []))
+        self.assertEqual(kontrol.bozuk_dosya("x.txt", b"junk\x00\xff"), ([], []))
+
+    def test_hooks_altindaki_dosya_atlanir(self):
+        self.assertEqual(kontrol.bozuk_dosya(".waypoint/hooks/x.py", b"\xff"), ([], []))
+
+    def test_hook_kaynagi_taramadan_gecer(self):
+        source = MODULE_PATH.read_bytes()
+        self.assertEqual(kontrol.bozuk_dosya("kontrol_kopya.py", source), ([], []))
+
+
 class HaritaTestleri(unittest.TestCase):
     def test_bos_kit_sablonu_gecer(self):
         text = (WAYPOINT / "HARITA.md").read_text(encoding="utf-8")

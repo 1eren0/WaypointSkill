@@ -34,6 +34,7 @@ Waypoint bunların her birine bir kural ve bir kontrol koyar. Kurallar rica değ
 | 🗺️ **Proje haritası** | Önemli fonksiyonlar ve bağlantıları, Obsidian'da resim olarak görünen bir şemayla. Haritada olmayan yeni fonksiyon kayda **giremez**. |
 | 📝 **Dersler** | Yapay zekânın hatalarından çıkan kurallar. Düzeltme kayıtlarında ders yazmayı hatırlatır. |
 | 🏷️ **Türlü kayıtlar** | Her kayıt `Özellik:`, `Düzeltme:`, `Düzenleme:`, `Kurulum:` ya da `Belge:` ile başlar. Testsiz hata düzeltmesi kayda **giremez**. |
+| 🔤 **Bozuk karakter koruması** | Türkçe harfleri bozulmuş (yanlış kodlanmış) dosyalar ve kayıt mesajları kayda **giremez**. |
 | 🔒 **Gizli dosya koruması** | `.env`, anahtar ve şifre dosyaları kayda **giremez**. |
 | 🇹🇷 **Sade Türkçe** | Yapay zekâ seninle teknik terim kullanmadan, kısa ve net konuşur. |
 

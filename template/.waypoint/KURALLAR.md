@@ -7,6 +7,7 @@ I get distracted easily and lose track of where I am. These rules exist to preve
 
 - **Always talk to me in Turkish.** Plain, non-technical language. If a technical term is unavoidable, explain it in one sentence in parentheses.
 - User-facing files (`ILERLEME.md`, `DERSLER.md`) and commit messages are written in **Turkish**. `HARITA.md` may be in English.
+- **Always write files as UTF-8 (no BOM)** so Turkish letters stay intact. Prefer your own file-editing tool. On Windows never write files with PowerShell `>`, `Set-Content` or `Out-File` unless you pass `-Encoding utf8` (PowerShell 7: `utf8NoBOM`). If you see broken letters (odd two-character combinations where ü, ş, ı, ğ, ç, ö should be), fix them immediately; the commit check blocks them anyway.
 - Don't show me code or explain it line by line. Tell me **what changed** and **what it gives me**.
 - Be brief. At most one question per message, always with your recommendation.
 - If I don't answer a question of yours and we move on, don't drop it: add it to "Sonra yapılacaklar" in `ILERLEME.md` as `- ❓ <question> (cevap bekleniyor)`. Remove the line once I answer.

@@ -9,6 +9,58 @@ from datetime import date
 from pathlib import Path
 
 
+_MOJIBAKE_SOURCE = "\u00e7\u011f\u0131\u00f6\u015f\u00fc\u00c7\u011e\u0130\u00d6\u015e\u00dc\u00e2\u00ee\u00fb\u00c2\u00ce\u00db\u2019\u2018\u201c\u201d\u2013\u2014\u2026\u20ac"
+_EMOJI_PREFIX = "\U0001f600".encode("utf-8").decode("cp1252", errors="ignore")[:2]
+_MOJIBAKE = tuple(
+    dict.fromkeys(
+        corrupted
+        for char in _MOJIBAKE_SOURCE + _EMOJI_PREFIX
+        for encoding in ("cp1252", "cp1254", "latin-1")
+        if len(corrupted := char.encode("utf-8").decode(encoding, errors="ignore")) >= 2
+        and corrupted != char
+    )
+)
+_BAD_REPLACEMENT = "\ufffd"
+_BINARY_EXTENSIONS = {
+    ".png", ".jpg", ".jpeg", ".gif", ".ico", ".webp", ".bmp", ".pdf", ".zip", ".gz",
+    ".tar", ".7z", ".db", ".sqlite", ".sqlite3", ".woff", ".woff2", ".ttf", ".otf",
+    ".eot", ".exe", ".dll", ".so", ".pyc", ".mp3", ".mp4", ".wav", ".mov",
+}
+
+
+def _bad_at(line: str) -> tuple[int, str] | None:
+    candidates = [(line.find(_BAD_REPLACEMENT), _BAD_REPLACEMENT)] if _BAD_REPLACEMENT in line else []
+    candidates.extend((line.find(pattern), pattern) for pattern in _MOJIBAKE if pattern in line)
+    return min(candidates, key=lambda item: item[0]) if candidates else None
+
+
+def bozuk_metin(name: str, text: str) -> tuple[list[str], list[str]]:
+    for line_no, line in enumerate(text.splitlines(), start=1):
+        found = _bad_at(line)
+        if found is None:
+            continue
+        position, bad = found
+        start, end = max(0, position - 12), min(len(line), position + len(bad) + 12)
+        snippet = line[start:position] + repr(line[position:position + len(bad)]) + line[position + len(bad):end]
+        return [f"{name}: {line_no}. satırda bozuk karakter var ({snippet}). Dosyayı UTF-8 olarak yeniden yazın; Türkçe harfleri düzeltin."], []
+    return [], []
+
+
+def bozuk_dosya(name: str, data: bytes) -> tuple[list[str], list[str]]:
+    normalized = name.replace("\\", "/")
+    if ".waypoint/hooks/" in f"/{normalized}/":
+        return [], []
+    if Path(name).suffix.lower() in _BINARY_EXTENSIONS or b"\x00" in data[:8000]:
+        return [], []
+    if data.startswith(b"\xef\xbb\xbf"):
+        data = data[3:]
+    try:
+        decoded = data.decode("utf-8")
+    except UnicodeDecodeError:
+        return [f"{name}: dosya UTF-8 değil (bozuk bayt). Dosyayı UTF-8 olarak kaydedin."], []
+    return bozuk_metin(name, decoded)
+
+
 def gizli_dosyalar(staged_names: list[str]) -> tuple[list[str], list[str]]:
     """Commit'e eklenen gizli anahtar ve ortam dosyalarını bulur."""
     hatalar: list[str] = []
@@ -209,6 +261,14 @@ def _git_output(root: Path, *args: str) -> list[str]:
     return result.stdout.splitlines()
 
 
+def _git_bytes(root: Path, *args: str) -> bytes:
+    result = subprocess.run(
+        ["git", "-c", "core.quotepath=false", *args],
+        cwd=root, check=True, capture_output=True,
+    )
+    return result.stdout
+
+
 def main() -> int:
     # Windows konsolu emoji ve Türkçe karakterleri bozmasın
     for stream in (sys.stdout, sys.stderr):
@@ -230,6 +290,8 @@ def main() -> int:
         except OSError:
             progress_text = ""
         errors, warnings = kayit_turu(message, staged_names, test_komutu(progress_text))
+        text_errors, _ = bozuk_metin("Kayıt mesajı", message)
+        errors.extend(text_errors)
         _, lesson_warnings = ders_hatirlatma(message)
         warnings.extend(lesson_warnings)
         for error in errors:
@@ -244,6 +306,13 @@ def main() -> int:
         return 1
 
     hatalar, uyarilar = gizli_dosyalar(staged)
+    for name in staged:
+        try:
+            data = _git_bytes(root, "show", f":{name}")
+        except (subprocess.CalledProcessError, OSError):
+            continue
+        errors, _ = bozuk_dosya(name, data)
+        hatalar.extend(errors)
     today = date.today().isoformat()
     for path, check in ((".waypoint/HARITA.md", harita), (".waypoint/DERSLER.md", dersler), (".waypoint/ILERLEME.md", ilerleme)):
         file_path = root / path
