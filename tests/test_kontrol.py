@@ -286,5 +286,14 @@ class YorumSatiriTestleri(unittest.TestCase):
         self.assertEqual(len(uyarilar), 1)
 
 
+class TestDosyasiSifreTestleri(unittest.TestCase):
+    def test_test_dosyasinda_sahte_sifre_serbest(self):
+        self.assertEqual(kontrol.gizli_icerik("tests/test_login.py", 'password = "deneme123"\n')[0], [])
+
+    def test_test_dosyasinda_gercek_anahtar_yakalanir(self):
+        key = "gh" + "p_" + "a" * 36
+        self.assertEqual(len(kontrol.gizli_icerik("tests/test_api.py", f'TOKEN = "{key}"\n')[0]), 1)
+
+
 if __name__ == "__main__":
     unittest.main()

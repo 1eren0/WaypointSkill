@@ -66,16 +66,51 @@ def gizli_dosyalar(staged_names: list[str]) -> tuple[list[str], list[str]]:
     hatalar: list[str] = []
     for name in staged_names:
         basename = name.replace("\\", "/").rsplit("/", 1)[-1]
-        blocked = (
+        lower = basename.lower()
+        sample = lower.endswith((".example", ".sample", ".template"))
+        blocked = not sample and (
             (basename.startswith(".env") and basename != ".env.example")
             or basename.endswith((".pem", ".key"))
-            or basename.startswith("id_rsa")
+            or lower.startswith(("id_rsa", "id_ed25519", "id_ecdsa", "id_dsa"))
+            or lower in {"credentials.json", "secrets.json", "secrets.yml", "secrets.yaml", ".npmrc", ".pypirc", ".netrc", ".htpasswd"}
+            or lower.endswith((".p12", ".pfx", ".jks", ".keystore", ".ppk", ".asc", ".ovpn"))
+            or bool(re.fullmatch(r"client_secret.*\.json", lower))
+            or bool(re.fullmatch(r"service-account.*\.json", lower))
+            or bool(re.fullmatch(r"serviceaccount.*\.json", lower))
+            or lower.endswith("-service-account.json")
         )
         if blocked:
             hatalar.append(
                 f"{name}: gizli dosyayı commit'ten çıkarın ve .gitignore dosyasına ekleyin."
             )
     return hatalar, []
+
+
+_SECRET_PATTERNS = (
+    (re.compile(r"-----BEGIN (?:RSA |EC |DSA |OPENSSH |PGP |ENCRYPTED )?PRIVATE KEY"), "\u00f6zel anahtar"),
+    (re.compile(r"AKIA[0-9A-Z]{16}"), "AWS anahtar\u0131"),
+    (re.compile(r"gh[pousr]_[A-Za-z0-9]{36,}|github_pat_[A-Za-z0-9_]{60,}"), "GitHub anahtar\u0131"),
+    (re.compile(r"sk-(?:ant-)?[A-Za-z0-9_-]{32,}"), "yapay zek\u00e2 API anahtar\u0131"),
+    (re.compile(r"xox[baprs]-[A-Za-z0-9-]{10,}"), "Slack anahtar\u0131"),
+    (re.compile(r"AIza[0-9A-Za-z_-]{35}"), "Google API anahtar\u0131"),
+)
+_ASSIGNMENT_SECRET = re.compile(r"(?i)(password|passwd|secret|api_key|apikey|token)\s*[:=]\s*([\"'][^\"'\s]{8,}[\"'])")
+
+
+def gizli_icerik(name: str, text: str) -> tuple[list[str], list[str]]:
+    normalized = name.replace("\\", "/")
+    basename = normalized.rsplit("/", 1)[-1].lower()
+    if "/.waypoint/hooks/" in f"/{normalized}/" or basename.endswith((".example", ".sample", ".template", ".md")):
+        return [], []
+    placeholders = ("xxx", "<", "your", "example", "changeme", "***", "${", "process.env", "os.environ")
+    for line_no, line in enumerate(text.splitlines(), 1):
+        for pattern, kind in _SECRET_PATTERNS:
+            if pattern.search(line):
+                return [f"{name}: {line_no}. sat\u0131rda gizli anahtar/\u015fifre olabilir ({kind}). Bu de\u011feri dosyadan \u00e7\u0131kar\u0131n, .env gibi kayda girmeyen bir dosyaya ta\u015f\u0131y\u0131n."], []
+        match = None if _is_test_file(normalized) else _ASSIGNMENT_SECRET.search(line)  # testlerde sahte şifreler olağan
+        if match and not any(value in match.group(2).lower() for value in placeholders):
+            return [f"{name}: {line_no}. sat\u0131rda gizli anahtar/\u015fifre olabilir (\u015fifre/anahtar atamas\u0131). Bu de\u011feri dosyadan \u00e7\u0131kar\u0131n, .env gibi kayda girmeyen bir dosyaya ta\u015f\u0131y\u0131n."], []
+    return [], []
 
 
 def _section(text: str, heading: str) -> str:
@@ -253,6 +288,13 @@ _FUNCTION_PATTERNS = (
     re.compile(r"^\+\s*(?:export\s+)?(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=\s*(?:async\s+)?(?:function\b|\([^)]*\)\s*=>|[A-Za-z_$][\w$]*\s*=>)", re.MULTILINE),
     re.compile(r"^\+\s*(?:async\s+)?def\s+([A-Za-z_]\w*)", re.MULTILINE),
     re.compile(r"^\+\s*(?:export\s+)?class\s+([A-Za-z_$][\w$]*)", re.MULTILINE),
+    re.compile(r"^\+\s*func\s+(?:\([^)]*\)\s*)?([A-Za-z_]\w*)\s*\(", re.MULTILINE),
+    re.compile(r"^\+\s*(?:(?:pub(?:\(crate\))?|async)\s+)*fn\s+([A-Za-z_]\w*)\s*\(", re.MULTILINE),
+    re.compile(r"^\+\s*(?:(?:private|public|internal|override|suspend|static)\s+)*(?:fun|func)\s+([A-Za-z_]\w*)\s*\(", re.MULTILINE),
+    re.compile(r"^\+\s*(?:(?:public|private|protected|internal|static|final|abstract|override|virtual|async|synchronized|readonly)\s+)+[\w<>\[\],.?]+\s+(\w+)\s*\(", re.MULTILINE),
+    re.compile(r"^\+\s*(?:(?:public|private|protected|static|async|readonly)\s+)+(\w+)\s*\(", re.MULTILINE),
+    re.compile(r"^\+\s{2,}(?:async\s+)?(\w+)\s*\([^)]*\)\s*\{\s*$", re.MULTILINE),
+    re.compile(r"^\+\s*def\s+(?:self\.)?([A-Za-z_]\w*)\b", re.MULTILINE),
 )
 
 
@@ -266,6 +308,7 @@ def yeni_fonksiyonlar(diff_text: str) -> list[str]:
     added_text = "\n".join(added_lines)
     for pattern in _FUNCTION_PATTERNS:
         names.update(pattern.findall(added_text))
+    names.difference_update({"if", "for", "while", "switch", "catch", "function", "return", "else", "do", "try", "with", "constructor"})
     return sorted(names)
 
 
@@ -349,6 +392,9 @@ def main() -> int:
             continue
         errors, _ = bozuk_dosya(name, data)
         hatalar.extend(errors)
+        if Path(name).suffix.lower() not in _BINARY_EXTENSIONS and b"\x00" not in data[:8000]:
+            secrets, _ = gizli_icerik(name, data.decode("utf-8", errors="ignore"))
+            hatalar.extend(secrets)
     today = date.today().isoformat()
     for path, check in ((".waypoint/HARITA.md", harita), (".waypoint/DERSLER.md", dersler), (".waypoint/ILERLEME.md", ilerleme)):
         file_path = root / path

@@ -31,11 +31,11 @@ Waypoint bunların her birine bir kural ve bir kontrol koyar. Kurallar rica değ
 | 🧱 **Küçük adımlar** | Her değişiklik tek bir iş yapar ve ayrı bir kayıt noktasıdır. Bozulan adım tek başına geri alınır. |
 | 🧪 **Otomatik testler** | Önemli özelliklerin testi yazılır. Testler geçmezse kayıt **alınmaz**. |
 | 📒 **İlerleme defteri** | Hedef, plan, kararlar ve günlük tek dosyada. Kod değiştiği gün günlüğe yazılmadan kayıt **alınmaz**. Defter büyüyünce eski kayıtlar arşive taşınır, hep kısa kalır. |
-| 🗺️ **Proje haritası** | Önemli fonksiyonlar ve bağlantıları, Obsidian'da resim olarak görünen bir şemayla. Haritada olmayan yeni fonksiyon kayda **giremez**. |
+| 🗺️ **Proje haritası** | Önemli fonksiyonlar ve bağlantıları, Obsidian'da resim olarak görünen bir şemayla. Haritada olmayan yeni fonksiyon kayda **giremez** (JavaScript/TypeScript, Python, Go, Rust, Java, C#, Kotlin, Swift, PHP, Ruby gibi yaygın dillerde). |
 | 📝 **Dersler** | Yapay zekânın hatalarından çıkan kurallar. Düzeltme kayıtlarında ders yazmayı hatırlatır. |
 | 🏷️ **Düzenli kayıtlar** | Her kayıt İngilizce ve türüyle başlar: `(Create) Add expense form`, `(Fix) Prevent empty tasks`, `(Docs) …`. Testsiz hata düzeltmesi kayda **giremez**. |
 | 🔤 **Bozuk karakter koruması** | Türkçe harfleri bozulmuş (yanlış kodlanmış) dosyalar ve kayıt mesajları kayda **giremez**. |
-| 🔒 **Gizli dosya koruması** | `.env`, anahtar ve şifre dosyaları kayda **giremez**. |
+| 🔒 **Gizli bilgi koruması** | `.env`, anahtar, sertifika ve servis hesabı dosyaları kayda **giremez**. Koda gömülü GitHub/AWS/Google/yapay zekâ anahtarları ve özel anahtarlar da yakalanır. |
 | 🇹🇷 **Sade Türkçe** | Yapay zekâ seninle teknik terim kullanmadan, kısa ve net konuşur. |
 
 ## Kurulum
@@ -59,7 +59,7 @@ Bitti. Şimdi aynı klasörde yapay zekâ aracını aç ve ne yapmak istediğini
 ### Gerekenler
 
 - **Git**: kayıt noktaları için. [İndir](https://git-scm.com)
-- **Python 3.10+**: kural kontrolleri için. Yoksa kurulum yine çalışır, kontroller atlanır. [İndir](https://www.python.org/downloads/)
+- **Python 3.10+** (zorunlu): kural kontrolleri Python ile çalışır. Python yoksa kontroller atlanmaz, **kayıt engellenir** ve nasıl kurulacağı söylenir. Windows'ta kurarken "Add python.exe to PATH" kutusunu işaretle. [İndir](https://www.python.org/downloads/)
 - **GitHub CLI**: repo gizliyken kurulum için. [İndir](https://cli.github.com)
 
 ### Güncelleme
