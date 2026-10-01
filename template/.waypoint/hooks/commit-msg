@@ -1,5 +1,5 @@
 #!/bin/sh
-# Reminds about recording lessons; this hook never blocks a commit.
+# Checks commit message type and reminds about recording lessons.
 
 cd "$(git rev-parse --show-toplevel 2>/dev/null)" 2>/dev/null || exit 0
 
@@ -13,5 +13,5 @@ elif command -v py >/dev/null 2>&1 && py -3 --version >/dev/null 2>&1; then
 fi
 
 [ -n "$PYTHON" ] || exit 0
-$PYTHON .waypoint/hooks/kontrol.py --mesaj "$1" || true
-exit 0
+$PYTHON .waypoint/hooks/kontrol.py --mesaj "$1"
+exit $?

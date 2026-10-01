@@ -124,6 +124,32 @@ def _is_test_file(name: str) -> bool:
     return _is_code_file(name) and bool(re.search(r"test|spec", name.rsplit("/", 1)[-1], re.IGNORECASE))
 
 
+def kayit_turu(message_text: str, staged_names: list[str], test_komutu_var: bool) -> tuple[list[str], list[str]]:
+    lines = [line for line in message_text.splitlines() if line.strip() and not line.startswith("#")]
+    if not lines:
+        return ["Kayıt mesajı türle başlamalı: 'Kurulum:', 'Özellik:', 'Düzeltme:', 'Düzenleme:' veya 'Belge:'. Örnek: 'Özellik: Giriş butonu eklendi'"], []
+    subject = lines[0]
+    if subject.startswith(("Merge ", 'Revert "', "fixup!", "squash!")):
+        return [], []
+    match = re.match(r"^(Kurulum|\u00d6zellik|D\u00fczeltme|D\u00fczenleme|Belge): \S", subject)
+    if not match:
+        return ["Kayıt mesajı türle başlamalı: 'Kurulum:', 'Özellik:', 'Düzeltme:', 'Düzenleme:' veya 'Belge:'. Örnek: 'Özellik: Giriş butonu eklendi'"], []
+    kind = match.group(1)
+    code_names = [name for name in staged_names if _is_code_file(name)]
+    if kind == "Belge" and code_names:
+        return ["'Belge:' türü yalnız .waypoint/ ve .md dosyaları içindir; türü düzeltin ya da kod değişikliğini ayrı kayda alın."], []
+    if (kind == "Düzeltme" and test_komutu_var and code_names
+            and not any(_is_test_file(name) for name in code_names)
+            and "test yok:" not in message_text.lower()):
+        return ["'Düzeltme:' kaydında bu hatayı yakalayan bir test olmalı. Test ekleyin; test yazılamıyorsa mesaja 'test yok: <sebep>' ekleyin."], []
+    return [], []
+
+
+def test_komutu(ilerleme_text: str) -> bool:
+    section = _section(ilerleme_text, "Testleri çalıştırma")
+    return any(command.strip() not in {"...", "…"} for command in re.findall(r"`([^`]+)`", section))
+
+
 def ilerleme_bugun(ilerleme_text: str, today: str, staged_names: list[str]) -> tuple[list[str], list[str]]:
     if any(_is_code_file(name) for name in staged_names):
         daily = _section(ilerleme_text, "Günlük")
@@ -194,10 +220,23 @@ def main() -> int:
             message = Path(sys.argv[2]).read_text(encoding="utf-8")
         except OSError:
             return 0
-        _, warnings = ders_hatirlatma(message)
+        try:
+            staged_names = _git_output(root, "diff", "--cached", "--name-only", "--diff-filter=ACMR")
+        except (subprocess.CalledProcessError, OSError):
+            staged_names = []
+        progress_path = root / ".waypoint" / "ILERLEME.md"
+        try:
+            progress_text = progress_path.read_text(encoding="utf-8")
+        except OSError:
+            progress_text = ""
+        errors, warnings = kayit_turu(message, staged_names, test_komutu(progress_text))
+        _, lesson_warnings = ders_hatirlatma(message)
+        warnings.extend(lesson_warnings)
+        for error in errors:
+            print(f"❌ {error}")
         for warning in warnings:
             print(f"⚠️ {warning}")
-        return 0
+        return 1 if errors else 0
     try:
         staged = _git_output(root, "diff", "--cached", "--name-only", "--diff-filter=ACMR")
     except (subprocess.CalledProcessError, OSError) as exc:

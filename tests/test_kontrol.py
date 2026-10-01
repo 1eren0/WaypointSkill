@@ -149,6 +149,43 @@ class DersHatirlatmaTestleri(unittest.TestCase):
         self.assertEqual(kontrol.ders_hatirlatma("Giriş butonu eklendi"), ([], []))
 
 
+class KayitTuruTestleri(unittest.TestCase):
+    def test_gecerli_turler(self):
+        for kind in ("Kurulum", "\u00d6zellik", "D\u00fczeltme", "D\u00fczenleme", "Belge"):
+            with self.subTest(kind=kind):
+                self.assertEqual(kontrol.kayit_turu(f"{kind}: \u00d6rnek", [], False), ([], []))
+
+    def test_tur_yoksa_hata(self):
+        self.assertEqual(len(kontrol.kayit_turu("Bir de\u011fi\u015fiklik", [], False)[0]), 1)
+
+    def test_merge_serbest(self):
+        self.assertEqual(kontrol.kayit_turu("Merge branch x", [], False), ([], []))
+
+    def test_yorum_satirlari_atlanir(self):
+        self.assertEqual(kontrol.kayit_turu("# yorum\n\n\u00d6zellik: Eklendi", [], False), ([], []))
+
+    def test_belge_kodla_hata(self):
+        self.assertEqual(len(kontrol.kayit_turu("Belge: A\u00e7\u0131kla", ["app.js"], False)[0]), 1)
+
+    def test_belge_waypoint_serbest(self):
+        self.assertEqual(kontrol.kayit_turu("Belge: A\u00e7\u0131kla", [".waypoint/ILERLEME.md"], False), ([], []))
+
+    def test_duzeltme_test_gerekir(self):
+        self.assertEqual(len(kontrol.kayit_turu("D\u00fczeltme: Hata", ["app.js"], True)[0]), 1)
+
+    def test_duzeltme_test_dosyasi_ile_serbest(self):
+        self.assertEqual(kontrol.kayit_turu("D\u00fczeltme: Hata", ["app.js", "test_app.js"], True), ([], []))
+
+    def test_duzeltme_test_yok_aciklamasi_ile_serbest(self):
+        self.assertEqual(kontrol.kayit_turu("D\u00fczeltme: Hata\n\ntest yok: sadece CSS", ["app.js"], True), ([], []))
+
+    def test_test_komutu_yoksa_serbest(self):
+        self.assertEqual(kontrol.kayit_turu("D\u00fczeltme: Hata", ["app.js"], False), ([], []))
+
+    def test_test_komutu_okunur(self):
+        self.assertTrue(kontrol.test_komutu("## Testleri \u00e7al\u0131\u015ft\u0131rma\n`node --test`"))
+        self.assertFalse(kontrol.test_komutu("## Testleri \u00e7al\u0131\u015ft\u0131rma\n`...`"))
+
 class YorumSatiriTestleri(unittest.TestCase):
     def test_yorumdaki_function_kelimesi_sayilmaz(self):
         diff = "+// this function handles clicks\n+  return value; // helper function x\n"

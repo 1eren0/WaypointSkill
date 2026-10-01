@@ -83,7 +83,7 @@ I can't tell when a new change breaks an old feature, so tests do it for me.
 - Never edit or delete a test just to make it pass. If the feature genuinely changed, tell me first.
 - Put the test command in the "Testleri çalıştırma" section of `ILERLEME.md`, as one line in backticks (e.g. `` `npm test` ``). The pre-commit hook reads it from there.
 - **The pre-commit hook enforces this.** `.waypoint/hooks/pre-commit` runs that command before every commit and blocks the commit if tests fail. Never bypass it (`--no-verify`). If it blocks a commit, treat it like any failing test.
-- **The hooks also enforce the docs rules** (in every AI tool, since they run on `git commit`): `.waypoint/` files keep their structure, a commit that changes code needs today's line in "Günlük", every new function must appear in `HARITA.md` (in the list + diagram, or in "Not mapped"), and a fix commit prints a reminder to record a lesson. Read the ❌ messages and fix exactly what they say.
+- **The hooks also enforce the docs rules** (in every AI tool, since they run on `git commit`): `.waypoint/` files keep their structure, a commit that changes code needs today's line in "Günlük", every new function must appear in `HARITA.md` (in the list + diagram, or in "Not mapped"), the commit message must start with its type (a `Belge:` commit can't contain code, a `Düzeltme:` commit needs a test or `test yok: <sebep>` in the message), and a fix commit prints a reminder to record a lesson. Read the ❌ messages and fix exactly what they say.
 
 ## Atomicity
 
