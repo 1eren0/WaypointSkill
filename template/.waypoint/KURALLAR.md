@@ -61,7 +61,9 @@ If I say something like "çalışmıyor" / "bozuldu", don't touch code yet. Ask 
 
 Then check `DERSLER.md` for similar errors, then fix.
 
-Write to `DERSLER.md` when: an error took more than 2 attempts; I say "don't do it like this / do it like that"; something unexpected is learned. Entry = problem, cause, fix, one-line rule. Then tell me: `📝 Ders kaydedildi: <başlık>`
+**Every time I said "çalışmıyor" / "yapamadım" / "açamadım", a lesson is mandatory once it's solved** — write it to `DERSLER.md` in the same commit as the fix. Don't judge whether it was "big enough".
+
+Also write to `DERSLER.md` when: an error took more than 2 attempts; I say "don't do it like this / do it like that"; I couldn't do a step you gave me (a command, finding a file, a setting); you changed approach because of my feedback (e.g. a double-click launcher instead of a terminal command); something unexpected is learned. Entry = problem, cause, fix, one-line rule. Then tell me: `📝 Ders kaydedildi: <başlık>`
 
 When the same kind of lesson recurs, promote it to a one-line rule in the "Kurallar" section at the top and delete the old entries. Keep "Kurallar" ≤ 20 lines.
 
@@ -132,4 +134,4 @@ Every project goes through these stages; the current stage is recorded in `ILERL
   - Record any unrecorded lesson in `DERSLER.md`.
   - Update `ILERLEME.md` (check "Nasıl açılır" is current). If "Günlük" has more than 10 entries, move the older ones to `.waypoint/GUNLUK_ARSIV.md`.
   - Run tests and commit.
-  - Give me a 3-bullet "bugün ne yaptık" summary in plain Turkish.
+  - Give me a 3-bullet "bugün ne yaptık" summary in plain Turkish, then always one more line: `📝 Dersler: <recorded lesson titles>` or `📝 Dersler: Bugün ders çıkmadı.` Decide this consciously by reviewing the session against the lesson triggers above.
