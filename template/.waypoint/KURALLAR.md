@@ -6,7 +6,7 @@ I get distracted easily and lose track of where I am. These rules exist to preve
 ## Language & communication
 
 - **Always talk to me in Turkish.** Plain, non-technical language. If a technical term is unavoidable, explain it in one sentence in parentheses.
-- User-facing files (`ILERLEME.md`, `DERSLER.md`) and commit messages are written in **Turkish**. `HARITA.md` may be in English.
+- User-facing files (`ILERLEME.md`, `DERSLER.md`) are written in **Turkish**. `HARITA.md` may be in English. **Commit messages are in English** (format below).
 - **Always write files as UTF-8 (no BOM)** so Turkish letters stay intact. Prefer your own file-editing tool. On Windows never write files with PowerShell `>`, `Set-Content` or `Out-File` unless you pass `-Encoding utf8` (PowerShell 7: `utf8NoBOM`). If you see broken letters (odd two-character combinations where ü, ş, ı, ğ, ç, ö should be), fix them immediately; the commit check blocks them anyway.
 - Don't show me code or explain it line by line. Tell me **what changed** and **what it gives me**.
 - Be brief. At most one question per message, always with your recommendation.
@@ -85,7 +85,7 @@ I can't tell when a new change breaks an old feature, so tests do it for me.
 - Never edit or delete a test just to make it pass. If the feature genuinely changed, tell me first.
 - Put the test command in the "Testleri çalıştırma" section of `ILERLEME.md`, as one line in backticks (e.g. `` `npm test` ``). The pre-commit hook reads it from there.
 - **The pre-commit hook enforces this.** `.waypoint/hooks/pre-commit` runs that command before every commit and blocks the commit if tests fail. Never bypass it (`--no-verify`). If it blocks a commit, treat it like any failing test.
-- **The hooks also enforce the docs rules** (in every AI tool, since they run on `git commit`): `.waypoint/` files keep their structure, a commit that changes code needs today's line in "Günlük", every new function must appear in `HARITA.md` (in the list + diagram, or in "Not mapped"), the commit message must start with its type (a `Belge:` commit can't contain code, a `Düzeltme:` commit needs a test or `test yok: <sebep>` in the message), and a fix commit prints a reminder to record a lesson. Read the ❌ messages and fix exactly what they say.
+- **The hooks also enforce the docs rules** (in every AI tool, since they run on `git commit`): `.waypoint/` files keep their structure, a commit that changes code needs today's line in "Günlük", every new function must appear in `HARITA.md` (in the list + diagram, or in "Not mapped"), the commit message must be English and start with its type (a `(Docs)` commit can't contain code, a `(Test)` commit only tests, a `(Fix)` commit needs a test or `(no test: <reason>)` in the message), and a fix commit prints a reminder to record a lesson. Read the ❌ messages and fix exactly what they say.
 
 ## Atomicity
 
@@ -96,12 +96,13 @@ Every change is **small, single-purpose, and reversible**.
 - **If a step looks big** (many files, or can't be described in one sentence), split it first.
 - **Commit after every atomic step without asking — this is my standing permission.**
   - Order: tests pass → update `HARITA.md` / `DERSLER.md` if needed → everything in the same commit.
-  - **Every commit has exactly one type:** `Kurulum` (setup, tools), `Özellik` (new behaviour), `Düzeltme` (bug fix), `Düzenleme` (refactor: tidy code without changing behaviour) or `Belge` (only `.waypoint/` / docs). Never mix a refactor with a feature or fix in the same commit — do the refactor as its own step first.
-  - Commit message: Turkish, short, one line, starting with the type. Example: `Özellik: Giriş butonu eklendi`, `Düzeltme: Boş görev eklenmesi engellendi`
+  - **Every commit has exactly one type:** `(Setup)` setup and tools, `(Create)` a new feature or file, `(Update)` change an existing feature, `(Fix)` bug fix, `(Refactor)` tidy code without changing behaviour, `(Test)` tests only, `(Docs)` only `.waypoint/` / docs. Never mix a refactor with a feature or fix in the same commit — do the refactor as its own step first.
+  - Commit message: English, one line, `(Type) Description` — description starts with a capital letter, imperative, short. Examples: `(Create) Add login button`, `(Fix) Prevent empty tasks`, `(Docs) Update progress log`.
+  - **Always work on the main branch.** No branch per task. Exception: a risky experiment ("let's see if this approach works") goes on a `deney/<short-name>` branch; tell me when you create it. If it works, merge it into main after my OK; if not, delete the branch after my OK. Never leave me on a side branch at the end of a session.
   - If there's no git repo, run `git init` before the first commit and tell me in one sentence: "Kayıt noktası alabilmek için git kurdum." Right after `git init`, run `git config core.hooksPath .waypoint/hooks` to turn on the checks. If `.waypoint/hooks/` is missing, tell me to reinstall Waypoint.
   - Local commits only. Never push, rewrite history, or run irreversible commands like `reset --hard` without asking.
   - Never commit secrets (passwords, API keys, `.env`); add them to `.gitignore`. Also keep `.obsidian/` in `.gitignore` (Obsidian's settings folder).
-- After committing, report in one line: `✅ Kaydedildi: <commit mesajı>`
+- After committing, report in one line with a Turkish gloss: `✅ Kaydedildi: <commit message> — <ne yapıldı, Türkçe>`
 - If something breaks, revert only the offending step (`git revert`) — but tell me which step first and get my OK.
 
 ## Project map
@@ -116,7 +117,7 @@ Every change is **small, single-purpose, and reversible**.
 
 Every project goes through these stages; the current stage is recorded in `ILERLEME.md`.
 
-0. **Existing project (code exists, `.waypoint/` forms still blank):** don't start from scratch and don't change any code yet. Read the project (README, package/config files, entry points), then fill the forms: `ILERLEME.md` (goal as you understand it; "Nasıl açılır" with exact commands you actually tried; the existing stack in "Kararlar" as `mevcut`; stage `Yapılıyor`), `HARITA.md` (the important existing functions + diagram). Run the existing tests: if they pass, put the command in "Testleri çalıştırma"; if some already fail, leave it as `...`, list the failures under "Sonra yapılacaklar" and tell me — don't fix them without asking. Commit as `Belge: Waypoint için mevcut proje çıkarıldı`. Then tell me in 3–5 plain lines "Projeyi şöyle anladım: …" and ask what I want to do first; my answer becomes the plan (stage 2).
+0. **Existing project (code exists, `.waypoint/` forms still blank):** don't start from scratch and don't change any code yet. Read the project (README, package/config files, entry points), then fill the forms: `ILERLEME.md` (goal as you understand it; "Nasıl açılır" with exact commands you actually tried; the existing stack in "Kararlar" as `mevcut`; stage `Yapılıyor`), `HARITA.md` (the important existing functions + diagram). Run the existing tests: if they pass, put the command in "Testleri çalıştırma"; if some already fail, leave it as `...`, list the failures under "Sonra yapılacaklar" and tell me — don't fix them without asking. Commit as `(Docs) Map existing project for Waypoint`. Then tell me in 3–5 plain lines "Projeyi şöyle anladım: …" and ask what I want to do first; my answer becomes the plan (stage 2).
 1. **Idea → Goal:** For a new project ask me: what will it do, who uses it, what must work to call it "done". Before writing anything, tell me back in 2–3 plain sentences: "Seni şöyle anladım: … Doğru mu?" and wait for my yes. Turn my answers into a 2–3 sentence goal in `ILERLEME.md`. Then research the tech choice and present options.
 2. **Plan:** Split the goal into 3–8 **tasks**, each ending with something I can try ("giriş sayfası açılıyor"). Each task = one or more atomic steps. Simplest working version first, polish last. Show me the plan; don't start without approval.
 3. **Build in atomic steps:** One task at a time; say in 1–2 sentences what you'll do (for a new feature, start with "Seni şöyle anladım: …" and wait if anything is unclear). If the task needs something new, research and get approval first. Each step: write code → write/update tests → run all tests → update `HARITA.md` if needed → commit. If how to start the project changes (new command, new setup step), update **"Nasıl açılır"** in `ILERLEME.md` immediately, with exact copy-pasteable commands.

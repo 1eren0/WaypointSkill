@@ -219,38 +219,55 @@ class DersHatirlatmaTestleri(unittest.TestCase):
         self.assertEqual(kontrol.ders_hatirlatma("Giriş butonu eklendi"), ([], []))
 
 
+    def test_fix_turu_uyari_verir(self):
+        self.assertEqual(len(kontrol.ders_hatirlatma("(Fix) Handle crash")[1]), 1)
+
+
 class KayitTuruTestleri(unittest.TestCase):
     def test_gecerli_turler(self):
-        for kind in ("Kurulum", "\u00d6zellik", "D\u00fczeltme", "D\u00fczenleme", "Belge"):
+        for kind in ("Setup", "Create", "Update", "Fix", "Refactor", "Test", "Docs"):
             with self.subTest(kind=kind):
-                self.assertEqual(kontrol.kayit_turu(f"{kind}: \u00d6rnek", [], False), ([], []))
+                self.assertEqual(kontrol.kayit_turu(f"({kind}) Add example", [], False), ([], []))
+
+    def test_kucuk_harfli_aciklama_hata(self):
+        self.assertEqual(len(kontrol.kayit_turu("(Create) add example", [], False)[0]), 1)
 
     def test_tur_yoksa_hata(self):
         self.assertEqual(len(kontrol.kayit_turu("Bir de\u011fi\u015fiklik", [], False)[0]), 1)
 
     def test_merge_serbest(self):
-        self.assertEqual(kontrol.kayit_turu("Merge branch x", [], False), ([], []))
+        self.assertEqual(kontrol.kayit_turu("Merge branch 'deney/x'", [], False), ([], []))
 
     def test_yorum_satirlari_atlanir(self):
-        self.assertEqual(kontrol.kayit_turu("# yorum\n\n\u00d6zellik: Eklendi", [], False), ([], []))
+        self.assertEqual(kontrol.kayit_turu("# yorum\n\n(Create) Added", [], False), ([], []))
+
+    def test_eski_turkce_on_ek_hata(self):
+        self.assertEqual(len(kontrol.kayit_turu("Özellik: X", [], False)[0]), 1)
 
     def test_belge_kodla_hata(self):
-        self.assertEqual(len(kontrol.kayit_turu("Belge: A\u00e7\u0131kla", ["app.js"], False)[0]), 1)
+        self.assertEqual(len(kontrol.kayit_turu("(Docs) Explain", ["app.js"], False)[0]), 1)
 
     def test_belge_waypoint_serbest(self):
-        self.assertEqual(kontrol.kayit_turu("Belge: A\u00e7\u0131kla", [".waypoint/ILERLEME.md"], False), ([], []))
+        self.assertEqual(kontrol.kayit_turu("(Docs) Explain", [".waypoint/ILERLEME.md"], False), ([], []))
+
+    def test_test_turu_yalniz_test_dosyasi(self):
+        self.assertEqual(kontrol.kayit_turu("(Test) Add coverage", ["tests/test_a.py"], False), ([], []))
+        self.assertEqual(len(kontrol.kayit_turu("(Test) Add coverage", ["app.py"], False)[0]), 1)
 
     def test_duzeltme_test_gerekir(self):
-        self.assertEqual(len(kontrol.kayit_turu("D\u00fczeltme: Hata", ["app.js"], True)[0]), 1)
+        self.assertEqual(len(kontrol.kayit_turu("(Fix) Prevent crash", ["app.js"], True)[0]), 1)
 
     def test_duzeltme_test_dosyasi_ile_serbest(self):
-        self.assertEqual(kontrol.kayit_turu("D\u00fczeltme: Hata", ["app.js", "test_app.js"], True), ([], []))
+        self.assertEqual(kontrol.kayit_turu("(Fix) Prevent crash", ["app.js", "test_app.js"], True), ([], []))
 
     def test_duzeltme_test_yok_aciklamasi_ile_serbest(self):
-        self.assertEqual(kontrol.kayit_turu("D\u00fczeltme: Hata\n\ntest yok: sadece CSS", ["app.js"], True), ([], []))
+        self.assertEqual(kontrol.kayit_turu("(Fix) Prevent crash\n\n(no test: CSS only)", ["app.js"], True), ([], []))
 
     def test_test_komutu_yoksa_serbest(self):
-        self.assertEqual(kontrol.kayit_turu("D\u00fczeltme: Hata", ["app.js"], False), ([], []))
+        self.assertEqual(kontrol.kayit_turu("(Fix) Prevent crash", ["app.js"], False), ([], []))
+
+    def test_turkce_harfler_aciklamada_hata(self):
+        self.assertEqual(len(kontrol.kayit_turu("(Create) Add ışık", [], False)[0]), 1)
 
     def test_test_komutu_okunur(self):
         self.assertTrue(kontrol.test_komutu("## Testleri \u00e7al\u0131\u015ft\u0131rma\n`node --test`"))
