@@ -1,9 +1,26 @@
 #!/bin/sh
-# Runs the project's tests before every commit; blocks the commit if they fail.
+# Checks project rules, then runs the project's tests before every commit.
 # The test command is the first `backticked` line under "## Testleri çalıştırma"
 # in docs/ILERLEME.md. If it's missing or still "...", there are no tests yet → allow.
 
 cd "$(git rev-parse --show-toplevel)" || exit 1
+
+PYTHON=""
+if command -v python3 >/dev/null 2>&1 && python3 --version >/dev/null 2>&1; then
+  PYTHON="python3"
+elif command -v python >/dev/null 2>&1 && python --version >/dev/null 2>&1; then
+  PYTHON="python"
+elif command -v py >/dev/null 2>&1 && py -3 --version >/dev/null 2>&1; then
+  PYTHON="py -3"
+fi
+
+if [ -n "$PYTHON" ]; then
+  if ! $PYTHON .githooks/kontrol.py; then
+    exit 1
+  fi
+else
+  echo "⚠️ Python 3 bulunamadı; proje kuralı denetimleri atlandı."
+fi
 
 FILE="docs/ILERLEME.md"
 [ -f "$FILE" ] || exit 0
