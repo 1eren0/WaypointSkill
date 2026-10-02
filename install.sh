@@ -55,6 +55,12 @@ for file in AGENTS.md CLAUDE.md; do
     if [ ! -f "$target/$file" ]; then cp "$source_dir/$file" "$target/$file"
     elif ! grep -Fq "$pointer" "$target/$file"; then printf '\n' >> "$target/$file"; cat "$source_dir/$file" >> "$target/$file"; fi
 done
+# Older versions told the agent to follow the rules "exactly"; swap in the current pointer line.
+legacy='Before doing anything in this project, read `.waypoint/KURALLAR.md` and follow it exactly. It overrides your defaults.'
+if grep -Fq "$legacy" "$target/AGENTS.md"; then
+    current='Before working in this project, read `.waypoint/KURALLAR.md`.'
+    LEGACY="$legacy" CURRENT="$current" awk '{ i = index($0, ENVIRON["LEGACY"]); if (i) $0 = substr($0, 1, i - 1) ENVIRON["CURRENT"] substr($0, i + length(ENVIRON["LEGACY"])); print }' "$target/AGENTS.md" > "$target/AGENTS.md.tmp" && mv "$target/AGENTS.md.tmp" "$target/AGENTS.md"
+fi
 
 if ! git -C "$target" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
     git -C "$target" init >/dev/null || fail 'Git deposu başlatılamadı.'

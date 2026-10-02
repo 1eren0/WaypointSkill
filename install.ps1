@@ -148,6 +148,24 @@ try {
 
             [System.IO.File]::WriteAllText($path, $old + "`r`n`r`n" + $addition, $utf8)
 
+        } elseif ($name -eq 'AGENTS.md') {
+
+            # Older versions told the agent to follow the rules "exactly"; swap in the current pointer line.
+
+            $legacy = 'Before doing anything in this project, read `.waypoint/KURALLAR.md` and follow it exactly. It overrides your defaults.'
+
+            $old = [System.IO.File]::ReadAllText($path)
+
+            if ($old.Contains($legacy)) {
+
+                $current = 'Before working in this project, read `.waypoint/KURALLAR.md`.'
+
+                $utf8 = New-Object System.Text.UTF8Encoding($false)
+
+                [System.IO.File]::WriteAllText($path, $old.Replace($legacy, $current), $utf8)
+
+            }
+
         }
 
     }

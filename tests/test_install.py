@@ -41,7 +41,17 @@ class InstallerTests(unittest.TestCase):
         self.assertIn("project-specific guidance", agents.read_text(encoding="utf-8"))
         self.assertEqual(agents.read_text(encoding="utf-8").count(".waypoint/KURALLAR.md"), 1)
 
-        progress = self.target / ".waypoint/ILERLEME.md"
+        # The old "follow it exactly" pointer is replaced on update; other lines stay.
+        legacy = ("Before doing anything in this project, read `.waypoint/KURALLAR.md` "
+                  "and follow it exactly. It overrides your defaults.")
+        agents.write_text(f"project-specific guidance\n\n# Waypoint\n\n{legacy}\n", encoding="utf-8")
+        self.run_cmd(command)
+        updated = agents.read_text(encoding="utf-8")
+        self.assertNotIn("follow it exactly", updated)
+        self.assertIn("Before working in this project, read `.waypoint/KURALLAR.md`.", updated)
+        self.assertIn("project-specific guidance", updated)
+
+        progress =self.target / ".waypoint/ILERLEME.md"
         progress.write_text("user progress data\n", encoding="utf-8")
         (self.target / ".waypoint/KURALLAR.md").write_text("modified rules\n", encoding="utf-8")
         self.run_cmd(command)
