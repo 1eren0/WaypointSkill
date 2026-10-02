@@ -34,6 +34,7 @@ If `HARITA.md` disagrees with the code, trust the code and fix the map.
 ## Sub-agents (only if your tool supports them)
 
 You orchestrate; sub-agents write the code. You plan, split the work, brief them, review what they return, run the tests and commit. Tiny fixes you can do yourself.
+Before handing off a step, write down what will prove it's done; check that yourself before accepting the result. A sub-agent saying "done" isn't enough.
 
 ## Research
 
