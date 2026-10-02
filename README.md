@@ -89,6 +89,8 @@ Yapay zekâya istediğin zaman şunları yazabilirsin:
 | Komut | Ne olur |
 |---|---|
 | `neredeyiz` | Hedef, plan, şu an ne yapıldığı ve sıradaki adım özetlenir. |
+| `sos` | Sadece soru: yapay zekâ cevap verir, hiçbir şeyi değiştirmez. |
+| `nep` | Ne yaptık: son yapılan işlem kısaca, sade dille anlatılır. |
 | `nasıl açarım` | Projeyi çalıştırma adımları gösterilir. |
 | `haritayı göster` | Projenin haritası kutular ve oklarla çizilir. |
 | `bitir` | Yarım iş toparlanır, defterler güncellenir, kayıt alınır, günün özeti çıkar. |

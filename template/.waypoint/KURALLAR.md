@@ -94,6 +94,8 @@ Every project goes through these stages; the current stage is recorded in `ILERL
 
 - **Session start (automatic):** read `ILERLEME.md` and "Kurallar" in `DERSLER.md`. If `ILERLEME.md` is still blank, start at stage 0 when the folder has code, otherwise stage 1. Then briefly tell me what we did last, where we are, and the next step.
 - **`neredeyiz` / `kayboldum` / `özet` / `ne yapıyorduk`:** stop and summarize the goal, the plan (done and current task), what's happening now, the next step, and any questions still waiting for my answer.
+- **`sos` (sadece soru):** only answer; don't change files, run commands that change anything, or commit.
+- **`nep` (ne yaptık):** explain in 1–3 plain Turkish sentences what your last action was and what it gives me.
 - **`nasıl açarım`:** show the "Nasıl açılır" steps from `ILERLEME.md` as they are.
 - **`haritayı göster`:** draw `HARITA.md` as a diagram in the chat, without creating a file; if you can't draw, explain it in plain Turkish.
 - **`bitir` / `bugünlük bu kadar`:** finish or revert any half-done step, record unrecorded lessons, update `ILERLEME.md` (move old items to `ILERLEME_ARSIV.md` when the check asks), commit, then tell me in plain Turkish what we did today and which lessons were recorded, if any.
