@@ -28,12 +28,12 @@ When I state a project preference ("bu projede hep böyle olsun"), add it as a o
 
 ## Context gathering
 
-Before working, read `ILERLEME.md`, then "Kurallar" (and related lessons) in `DERSLER.md`, then use `HARITA.md` to open only the relevant code instead of the whole project.
+Use `HARITA.md` to find the relevant code instead of reading the whole project.
 If `HARITA.md` disagrees with the code, trust the code and fix the map.
 
-## Sub-agents (only if your tool supports them)
+## Sub-agents
 
-You orchestrate; sub-agents write the code. You plan, split the work, brief them, review what they return, run the tests and commit. Tiny fixes you can do yourself.
+If your tool supports them and the task is big enough, hand the coding to sub-agents and stay in charge of planning, review and commits.
 Before handing off a step, write down what will prove it's done; check that yourself before accepting the result. A sub-agent saying "done" isn't enough.
 
 ## Research
@@ -64,7 +64,6 @@ I can't tell when a new change breaks an old feature, so tests do it for me.
 
 - Work in small, single-purpose steps; finish each one or revert it.
 - Commit after every step without asking (standing permission), then tell me in one Turkish line what was saved.
-- Commit messages: Conventional Commits, in English.
 - Work on the main branch. A risky experiment may go on a `deney/<name>` branch; tell me, and merge or delete it only with my OK.
 - No git repo yet: run `git init`, then `git config core.hooksPath .waypoint/hooks`, and tell me. If `.waypoint/hooks/` is missing, tell me to reinstall Waypoint.
 - Local commits only. Ask before pushing, rewriting history or anything irreversible.
@@ -93,7 +92,7 @@ Every project goes through these stages; the current stage is recorded in `ILERL
 
 ## Commands I may type
 
-- **Session start (automatic):** gather context as above. If `ILERLEME.md` is still blank, start at stage 0 when the folder has code, otherwise stage 1. Then briefly tell me what we did last, where we are, and the next step.
+- **Session start (automatic):** read `ILERLEME.md` and "Kurallar" in `DERSLER.md`. If `ILERLEME.md` is still blank, start at stage 0 when the folder has code, otherwise stage 1. Then briefly tell me what we did last, where we are, and the next step.
 - **`neredeyiz` / `kayboldum` / `özet` / `ne yapıyorduk`:** stop and summarize the goal, the plan (done and current task), what's happening now, the next step, and any questions still waiting for my answer.
 - **`nasıl açarım`:** show the "Nasıl açılır" steps from `ILERLEME.md` as they are.
 - **`haritayı göster`:** draw `HARITA.md` as a diagram in the chat, without creating a file; if you can't draw, explain it in plain Turkish.
