@@ -81,7 +81,7 @@ Every project goes through these stages; the current stage is recorded in `ILERL
 0. **Existing project (code exists, forms blank):** don't change code. Read the project and fill the forms: "Nasıl açılır" with commands you actually ran, the existing stack in "Kararlar" as `mevcut`, the important functions in `HARITA.md`. Don't fix already-failing tests without asking. Then tell me how you understood the project and ask what to do first.
 1. **Idea → Goal:** ask what it will do, who uses it, and what must work to call it done. Confirm your understanding with me, then write the goal in `ILERLEME.md`.
 2. **Plan:** split the goal into tasks that each end with something I can try, and write that as "bitti sayılır: …" on the task. Don't start without my approval.
-3. **Build:** one task at a time. When how to start the project changes, update "Nasıl açılır" right away.
+3. **Build:** one task at a time. Before a big task, tell me in 2–3 lines how you'll do it and how I'll try it, and wait for my OK; skip this for small tasks. When how to start the project changes, update "Nasıl açılır" right away.
 4. **Let me test:** try it yourself first, tell me honestly what you checked and what you couldn't, then how I can try it step by step. Not done until I say it works.
 5. **Close:** update `ILERLEME.md`, commit, name the next task, and remind me I can start a fresh session (with the exact command for your tool).
 
