@@ -99,6 +99,7 @@ Every project goes through these stages; the current stage is recorded in `ILERL
 - **`nep` (ne yaptık):** explain in 1–3 plain Turkish sentences what your last action was and what it gives me.
 - **`snv` (sırada ne var):** tell me only the next step, in one sentence.
 - **`parket <fikir>`:** add the idea to "Sonra yapılacaklar" in `ILERLEME.md` (long ones via `FIKIRLER.md`, see Focus rules), confirm in one line, and continue the current task.
+- **`liste`:** from `ILERLEME.md`, show done tasks, then remaining tasks and "Sonra yapılacaklar", as short lists.
 - **`nasıl açarım`:** show the "Nasıl açılır" steps from `ILERLEME.md` as they are.
 - **`haritayı göster`:** draw `HARITA.md` as a diagram in the chat, without creating a file; if you can't draw, explain it in plain Turkish.
 - **`bitir` / `bugünlük bu kadar`:** finish or revert any half-done step, record unrecorded lessons, update `ILERLEME.md` (move old items to `ILERLEME_ARSIV.md` when the check asks), commit, then tell me in plain Turkish what we did today and which lessons were recorded, if any.

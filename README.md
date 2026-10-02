@@ -93,6 +93,7 @@ Yapay zekâya istediğin zaman şunları yazabilirsin:
 | `nep` | Ne yaptık: son yapılan işlem kısaca, sade dille anlatılır. |
 | `snv` | Sırada ne var: sadece sıradaki adım tek cümleyle söylenir. |
 | `parket <fikir>` | Yeni fikir, mevcut iş bölünmeden "Sonra yapılacaklar"a yazılır. |
+| `liste` | Yapılanlar ve yapılacaklar alt alta gösterilir. |
 | `nasıl açarım` | Projeyi çalıştırma adımları gösterilir. |
 | `haritayı göster` | Projenin haritası kutular ve oklarla çizilir. |
 | `bitir` | Yarım iş toparlanır, defterler güncellenir, kayıt alınır, günün özeti çıkar. |
