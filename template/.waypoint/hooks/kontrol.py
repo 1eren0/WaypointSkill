@@ -227,6 +227,24 @@ def ilerleme(text: str) -> tuple[list[str], list[str]]:
     return hatalar, uyarilar
 
 
+def fikirler(ilerleme_text: str, fikirler_text: str | None) -> tuple[list[str], list[str]]:
+    """'Sonra yapılacaklar' yer tutucuları ile FIKIRLER.md başlıklarını eşleştirir."""
+    parked = _without_html_comments(_section(ilerleme_text, "Sonra yapılacaklar"))
+    refs = {name.strip() for name in re.findall(r"FIKIRLER\.md\s*[›>]\s*(.+?)\s*$", parked, flags=re.MULTILINE)}
+    sections = set() if fikirler_text is None else {
+        line[3:].strip() for line in _without_html_comments(fikirler_text).splitlines() if line.startswith("## ")
+    }
+    hatalar = [
+        f".waypoint/FIKIRLER.md: '{name}' için ayrıntı başlığı yok; '## {name}' başlığını ekleyin veya ILERLEME.md'deki yer tutucuyu düzeltin."
+        for name in sorted(refs - sections)
+    ]
+    hatalar += [
+        f".waypoint/FIKIRLER.md: '## {name}' bölümü 'Sonra yapılacaklar'da yok; fikir yapıldıysa veya vazgeçildiyse bu bölümü silin."
+        for name in sorted(sections - refs)
+    ]
+    return hatalar, []
+
+
 def _is_code_file(name: str) -> bool:
     normalized = name.replace("\\", "/")
     basename = normalized.rsplit("/", 1)[-1]
@@ -407,6 +425,10 @@ def main() -> int:
                 errors, warnings = ilerleme_bugun(file_text, today, staged)
                 hatalar.extend(errors)
                 uyarilar.extend(warnings)
+                ideas_path = root / ".waypoint/FIKIRLER.md"
+                ideas_text = ideas_path.read_text(encoding="utf-8") if ideas_path.is_file() else None
+                errors, _ = fikirler(file_text, ideas_text)
+                hatalar.extend(errors)
     map_path = root / ".waypoint/HARITA.md"
     if map_path.is_file():
         code_paths = [name for name in staged if _is_code_file(name) and not _is_test_file(name)]

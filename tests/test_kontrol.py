@@ -167,6 +167,28 @@ class IlerlemeTestleri(unittest.TestCase):
         self.assertEqual(kontrol.ilerleme(text), ([], []))
 
 
+class FikirlerTestleri(unittest.TestCase):
+    PARKED = "## Sonra yapılacaklar\n- Karanlık mod → ayrıntı: FIKIRLER.md › Karanlık mod\n- kısa fikir\n## Günlük\n"
+
+    def test_bos_kit_ve_dosyasiz_gecer(self):
+        text = (WAYPOINT / "ILERLEME.md").read_text(encoding="utf-8")
+        self.assertEqual(kontrol.fikirler(text, None), ([], []))
+
+    def test_eslesen_baslik_gecer(self):
+        self.assertEqual(kontrol.fikirler(self.PARKED, "# Fikirler\n\n## Karanlık mod\nayrıntı\n"), ([], []))
+
+    def test_baslik_yoksa_hata(self):
+        for ideas in (None, "## Başka fikir\n"):
+            with self.subTest(ideas=ideas):
+                errors, _ = kontrol.fikirler(self.PARKED, ideas)
+                self.assertTrue(any("'Karanlık mod' için ayrıntı başlığı yok" in e for e in errors))
+
+    def test_artik_bolum_hata(self):
+        errors, _ = kontrol.fikirler("## Sonra yapılacaklar\n- ...\n", "## Eski fikir\nayrıntı\n")
+        self.assertEqual(len(errors), 1)
+        self.assertIn("Eski fikir", errors[0])
+
+
 class BugunKontrolTestleri(unittest.TestCase):
     def test_bugunun_satiri_varsa_gecer(self):
         self.assertEqual(kontrol.ilerleme_bugun("## Günlük\n- 2026-10-01: iş\n", "2026-10-01", ["app.js"]), ([], []))
