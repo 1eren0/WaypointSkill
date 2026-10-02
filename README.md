@@ -91,6 +91,8 @@ Yapay zekâya istediğin zaman şunları yazabilirsin:
 | `neredeyiz` | Hedef, plan, şu an ne yapıldığı ve sıradaki adım özetlenir. |
 | `sos` | Sadece soru: yapay zekâ cevap verir, hiçbir şeyi değiştirmez. |
 | `nep` | Ne yaptık: son yapılan işlem kısaca, sade dille anlatılır. |
+| `snv` | Sırada ne var: sadece sıradaki adım tek cümleyle söylenir. |
+| `parket <fikir>` | Yeni fikir, mevcut iş bölünmeden "Sonra yapılacaklar"a yazılır. |
 | `nasıl açarım` | Projeyi çalıştırma adımları gösterilir. |
 | `haritayı göster` | Projenin haritası kutular ve oklarla çizilir. |
 | `bitir` | Yarım iş toparlanır, defterler güncellenir, kayıt alınır, günün özeti çıkar. |
