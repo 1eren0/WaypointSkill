@@ -30,7 +30,7 @@ When I state a project preference ("bu projede hep böyle olsun"), add it as a o
 
 ## Context gathering
 
-Use `HARITA.md` to find the relevant code instead of reading the whole project.
+Use `HARITA.md` to find the relevant code instead of reading the whole project. The map only tells you where to look: before changing a function, always read its code and the places that call it (search the code too, not only the map's "used by").
 If `HARITA.md` disagrees with the code, trust the code and fix the map.
 
 ## Sub-agents
@@ -76,6 +76,7 @@ I can't tell when a new change breaks an old feature, so tests do it for me.
 ## Project map
 
 Before changing a function, check its "used by" lines in `HARITA.md` to see what else it affects. The format is in the comment at the top of that file.
+When the commit check warns that a mapped function changed, re-check its "uses" / "used by" lines against the code and fix them in the same commit.
 
 ## Workflow
 
