@@ -126,13 +126,30 @@ def _without_html_comments(text: str) -> str:
     return re.sub(r"<!--.*?-->", "", text, flags=re.DOTALL)
 
 
+def _harita_girdileri(text: str) -> list[tuple[str, str]]:
+    """'### fonksiyon() — dosya' girdilerini (ad, dosya) olarak döndürür."""
+    section = _without_html_comments(_section(text, "Key functions / components"))
+    return [
+        (name.strip(), path.strip())
+        for name, path in re.findall(r"^###\s+(.+?)\s+—\s+(.+?)\s*$", section, flags=re.MULTILINE)
+    ]
+
+
+def _kimlik(name: str) -> str:
+    """'Kullanici.kaydet()' gibi bir girdi adından koddaki çıplak adı çıkarır: 'kaydet'."""
+    return re.split(r"[.:]+", name.split("(", 1)[0].strip())[-1]
+
+
+def _kelime_var(name: str, text: str) -> bool:
+    return bool(re.search(rf"(?<![\w$]){re.escape(name)}(?![\w$])", text))
+
+
 def harita(text: str) -> tuple[list[str], list[str]]:
     """Karşılaştırır: önemli işlev listesi ve Mermaid şemalarındaki düğümler."""
     hatalar: list[str] = []
-    entries_section = _without_html_comments(_section(text, "Key functions / components"))
-    entries = re.findall(r"^###\s+(.+?)\s+—\s+(.+?)\s*$", entries_section, flags=re.MULTILINE)
-    entry_names = {name.strip() for name, _ in entries}
-    entry_files = {filename.strip() for _, filename in entries}
+    entries = _harita_girdileri(text)
+    entry_names = {name for name, _ in entries}
+    entry_files = {path for _, path in entries}
 
     schema_section = _section(text, "Şema")
     blocks = re.findall(r"```mermaid\s*\n(.*?)```", schema_section, flags=re.DOTALL)
@@ -152,12 +169,31 @@ def harita(text: str) -> tuple[list[str], list[str]]:
             )
 
     for name, _ in entries:
-        name = name.strip()
         if name not in node_names:
             hatalar.append(f".waypoint/HARITA.md: '{name}' listede var, şemada yok; işlevi şemaya ekleyin.")
     for node_name in sorted(node_names):
         if node_name not in entry_names and node_name not in entry_files:
             hatalar.append(f".waypoint/HARITA.md: '{node_name}' şemada var, listede yok; listeye ekleyin veya düğümü kaldırın.")
+    return hatalar, []
+
+
+def harita_gercek(text: str, read_file) -> tuple[list[str], list[str]]:
+    """Haritadaki her 'fonksiyon — dosya' girdisinin o dosyada hâlâ bulunduğunu doğrular."""
+    hatalar: list[str] = []
+    for name, path in _harita_girdileri(text):
+        if name == path:  # genel şemadaki dosya kutusu
+            continue
+        source = read_file(path)
+        if source is None:
+            hatalar.append(
+                f".waypoint/HARITA.md: '{name}' için yazılan '{path}' dosyası yok; yolu proje köküne göre düzeltin "
+                "ya da fonksiyon kaldırıldıysa girdiyi listeden ve şemadan silin."
+            )
+        elif not _kelime_var(_kimlik(name), source):
+            hatalar.append(
+                f".waypoint/HARITA.md: '{name}' artık {path} içinde yok; fonksiyon silindiyse ya da adı veya dosyası "
+                "değiştiyse haritayı (listeyi ve şemayı) düzeltin."
+            )
     return hatalar, []
 
 
@@ -360,14 +396,34 @@ def yeni_fonksiyonlar(diff_text: str) -> list[str]:
     return sorted(names)
 
 
-def harita_kapsami(harita_text: str, names: list[str]) -> tuple[list[str], list[str]]:
-    missing = [
-        name for name in names
-        if not re.search(rf"(?<![\w$]){re.escape(name)}(?![\w$])", harita_text)
-    ]
+def yeni_fonksiyonlar_dosyali(diff_text: str) -> list[tuple[str, str]]:
+    """Diff'te eklenen fonksiyonları (dosya, ad) olarak döndürür."""
+    added: dict[str, list[str]] = {}
+    current = None
+    for line in diff_text.splitlines():
+        if line.startswith("+++ "):
+            target = line[4:].strip()
+            current = target[2:] if target.startswith("b/") else None
+        elif line.startswith("+") and current:
+            added.setdefault(current, []).append(line)
+    return sorted({(path, name) for path, lines in added.items() for name in yeni_fonksiyonlar("\n".join(lines))})
+
+
+def harita_kapsami(harita_text: str, pairs: list[tuple[str, str]]) -> tuple[list[str], list[str]]:
+    """Her yeni fonksiyon kendi dosyasıyla haritada, yardımcı listesinde ya da yardımcı dosyada olmalı."""
+    mapped = {(path, _kimlik(name)) for name, path in _harita_girdileri(harita_text)}
+    helpers = set(re.findall(r"[A-Za-z_$][\w$]*", _without_html_comments(_section(harita_text, "Not mapped ("))))
+    helper_files = {
+        line.strip().lstrip("-* ").strip("`").strip()
+        for line in _without_html_comments(_section(harita_text, "Not mapped files")).splitlines()
+        if line.strip()
+    }
     return [
-        f".waypoint/HARITA.md: yeni fonksiyon '{name}' haritada yok. Önemliyse listeye ve şemaya ekleyin; küçük bir yardımcıysa '## Not mapped (small helpers)' satırına adını yazın."
-        for name in missing
+        f".waypoint/HARITA.md: yeni fonksiyon '{path}::{name}' haritada yok. Önemliyse '### {name}() — {path}' girdisini ve "
+        "şema kutusunu ekleyin; küçük bir yardımcıysa adını '## Not mapped (small helpers)' satırına, dosyanın tamamı "
+        "yardımcıysa yolunu '## Not mapped files' bölümüne yazın."
+        for path, name in pairs
+        if (path, name) not in mapped and name not in helpers and path not in helper_files
     ], []
 
 
@@ -394,6 +450,14 @@ def _git_bytes(root: Path, *args: str) -> bytes:
         cwd=root, check=True, capture_output=True,
     )
     return result.stdout
+
+
+def _oku(root: Path, relative: str) -> str | None:
+    path = root / relative
+    try:
+        return path.read_text(encoding="utf-8", errors="ignore") if path.is_file() else None
+    except OSError:
+        return None
 
 
 OTO_KAYIT = ".waypoint/oto-kayit.log"
@@ -487,13 +551,16 @@ def main() -> int:
                 hatalar.extend(errors)
     map_path = root / ".waypoint/HARITA.md"
     if map_path.is_file():
+        map_text = map_path.read_text(encoding="utf-8")
+        errors, _ = harita_gercek(map_text, lambda path: _oku(root, path))
+        hatalar.extend(errors)
         code_paths = [name for name in staged if _is_code_file(name) and not _is_test_file(name)]
         if code_paths:
             try:
                 diff_text = "\n".join(_git_output(root, "diff", "--cached", "-U0", "--diff-filter=ACMR", "--", *code_paths))
             except (subprocess.CalledProcessError, OSError):
                 diff_text = ""
-            errors, warnings = harita_kapsami(map_path.read_text(encoding="utf-8"), yeni_fonksiyonlar(diff_text))
+            errors, warnings = harita_kapsami(map_text, yeni_fonksiyonlar_dosyali(diff_text))
             hatalar.extend(errors)
             uyarilar.extend(warnings)
     for hata in hatalar:

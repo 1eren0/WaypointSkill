@@ -2,7 +2,8 @@
 Last updated: —
 
 <!-- Important functions only: core parts of a feature, used from multiple places,
-     or talking to the outside (DB, API). Skip small helpers. Format per entry:
+     or talking to the outside (DB, API). Skip small helpers. File paths are relative to the project root;
+     the commit check verifies each function still exists in its file. Format per entry:
 
 ### girisYap() — auth.js
 - does: checks username and password, starts a session
@@ -29,5 +30,8 @@ flowchart LR
 
 ## Not mapped (small helpers)
 <!-- Comma-separated names of small helper functions deliberately left out of the map. -->
+
+## Not mapped files
+<!-- One path per line (relative to the project root) for files that hold only small helpers; no wildcards. -->
 
 ## External dependencies

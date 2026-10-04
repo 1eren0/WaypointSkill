@@ -240,13 +240,54 @@ class YeniFonksiyonTestleri(unittest.TestCase):
         diff = "+++ b/file.js\n-function eski() {}\n+const yeni = x => x\n"
         self.assertEqual(kontrol.yeni_fonksiyonlar(diff), ["yeni"])
 
+    def test_dosyali_yeni_fonksiyonlar(self):
+        diff = "+++ b/auth/login.py\n+def validate(x):\n+++ b/payments/pay.py\n+def validate(y):\n+def ode():\n"
+        self.assertEqual(kontrol.yeni_fonksiyonlar_dosyali(diff),
+                         [("auth/login.py", "validate"), ("payments/pay.py", "ode"), ("payments/pay.py", "validate")])
+
     def test_haritada_not_mapped_satiri_yeterli(self):
-        self.assertEqual(kontrol.harita_kapsami("## Not mapped (small helpers)\nfoo, bar\n", ["foo"]), ([], []))
+        self.assertEqual(kontrol.harita_kapsami("## Not mapped (small helpers)\nfoo, bar\n", [("a.js", "foo")]), ([], []))
+
+    def test_not_mapped_files_yeterli(self):
+        text = "## Not mapped files\n- src/utils.js\n## External dependencies\n"
+        self.assertEqual(kontrol.harita_kapsami(text, [("src/utils.js", "kucuk")]), ([], []))
+        self.assertEqual(len(kontrol.harita_kapsami(text, [("src/app.js", "kucuk")])[0]), 1)
 
     def test_haritada_yoksa_hata(self):
-        errors, _ = kontrol.harita_kapsami("## Not mapped (small helpers)\n", ["foo"])
+        errors, _ = kontrol.harita_kapsami("## Not mapped (small helpers)\n", [("a.js", "foo")])
         self.assertEqual(len(errors), 1)
-        self.assertIn("foo", errors[0])
+        self.assertIn("a.js::foo", errors[0])
+
+    def test_ad_baska_yerde_gecmesi_yetmez(self):
+        text = "## Key functions / components\n### validate() — auth/login.py\n- uses: foo()\n"
+        self.assertEqual(kontrol.harita_kapsami(text, [("auth/login.py", "validate")]), ([], []))
+        self.assertEqual(len(kontrol.harita_kapsami(text, [("payments/pay.py", "validate")])[0]), 1)
+        self.assertEqual(len(kontrol.harita_kapsami(text, [("auth/login.py", "foo")])[0]), 1)
+
+
+class HaritaGercekTestleri(unittest.TestCase):
+    FILES = {"auth.js": "export function girisYap() {}\n", "app.py": "print(1)\n"}
+
+    def check(self, entries):
+        text = "## Key functions / components\n" + entries
+        return kontrol.harita_gercek(text, self.FILES.get)[0]
+
+    def test_var_olan_fonksiyon_ve_dosya_kutusu_gecer(self):
+        self.assertEqual(self.check("### girisYap() — auth.js\n### app.py — app.py\n"), [])
+
+    def test_silinen_fonksiyon_hata(self):
+        errors = self.check("### cikisYap() — auth.js\n")
+        self.assertEqual(len(errors), 1)
+        self.assertIn("artık auth.js içinde yok", errors[0])
+
+    def test_olmayan_dosya_hata(self):
+        errors = self.check("### girisYap() — src/auth.js\n")
+        self.assertEqual(len(errors), 1)
+        self.assertIn("dosyası yok", errors[0])
+
+    def test_sablon_gecer(self):
+        text = (WAYPOINT / "HARITA.md").read_text(encoding="utf-8")
+        self.assertEqual(kontrol.harita_gercek(text, self.FILES.get), ([], []))
 
     def test_gercek_harita_sablonu_gecer(self):
         text = (WAYPOINT / "HARITA.md").read_text(encoding="utf-8")
