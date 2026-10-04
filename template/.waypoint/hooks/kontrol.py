@@ -144,6 +144,12 @@ def _kelime_var(name: str, text: str) -> bool:
     return bool(re.search(rf"(?<![\w$]){re.escape(name)}(?![\w$])", text))
 
 
+# Desteklenen kutu biçimleri: id["etiket"], id[etiket], id("etiket"), id(etiket), id{"etiket"}, id{etiket}
+_MERMAID_NODE = re.compile(
+    r'\b([A-Za-z_]\w*)(?:\["([^"]*)"\]|\[([^\]"]+)\]|\("([^"]*)"\)|\(([^)"]+)\)|\{"([^"]*)"\}|\{([^}"]+)\})'
+)
+
+
 def harita(text: str) -> tuple[list[str], list[str]]:
     """Karşılaştırır: önemli işlev listesi ve Mermaid şemalarındaki düğümler."""
     hatalar: list[str] = []
@@ -157,10 +163,11 @@ def harita(text: str) -> tuple[list[str], list[str]]:
     for block_number, block in enumerate(blocks, start=1):
         ids: dict[str, str] = {}
         for line in block.splitlines():
-            if re.match(r"^\s*subgraph\b", line):
+            if re.match(r"^\s*(?:subgraph|click|style|classDef|class|linkStyle)\b", line):
                 continue
-            for match in re.finditer(r'\b([A-Za-z_][\w]*)\["([^"]*)"\]', line):
-                ids[match.group(1)] = match.group(2).split("<br", 1)[0].strip()
+            for match in _MERMAID_NODE.finditer(line):
+                label = next(group for group in match.groups()[1:] if group is not None)
+                ids[match.group(1)] = label.split("<br", 1)[0].strip()
         node_names.update(ids.values())
         if len(ids) > 15:
             hatalar.append(

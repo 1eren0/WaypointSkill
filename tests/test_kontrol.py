@@ -78,6 +78,30 @@ flowchart LR
 '''
         self.assertEqual(kontrol.harita(text)[0], [])
 
+    def test_yaygin_kutu_bicimleri_taninir(self):
+        text = '''## Şema
+```mermaid
+flowchart LR
+  subgraph auth["Giriş — auth.js"]
+    a["girisYap()<br>kullanıcıyı içeri alır"]
+    b[cikisYap()]
+    c("sifreKontrol()")
+    d(oturumAc)
+    e{"yetkiVar()"}
+  end
+  a --> b
+  a -->|kontrol| c
+  click a call goster()
+```
+## Key functions / components
+### girisYap() — auth.js
+### cikisYap() — auth.js
+### sifreKontrol() — auth.js
+### oturumAc — auth.js
+### yetkiVar() — auth.js
+'''
+        self.assertEqual(kontrol.harita(text)[0], [])
+
     def test_on_alti_dugum_hata(self):
         nodes = "\n".join(f'  n{i}["dosya{i}.py"]' for i in range(16))
         text = f"## Şema\n```mermaid\nflowchart LR\n{nodes}\n```\n## Key functions / components\n"
