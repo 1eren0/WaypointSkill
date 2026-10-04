@@ -245,6 +245,36 @@ def fikirler(ilerleme_text: str, fikirler_text: str | None) -> tuple[list[str], 
     return hatalar, []
 
 
+_WAYPOINT_FILES = {
+    "KURALLAR.md", "ILERLEME.md", "ILERLEME_ARSIV.md", "DERSLER.md", "DERS_ARSIV.md",
+    "HARITA.md", "FIKIRLER.md", ".gitattributes", ".gitignore",
+}
+
+
+def waypoint_duzeni(staged_names: list[str]) -> tuple[list[str], list[str]]:
+    """.waypoint/ içine yalnız Waypoint dosyalarının ve tarihli raporların girmesini sağlar."""
+    hatalar: list[str] = []
+    for name in staged_names:
+        parts = name.replace("\\", "/").split("/")
+        if parts[0] != ".waypoint" or len(parts) < 2 or parts[1] == "hooks":
+            continue
+        if len(parts) == 2 and parts[1] in _WAYPOINT_FILES:
+            continue
+        if parts[1] == "raporlar" and len(parts) >= 3:
+            if re.match(r"^\d{4}-\d{2}-\d{2}-.+", parts[2]) and (len(parts) > 3 or parts[2].endswith(".md")):
+                continue
+            hatalar.append(
+                f"{name}: rapor adı tarihle başlamalı. Tek dosya için .waypoint/raporlar/YYYY-AA-GG-<konu>.md, "
+                "çok dosya için .waypoint/raporlar/YYYY-AA-GG-<konu>/ klasörünü kullanın."
+            )
+            continue
+        hatalar.append(
+            f"{name}: .waypoint/ içinde Waypoint'e ait olmayan dosya. Raporsa .waypoint/raporlar/YYYY-AA-GG-<konu>.md "
+            "(çok dosyaysa YYYY-AA-GG-<konu>/ klasörü) olarak taşıyın; değilse proje klasörüne taşıyın."
+        )
+    return hatalar, []
+
+
 def _is_code_file(name: str) -> bool:
     normalized = name.replace("\\", "/")
     basename = normalized.rsplit("/", 1)[-1]
@@ -403,6 +433,7 @@ def main() -> int:
         return 1
 
     hatalar, uyarilar = gizli_dosyalar(staged)
+    hatalar.extend(waypoint_duzeni(staged)[0])
     for name in staged:
         try:
             data = _git_bytes(root, "show", f":{name}")

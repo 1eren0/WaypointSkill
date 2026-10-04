@@ -189,6 +189,29 @@ class FikirlerTestleri(unittest.TestCase):
         self.assertIn("Eski fikir", errors[0])
 
 
+class WaypointDuzeniTestleri(unittest.TestCase):
+    def test_waypoint_dosyalari_ve_raporlar_gecer(self):
+        names = [
+            ".waypoint/ILERLEME.md", ".waypoint/FIKIRLER.md", ".waypoint/DERS_ARSIV.md", ".waypoint/hooks/kontrol.py",
+            ".waypoint/raporlar/2026-10-04-hiz-olcumu.md",
+            ".waypoint/raporlar/2026-10-06-guvenlik/ozet.md", ".waypoint/raporlar/2026-10-06-guvenlik/ekran.png",
+            "rapor.md", "src/app.js",
+        ]
+        self.assertEqual(kontrol.waypoint_duzeni(names), ([], []))
+
+    def test_koke_rapor_hata(self):
+        errors, _ = kontrol.waypoint_duzeni([".waypoint/rapor.md", ".waypoint/notlar/x.md"])
+        self.assertEqual(len(errors), 2)
+        self.assertIn("raporlar/", errors[0])
+
+    def test_tarihsiz_rapor_hata(self):
+        for name in (".waypoint/raporlar/hiz.md", ".waypoint/raporlar/guvenlik/ozet.md", ".waypoint/raporlar/2026-10-04-hiz.png"):
+            with self.subTest(name=name):
+                errors, _ = kontrol.waypoint_duzeni([name])
+                self.assertEqual(len(errors), 1)
+                self.assertIn("tarihle", errors[0])
+
+
 class BugunKontrolTestleri(unittest.TestCase):
     def test_bugunun_satiri_varsa_gecer(self):
         self.assertEqual(kontrol.ilerleme_bugun("## Günlük\n- 2026-10-01: iş\n", "2026-10-01", ["app.js"]), ([], []))

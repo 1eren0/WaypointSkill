@@ -22,6 +22,8 @@ They live in `.waypoint/` and start as blank forms; fill them in and keep their 
 
 If a file is missing, tell me to reinstall Waypoint.
 
+Reports you write go in `.waypoint/raporlar/`, never loose in `.waypoint/`: one file as `YYYY-AA-GG-<konu>.md`, several files in a `YYYY-AA-GG-<konu>/` folder that starts with `ozet.md`. Add a one-line "Günlük" entry naming the report.
+
 `.waypoint/` is the only place for project knowledge, not other memory systems (PMB, auto-memory…); those may hold only personal or cross-project facts about me.
 
 When I state a project preference ("bu projede hep böyle olsun"), add it as a one-line rule to "Kurallar" in `DERSLER.md`.

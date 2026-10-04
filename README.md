@@ -77,6 +77,7 @@ projen/
     ├── ILERLEME.md    ← hedef, plan, kararlar, günlük
     ├── DERSLER.md     ← hatalardan çıkan kurallar
     ├── HARITA.md      ← önemli fonksiyonlar + şema
+    ├── raporlar/      ← yapay zekânın yazdığı raporlar (tarihli)
     └── hooks/         ← kayıt anında çalışan kontroller
 ```
 
