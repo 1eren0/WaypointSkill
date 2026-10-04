@@ -1,0 +1,19 @@
+#!/bin/sh
+# Pushes every commit to the project's GitHub remote (origin), so work never lives only on this computer.
+# No remote → nothing to do. A failed push never undoes the commit; it is reported and retried on the next commit.
+
+cd "$(git rev-parse --show-toplevel 2>/dev/null)" 2>/dev/null || exit 0
+[ "${WAYPOINT_NO_PUSH:-}" = "1" ] && exit 0
+git remote get-url origin >/dev/null 2>&1 || exit 0
+BRANCH=$(git symbolic-ref --short -q HEAD) || exit 0  # mid-rebase (no branch): skip
+
+STAMP=$(date '+%Y-%m-%d %H:%M')
+if OUT=$(GIT_TERMINAL_PROMPT=0 git push -q origin "$BRANCH" 2>&1); then
+  printf '%s  YUKLE  %s\n' "$STAMP" "$BRANCH" >> .waypoint/oto-kayit.log 2>/dev/null
+  echo "☁️ Kayıt GitHub'a yüklendi ($BRANCH)."
+else
+  printf '%s  YUKLENEMEDI  %s: %s\n' "$STAMP" "$BRANCH" "$(printf '%s\n' "$OUT" | tail -n 1)" >> .waypoint/oto-kayit.log 2>/dev/null
+  echo "⚠️ Kayıt alındı ama GitHub'a yüklenemedi ($BRANCH). İnternet bağlantısını ve GitHub girişini kontrol edin; sonraki kayıtta tekrar denenir."
+  printf '%s\n' "$OUT" | tail -n 5
+fi
+exit 0

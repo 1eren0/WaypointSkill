@@ -66,9 +66,10 @@ I can't tell when a new change breaks an old feature, so tests do it for me.
 
 - Work in small, single-purpose steps; finish each one or revert it.
 - Commit after every step without asking (standing permission), then tell me in one Turkish line what was saved.
-- Work on the main branch. A risky experiment may go on a `deney/<name>` branch; tell me, and merge or delete it only with my OK.
+- Commit often: every working change is its own commit.
+- Work on the main branch. Put a risky experiment on a `deney/<name>` branch, and each of several jobs running at the same time on its own `is/<name>` branch; tell me, and merge or delete such a branch only with my OK.
 - No git repo yet: run `git init`, then `git config core.hooksPath .waypoint/hooks`, and tell me. If `.waypoint/hooks/` is missing, tell me to reinstall Waypoint.
-- Local commits only. Ask before pushing, rewriting history or anything irreversible.
+- If the project has a GitHub remote (`origin`), the post-commit hook pushes every commit to it (standing permission). If it says the push failed, tell me plainly. Still ask before force-pushing, rewriting history, deleting branches or anything irreversible.
 - Keep `.obsidian/` in `.gitignore`.
 - If something breaks, revert only that step, after my OK.
 

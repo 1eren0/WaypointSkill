@@ -89,6 +89,22 @@ class HookPythonRequiredTests(unittest.TestCase):
         self.assertIn("KAYIT  docs: add notes (1 dosya)", log)
         self.assertNotIn("oto-kayit.log", self.run_git("status", "--porcelain").stdout)
 
+    def test_kayit_uzak_depoya_yuklenir(self):
+        remote = self.repo / "uzak.git"
+        subprocess.run(["git", "init", "-q", "--bare", str(remote)], check=True, capture_output=True)
+        self.run_git("remote", "add", "origin", str(remote))
+        self.run_git("reset", "-q")
+        (self.repo / "NOTLAR.md").write_text("not\n", encoding="utf-8")
+        self.run_git("add", "NOTLAR.md")
+        result = self.commit("docs: add notes")
+        self.assertEqual(result.returncode, 0)
+        self.assertIn("GitHub'a yüklendi", result.stdout + result.stderr)
+        branch = self.run_git("symbolic-ref", "--short", "HEAD").stdout.strip()
+        pushed = subprocess.run(["git", "--git-dir", str(remote), "log", "--format=%s", branch],
+                                text=True, encoding="utf-8", capture_output=True, check=True)
+        self.assertEqual(pushed.stdout.strip(), "docs: add notes")
+        self.assertIn(f"YUKLE  {branch}", (self.repo / ".waypoint" / "oto-kayit.log").read_text(encoding="utf-8"))
+
 
 if __name__ == "__main__":
     unittest.main()
