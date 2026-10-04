@@ -4,6 +4,11 @@ What changed in each Waypoint version, written for the AI assistant that install
 Summarize the relevant entries for the user in plain Turkish before asking to update.
 The installed version is in `.waypoint/VERSION`.
 
+## 1.1 — 2026-10-04
+
+- **Test time limit:** the project's tests now stop after 5 minutes and run with `CI=true`, so a test runner left in watch mode (e.g. plain `vitest`) can no longer freeze a commit. A timeout blocks the commit and says to make the test command exit on its own (e.g. `vitest run`).
+- **Staged docs are checked:** the checks now read `ILERLEME.md`, `HARITA.md`, `DERSLER.md` and `FIKIRLER.md` as they will be committed. A log line written but not added to the commit no longer passes; add the file to the commit too.
+
 ## 1.0 — 2026-10-04
 
 First numbered version. Everything below is new compared with an unversioned install.
