@@ -129,6 +129,11 @@ class HookPythonRequiredTests(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("2 saniyede bitmedi", result.stdout + result.stderr)
 
+    def test_testler_kaydedilen_depoyu_gormez(self):
+        # Git, hook'a GIT_INDEX_FILE gibi ayarlar verir; testlere geçerse geçici depolardaki git komutları gerçek depoya gider.
+        result = self.docs_commit_with_test('test -z "$GIT_INDEX_FILE$GIT_DIR$GIT_WORK_TREE$GIT_PREFIX"')
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
     def test_gecen_test_kayda_izin_verir(self):
         self.assertEqual(self.docs_commit_with_test("echo tamam").returncode, 0)
 

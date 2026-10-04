@@ -378,6 +378,15 @@ def test_komutunu_bul(ilerleme_text: str) -> str | None:
 
 TEST_SURESI = 300  # saniye; WAYPOINT_TEST_TIMEOUT ile değişir
 
+# Git, hook'a kaydı alınan deponun yerini bu ayarlarla verir (`git rev-parse --local-env-vars`).
+# Testlere geçerse, testlerin geçici depolarda çalıştırdığı git komutları gerçek depoyu değiştirir.
+_GIT_DEPO_AYARLARI = frozenset({
+    "GIT_ALTERNATE_OBJECT_DIRECTORIES", "GIT_CONFIG", "GIT_CONFIG_PARAMETERS", "GIT_CONFIG_COUNT",
+    "GIT_OBJECT_DIRECTORY", "GIT_DIR", "GIT_WORK_TREE", "GIT_IMPLICIT_WORK_TREE", "GIT_GRAFT_FILE",
+    "GIT_INDEX_FILE", "GIT_NO_REPLACE_OBJECTS", "GIT_REPLACE_REF_BASE", "GIT_PREFIX", "GIT_SHALLOW_FILE",
+    "GIT_COMMON_DIR", "GIT_NAMESPACE",
+})
+
 
 def _sureci_kapat(process: subprocess.Popen) -> None:
     """Test komutunu, başlattığı alt süreçlerle (node, python…) birlikte kapatır."""
@@ -397,7 +406,7 @@ def _sureci_kapat(process: subprocess.Popen) -> None:
 
 def testleri_calistir(root: Path, command: str, timeout: float) -> tuple[list[str], str]:
     """Test komutunu süre sınırıyla çalıştırır; (hatalar, çıktı) döndürür."""
-    env = dict(os.environ)
+    env = {name: value for name, value in os.environ.items() if name not in _GIT_DEPO_AYARLARI}
     env.setdefault("CI", "true")  # izleme modunda açılan test araçları (vitest, jest) bir kez çalışıp kapansın
     group = {"creationflags": subprocess.CREATE_NEW_PROCESS_GROUP} if os.name == "nt" else {"start_new_session": True}
     with tempfile.TemporaryFile() as output:  # boru değil dosya: kapanmayan alt süreç beklemeyi kilitlemesin
