@@ -4,6 +4,15 @@ What changed in each Waypoint version, written for the AI assistant that install
 Summarize the relevant entries for the user in plain Turkish before asking to update.
 The installed version is in `.waypoint/VERSION`.
 
+## 1.2 — 2026-10-04
+
+Fixes from lessons recorded in real Waypoint projects.
+
+- **Tests can't touch the real repository:** git passes the repository's location to hooks (`GIT_INDEX_FILE`, `GIT_DIR`…). These no longer reach the project's tests, so git commands in temporary test repos can't write fake commits into the real one. Projects that worked around this themselves (e.g. an `isolate-git-env` helper) can keep or drop their workaround.
+- **Broken headings block the commit:** `HARITA.md` needs "Şema" and "Key functions / components", `DERSLER.md` needs "Kurallar" and "Kayıtlar". A heading damaged by a wrong encoding (e.g. "?ema") used to make the map check pass without checking anything.
+- **Fast commit tests:** the test command run before each commit should take under a minute. A slower full suite goes on a "Tüm testler" line and runs at the end of each task and in `bitir`.
+- **Double-click launcher:** apps, sites and bots get a `baslat.bat` / `baslat.command` listed first in "Nasıl açılır"; terminal commands become the fallback.
+
 ## 1.1 — 2026-10-04
 
 - **Test time limit:** the project's tests now stop after 5 minutes and run with `CI=true`, so a test runner left in watch mode (e.g. plain `vitest`) can no longer freeze a commit. A timeout blocks the commit and says to make the test command exit on its own (e.g. `vitest run`).
