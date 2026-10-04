@@ -409,6 +409,23 @@ def yeni_fonksiyonlar_dosyali(diff_text: str) -> list[tuple[str, str]]:
     return sorted({(path, name) for path, lines in added.items() for name in yeni_fonksiyonlar("\n".join(lines))})
 
 
+def degisen_harita_fonksiyonlari(harita_text: str, diff_text: str) -> tuple[list[str], list[str]]:
+    """Haritadaki bir fonksiyonun değişen satırlarda ya da hunk başlığında geçtiğini görünce uyarır (yaklaşık)."""
+    changed: dict[str, list[str]] = {}
+    current = None
+    for line in diff_text.splitlines():
+        if line.startswith("+++ "):
+            target = line[4:].strip()
+            current = target[2:] if target.startswith("b/") else None
+        elif current and not line.startswith("--- ") and line.startswith(("+", "-", "@@")):
+            changed.setdefault(current, []).append(line)
+    return [], [
+        f"{path}::{name} değişti. HARITA.md içindeki uses / used by bağlantılarının hâlâ doğru olduğunu kontrol edin."
+        for name, path in _harita_girdileri(harita_text)
+        if path in changed and name != path and _kelime_var(_kimlik(name), "\n".join(changed[path]))
+    ]
+
+
 def harita_kapsami(harita_text: str, pairs: list[tuple[str, str]]) -> tuple[list[str], list[str]]:
     """Her yeni fonksiyon kendi dosyasıyla haritada, yardımcı listesinde ya da yardımcı dosyada olmalı."""
     mapped = {(path, _kimlik(name)) for name, path in _harita_girdileri(harita_text)}
@@ -425,6 +442,16 @@ def harita_kapsami(harita_text: str, pairs: list[tuple[str, str]]) -> tuple[list
         for path, name in pairs
         if (path, name) not in mapped and name not in helpers and path not in helper_files
     ], []
+
+
+def harita_diff_denetimi(harita_text: str, read_diff) -> tuple[list[str], list[str]]:
+    """Kod diff'ine göre yeni fonksiyon kapsamını ve değişen fonksiyon uyarılarını üretir; diff okunamazsa kaydı durdurur."""
+    try:
+        diff_text = read_diff()
+    except (subprocess.CalledProcessError, OSError) as exc:
+        return [f".waypoint/hooks/kontrol.py: kod değişiklikleri okunamadı, harita denetlenemediği için kayıt engellendi; tekrar deneyin. ({exc})"], []
+    errors, _ = harita_kapsami(harita_text, yeni_fonksiyonlar_dosyali(diff_text))
+    return errors, degisen_harita_fonksiyonlari(harita_text, diff_text)[1]
 
 
 def ders_hatirlatma(message_text: str) -> tuple[list[str], list[str]]:
@@ -556,11 +583,10 @@ def main() -> int:
         hatalar.extend(errors)
         code_paths = [name for name in staged if _is_code_file(name) and not _is_test_file(name)]
         if code_paths:
-            try:
-                diff_text = "\n".join(_git_output(root, "diff", "--cached", "-U0", "--diff-filter=ACMR", "--", *code_paths))
-            except (subprocess.CalledProcessError, OSError):
-                diff_text = ""
-            errors, warnings = harita_kapsami(map_text, yeni_fonksiyonlar_dosyali(diff_text))
+            errors, warnings = harita_diff_denetimi(
+                map_text,
+                lambda: "\n".join(_git_output(root, "diff", "--cached", "-U0", "--diff-filter=ACMR", "--", *code_paths)),
+            )
             hatalar.extend(errors)
             uyarilar.extend(warnings)
     for hata in hatalar:

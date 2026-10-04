@@ -265,6 +265,27 @@ class YeniFonksiyonTestleri(unittest.TestCase):
         self.assertEqual(len(kontrol.harita_kapsami(text, [("auth/login.py", "foo")])[0]), 1)
 
 
+class DegisenFonksiyonTestleri(unittest.TestCase):
+    MAP = "## Key functions / components\n### girisYap() — auth.js\n### odemeAl() — pay.js\n### app.js — app.js\n"
+
+    def test_degisen_fonksiyon_uyari_verir(self):
+        diff = "--- a/auth.js\n+++ b/auth.js\n@@ -3 +3 @@ export function girisYap() {\n-  eskiServis()\n+  yeniServis()\n"
+        errors, warnings = kontrol.degisen_harita_fonksiyonlari(self.MAP, diff)
+        self.assertEqual(errors, [])
+        self.assertEqual(warnings, ["auth.js::girisYap() değişti. HARITA.md içindeki uses / used by bağlantılarının hâlâ doğru olduğunu kontrol edin."])
+
+    def test_diff_okunamazsa_kayit_durur(self):
+        def broken():
+            raise OSError("git yok")
+        errors, _ = kontrol.harita_diff_denetimi(self.MAP, broken)
+        self.assertEqual(len(errors), 1)
+        self.assertIn("okunamadı", errors[0])
+
+    def test_ilgisiz_degisiklik_uyari_vermez(self):
+        diff = "--- a/auth.js\n+++ b/auth.js\n@@ -9 +9 @@ function baska() {\n-  a()\n+  b()\n"
+        self.assertEqual(kontrol.degisen_harita_fonksiyonlari(self.MAP, diff), ([], []))
+
+
 class HaritaGercekTestleri(unittest.TestCase):
     FILES = {"auth.js": "export function girisYap() {}\n", "app.py": "print(1)\n"}
 
