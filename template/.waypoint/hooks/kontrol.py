@@ -125,6 +125,16 @@ def _section(text: str, heading: str) -> str:
     return "\n".join(lines[start + 1 : end])
 
 
+def _eksik_basliklar(text: str, file_name: str, required: tuple[str, ...]) -> list[str]:
+    """Zorunlu '## ' başlıklarını arar; başlık bozulursa (ör. 'Şema' → '?ema') denetim boşuna geçmesin."""
+    headings = [line[3:].strip() for line in text.splitlines() if line.startswith("## ")]
+    return [
+        f".waypoint/{file_name}: '{heading}' başlığı eksik; bu başlığı ekleyin (Türkçe harfler bozulduysa dosyayı UTF-8 olarak düzeltin)."
+        for heading in required
+        if not any(found.startswith(heading) for found in headings)
+    ]
+
+
 def _without_html_comments(text: str) -> str:
     return re.sub(r"<!--.*?-->", "", text, flags=re.DOTALL)
 
@@ -155,7 +165,7 @@ _MERMAID_NODE = re.compile(
 
 def harita(text: str) -> tuple[list[str], list[str]]:
     """Karşılaştırır: önemli işlev listesi ve Mermaid şemalarındaki düğümler."""
-    hatalar: list[str] = []
+    hatalar = _eksik_basliklar(text, "HARITA.md", ("Şema", "Key functions / components"))
     entries = _harita_girdileri(text)
     entry_names = {name for name, _ in entries}
     entry_files = {path for _, path in entries}
@@ -209,9 +219,9 @@ def harita_gercek(text: str, read_file) -> tuple[list[str], list[str]]:
 
 def dersler(text: str) -> tuple[list[str], list[str]]:
     """Kurallar bölümündeki etkin kural sayısını sınırlar."""
+    hatalar = _eksik_basliklar(text, "DERSLER.md", ("Kurallar", "Kayıtlar"))
     rules = _section(text, "Kurallar")
     count = sum(1 for line in rules.splitlines() if line.startswith("- ") and line != "- ...")
-    hatalar = []
     if count > 20:
         hatalar.append(f".waypoint/DERSLER.md: Kurallar bölümünde {count} kural var; 20'yi aşan kuralları azaltın veya birleştirin.")
     records = _section(text, "Kayıtlar")
@@ -239,11 +249,7 @@ _REQUIRED_HEADINGS = (
 
 def ilerleme(text: str) -> tuple[list[str], list[str]]:
     """İlerleme belgesindeki zorunlu başlıkları ve bölüm uzunluklarını denetler."""
-    hatalar: list[str] = []
-    headings = [line[3:].strip() for line in text.splitlines() if line.startswith("## ")]
-    for required in _REQUIRED_HEADINGS:
-        if not any(heading.startswith(required) for heading in headings):
-            hatalar.append(f".waypoint/ILERLEME.md: '{required}' başlığı eksik; bu başlığı ekleyin.")
+    hatalar = _eksik_basliklar(text, "ILERLEME.md", _REQUIRED_HEADINGS)
 
     uyarilar = []
     limits = (

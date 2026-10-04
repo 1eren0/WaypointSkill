@@ -71,6 +71,13 @@ class HaritaTestleri(unittest.TestCase):
         text = (WAYPOINT / "HARITA.md").read_text(encoding="utf-8")
         self.assertEqual(kontrol.harita(text)[0], [])
 
+    def test_bozuk_baslik_sessizce_gecmez(self):
+        # Gerçek olay: dosya UTF-8 dışı yazılınca "Şema" → "?ema" oldu, denetim hiçbir şey bulamadan geçti.
+        text = (WAYPOINT / "HARITA.md").read_text(encoding="utf-8").replace("## Şema", "## ?ema")
+        errors, _ = kontrol.harita(text)
+        self.assertEqual(len(errors), 1)
+        self.assertIn("'Şema' başlığı eksik", errors[0])
+
     def test_dosya_kutulu_genel_sema_gecer(self):
         text = '''## Şema
 ```mermaid
@@ -140,6 +147,11 @@ class DerslerTestleri(unittest.TestCase):
         text = (WAYPOINT / "DERSLER.md").read_text(encoding="utf-8")
         self.assertEqual(kontrol.dersler(text)[0], [])
 
+    def test_eksik_baslik_hata(self):
+        errors, _ = kontrol.dersler("## Kurallar\n- kural\n")
+        self.assertEqual(len(errors), 1)
+        self.assertIn("'Kayıtlar' başlığı eksik", errors[0])
+
     def test_yirmi_bir_kural_hata(self):
         text = "## Kurallar\n" + "\n".join(f"- kural {i}" for i in range(21)) + "\n## Kayıtlar\n"
         self.assertEqual(len(kontrol.dersler(text)[0]), 1)
@@ -148,7 +160,7 @@ class DerslerTestleri(unittest.TestCase):
         for count, expected in ((20, "none"), (21, "warning"), (31, "error")):
             with self.subTest(count=count):
                 records = "\n".join(f"### Ders {i}" for i in range(count))
-                errors, warnings = kontrol.dersler("## Kayıtlar\n### YYYY-AA-GG\n" + records)
+                errors, warnings = kontrol.dersler("## Kurallar\n## Kayıtlar\n### YYYY-AA-GG\n" + records)
                 self.assertEqual((len(errors), len(warnings)), {
                     "none": (0, 0), "warning": (0, 1), "error": (1, 0)
                 }[expected])
