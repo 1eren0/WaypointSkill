@@ -1,4 +1,5 @@
 import importlib.util
+import re
 import shutil
 import tempfile
 import time
@@ -225,6 +226,20 @@ class WaypointDuzeniTestleri(unittest.TestCase):
             "rapor.md", "src/app.js",
         ]
         self.assertEqual(kontrol.waypoint_duzeni(names), ([], []))
+
+    def test_komut_tarifleri_gecer(self):
+        names = [f".waypoint/komutlar/{path.name}" for path in (WAYPOINT / "komutlar").glob("*.md")]
+        self.assertTrue(names)
+        self.assertEqual(kontrol.waypoint_duzeni(names), ([], []))
+        self.assertEqual(len(kontrol.waypoint_duzeni([".waypoint/komutlar/alt/x.md"])[0]), 1)
+
+    def test_kurallardaki_komut_dosyalari_var(self):
+        rules = (WAYPOINT / "KURALLAR.md").read_text(encoding="utf-8")
+        referenced = set(re.findall(r"komutlar/([\w-]+\.md)", rules))
+        self.assertTrue(referenced)
+        for name in referenced:
+            with self.subTest(name=name):
+                self.assertTrue((WAYPOINT / "komutlar" / name).is_file())
 
     def test_koke_rapor_hata(self):
         errors, _ = kontrol.waypoint_duzeni([".waypoint/rapor.md", ".waypoint/notlar/x.md"])

@@ -106,6 +106,12 @@ try {
 
             ForEach-Object { Copy-Item -LiteralPath $_.FullName -Destination (Join-Path $hooks $_.Name) -Force }
 
+        $commands = Join-Path $waypoint 'komutlar'
+
+        if (Test-Path -LiteralPath $commands) { Remove-Item -LiteralPath $commands -Recurse -Force }
+
+        Copy-Item -LiteralPath (Join-Path $sourceDir '.waypoint/komutlar') -Destination $commands -Recurse -Force
+
         foreach ($name in @('ILERLEME.md', 'DERSLER.md', 'HARITA.md')) {
 
             $path = Join-Path $waypoint $name

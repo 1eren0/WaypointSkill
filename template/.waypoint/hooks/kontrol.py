@@ -306,6 +306,8 @@ def waypoint_duzeni(staged_names: list[str]) -> tuple[list[str], list[str]]:
             continue
         if len(parts) == 2 and parts[1] in _WAYPOINT_FILES:
             continue
+        if len(parts) == 3 and parts[1] == "komutlar" and parts[2].endswith(".md"):  # Waypoint'in komut tarifleri
+            continue
         if parts[1] == "raporlar" and len(parts) >= 3:
             if re.match(r"^\d{4}-\d{2}-\d{2}-.+", parts[2]) and (len(parts) > 3 or parts[2].endswith(".md")):
                 continue

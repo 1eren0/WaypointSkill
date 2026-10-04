@@ -77,6 +77,7 @@ projen/
 ├── CLAUDE.md          ← Claude Code için tek satırlık yönlendirme
 └── .waypoint/
     ├── KURALLAR.md    ← yapay zekânın uyduğu çalışma kuralları
+    ├── komutlar/      ← uzun komut tarifleri (bitir, güncelleme…), gerektiğinde okunur
     ├── VERSION        ← kurulu Waypoint sürümü
     ├── ILERLEME.md    ← hedef, plan, kararlar, günlük
     ├── DERSLER.md     ← hatalardan çıkan kurallar

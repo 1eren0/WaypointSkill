@@ -8,6 +8,7 @@ The installed version is in `.waypoint/VERSION`.
 
 - **Test time limit:** the project's tests now stop after 5 minutes and run with `CI=true`, so a test runner left in watch mode (e.g. plain `vitest`) can no longer freeze a commit. A timeout blocks the commit and says to make the test command exit on its own (e.g. `vitest run`).
 - **Staged docs are checked:** the checks now read `ILERLEME.md`, `HARITA.md`, `DERSLER.md` and `FIKIRLER.md` as they will be committed. A log line written but not added to the commit no longer passes; add the file to the commit too.
+- **Shorter rules:** `KURALLAR.md` is about a quarter shorter, so the AI follows it more reliably. The long how-tos for `bitir`, updating Waypoint and starting on an existing project moved to `.waypoint/komutlar/`, read only when needed. No rule was removed. The installer refreshes `komutlar/` on every update.
 
 ## 1.0 — 2026-10-04
 
