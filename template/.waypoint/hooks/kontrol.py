@@ -247,7 +247,7 @@ def fikirler(ilerleme_text: str, fikirler_text: str | None) -> tuple[list[str], 
 
 _WAYPOINT_FILES = {
     "KURALLAR.md", "ILERLEME.md", "ILERLEME_ARSIV.md", "DERSLER.md", "DERS_ARSIV.md",
-    "HARITA.md", "FIKIRLER.md", ".gitattributes", ".gitignore",
+    "HARITA.md", "FIKIRLER.md", "WAYPOINT_GUNLUGU.md", ".gitattributes", ".gitignore",
 }
 
 

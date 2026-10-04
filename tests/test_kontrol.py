@@ -192,7 +192,7 @@ class FikirlerTestleri(unittest.TestCase):
 class WaypointDuzeniTestleri(unittest.TestCase):
     def test_waypoint_dosyalari_ve_raporlar_gecer(self):
         names = [
-            ".waypoint/ILERLEME.md", ".waypoint/FIKIRLER.md", ".waypoint/DERS_ARSIV.md", ".waypoint/hooks/kontrol.py",
+            ".waypoint/ILERLEME.md", ".waypoint/FIKIRLER.md", ".waypoint/DERS_ARSIV.md", ".waypoint/WAYPOINT_GUNLUGU.md", ".waypoint/hooks/kontrol.py",
             ".waypoint/raporlar/2026-10-04-hiz-olcumu.md",
             ".waypoint/raporlar/2026-10-06-guvenlik/ozet.md", ".waypoint/raporlar/2026-10-06-guvenlik/ekran.png",
             "rapor.md", "src/app.js",
