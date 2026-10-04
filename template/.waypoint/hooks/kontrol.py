@@ -549,6 +549,14 @@ def _oku(root: Path, relative: str) -> str | None:
         return None
 
 
+def _kayittaki(root: Path, relative: str) -> str | None:
+    """Dosyanın kayda girecek (stage edilmiş) hali; git'te hiç yoksa diskteki hali."""
+    try:
+        return _git_bytes(root, "show", f":{relative}").decode("utf-8", errors="ignore")
+    except (subprocess.CalledProcessError, OSError):
+        return _oku(root, relative)
+
+
 WAYPOINT_REPO = "erenuzman/WaypointSkill"
 
 
@@ -621,7 +629,7 @@ def main() -> int:
             print(f"⬆️ {message}")
         return 0
     if sys.argv[1:] == ["--test"]:
-        command = test_komutunu_bul(_oku(root, ".waypoint/ILERLEME.md") or "")
+        command = test_komutunu_bul(_kayittaki(root, ".waypoint/ILERLEME.md") or "")
         if command is None:
             return 0
         try:
@@ -644,11 +652,7 @@ def main() -> int:
             staged_names = _git_output(root, "diff", "--cached", "--name-only", "--diff-filter=ACMR")
         except (subprocess.CalledProcessError, OSError):
             staged_names = []
-        progress_path = root / ".waypoint" / "ILERLEME.md"
-        try:
-            progress_text = progress_path.read_text(encoding="utf-8")
-        except OSError:
-            progress_text = ""
+        progress_text = _kayittaki(root, ".waypoint/ILERLEME.md") or ""
         errors, warnings = kayit_turu(message, staged_names, test_komutu(progress_text))
         text_errors, _ = bozuk_metin("Kayıt mesajı", message)
         errors.extend(text_errors)
@@ -684,10 +688,10 @@ def main() -> int:
             secrets, _ = gizli_icerik(name, data.decode("utf-8", errors="ignore"))
             hatalar.extend(secrets)
     today = date.today().isoformat()
+    # Belgeler kayda girecek halleriyle denetlenir: diskte düzeltilip 'git add' edilmemiş satır kontrolü geçirmesin.
     for path, check in ((".waypoint/HARITA.md", harita), (".waypoint/DERSLER.md", dersler), (".waypoint/ILERLEME.md", ilerleme)):
-        file_path = root / path
-        if file_path.is_file():
-            file_text = file_path.read_text(encoding="utf-8")
+        file_text = _kayittaki(root, path)
+        if file_text is not None:
             errors, warnings = check(file_text)
             hatalar.extend(errors)
             uyarilar.extend(warnings)
@@ -695,13 +699,10 @@ def main() -> int:
                 errors, warnings = ilerleme_bugun(file_text, today, staged)
                 hatalar.extend(errors)
                 uyarilar.extend(warnings)
-                ideas_path = root / ".waypoint/FIKIRLER.md"
-                ideas_text = ideas_path.read_text(encoding="utf-8") if ideas_path.is_file() else None
-                errors, _ = fikirler(file_text, ideas_text)
+                errors, _ = fikirler(file_text, _kayittaki(root, ".waypoint/FIKIRLER.md"))
                 hatalar.extend(errors)
-    map_path = root / ".waypoint/HARITA.md"
-    if map_path.is_file():
-        map_text = map_path.read_text(encoding="utf-8")
+    map_text = _kayittaki(root, ".waypoint/HARITA.md")
+    if map_text is not None:
         errors, _ = harita_gercek(map_text, lambda path: _oku(root, path))
         hatalar.extend(errors)
         code_paths = [name for name in staged if _is_code_file(name) and not _is_test_file(name)]

@@ -1,4 +1,5 @@
 import os
+from datetime import date
 from pathlib import Path
 import shutil
 import subprocess
@@ -89,6 +90,20 @@ class HookPythonRequiredTests(unittest.TestCase):
         self.assertIn("ENGEL  .waypoint/ILERLEME.md: kod değişti", log)
         self.assertIn("KAYIT  docs: add notes (1 dosya)", log)
         self.assertNotIn("oto-kayit.log", self.run_git("status", "--porcelain").stdout)
+
+    def test_kayda_eklenmemis_gunluk_satiri_sayilmaz(self):
+        self.run_git("reset", "-q")
+        self.run_git("add", ".waypoint")
+        self.assertEqual(self.commit("chore: install waypoint").returncode, 0)
+        progress = self.repo / ".waypoint" / "ILERLEME.md"
+        today = date.today().isoformat()
+        progress.write_text(progress.read_text(encoding="utf-8") + f"- {today}: örnek eklendi\n", encoding="utf-8")
+        self.run_git("add", "sample.txt")
+        result = self.commit("feat: add sample")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Günlük bölümünde bugünün", result.stdout + result.stderr)
+        self.run_git("add", ".waypoint/ILERLEME.md")
+        self.assertEqual(self.commit("feat: add sample").returncode, 0)
 
     def docs_commit_with_test(self, command, timeout="300"):
         progress = self.repo / ".waypoint" / "ILERLEME.md"
