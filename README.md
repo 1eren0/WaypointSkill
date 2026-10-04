@@ -79,6 +79,7 @@ projen/
     ├── HARITA.md      ← önemli fonksiyonlar + şema
     ├── raporlar/      ← yapay zekânın yazdığı raporlar (tarihli)
     ├── WAYPOINT_GUNLUGU.md ← Waypoint işe yarıyor mu? (oturum notları)
+    ├── oto-kayit.log  ← her kayıt ve engel kendiliğinden yazılır (sadece bilgisayarında)
     └── hooks/         ← kayıt anında çalışan kontroller
 ```
 

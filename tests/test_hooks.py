@@ -73,6 +73,22 @@ class HookPythonRequiredTests(unittest.TestCase):
         )
         self.assertNotIn("Python 3 bulunamadı", result.stdout + result.stderr)
 
+    def commit(self, message):
+        return subprocess.run(
+            ["git", "commit", "-m", message], cwd=self.repo, text=True, encoding="utf-8", capture_output=True
+        )
+
+    def test_oto_kayit_engel_ve_kayit_yazar(self):
+        self.assertNotEqual(self.commit("feat: add sample").returncode, 0)  # Günlük satırı yok
+        self.run_git("reset", "-q")
+        (self.repo / "NOTLAR.md").write_text("not\n", encoding="utf-8")
+        self.run_git("add", "NOTLAR.md")
+        self.assertEqual(self.commit("docs: add notes").returncode, 0)
+        log = (self.repo / ".waypoint" / "oto-kayit.log").read_text(encoding="utf-8")
+        self.assertIn("ENGEL  .waypoint/ILERLEME.md: kod değişti", log)
+        self.assertIn("KAYIT  docs: add notes (1 dosya)", log)
+        self.assertNotIn("oto-kayit.log", self.run_git("status", "--porcelain").stdout)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 import subprocess
 import sys
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 
 
@@ -396,6 +396,25 @@ def _git_bytes(root: Path, *args: str) -> bytes:
     return result.stdout
 
 
+OTO_KAYIT = ".waypoint/oto-kayit.log"
+
+
+def oto_kayit(root: Path, durum: str, satirlar: list[str]) -> None:
+    """Kontrol sonuçlarını git'e girmeyen yerel bir dosyaya ekler; Waypoint'in işe yarayıp yaramadığını değerlendirmek için."""
+    path = root / OTO_KAYIT
+    stamp = datetime.now().strftime("%Y-%m-%d %H:%M")
+    try:
+        with path.open("a", encoding="utf-8") as log:
+            for satir in satirlar:
+                first_line = (satir.strip().splitlines() or [""])[0]
+                log.write(f"{stamp}  {durum}  {first_line[:200]}\n")
+        if path.stat().st_size > 200_000:  # en yeni yarısı kalsın
+            lines = path.read_text(encoding="utf-8").splitlines(keepends=True)
+            path.write_text("".join(lines[len(lines) // 2:]), encoding="utf-8")
+    except OSError:
+        pass
+
+
 def main() -> int:
     # Windows konsolu emoji ve Türkçe karakterleri bozmasın
     for stream in (sys.stdout, sys.stderr):
@@ -425,7 +444,13 @@ def main() -> int:
             print(f"❌ {error}")
         for warning in warnings:
             print(f"⚠️ {warning}")
-        return 1 if errors else 0
+        oto_kayit(root, "UYARI", warnings)
+        if errors:
+            oto_kayit(root, "ENGEL", errors)
+            return 1
+        subject = next((line for line in message.splitlines() if line.strip() and not line.startswith("#")), "")
+        oto_kayit(root, "KAYIT", [f"{subject} ({len(staged_names)} dosya)"])
+        return 0
     try:
         staged = _git_output(root, "diff", "--cached", "--name-only", "--diff-filter=ACMR")
     except (subprocess.CalledProcessError, OSError) as exc:
@@ -475,7 +500,9 @@ def main() -> int:
         print(f"❌ {hata}")
     for uyari in uyarilar:
         print(f"⚠️ {uyari}")
+    oto_kayit(root, "UYARI", uyarilar)
     if hatalar:
+        oto_kayit(root, "ENGEL", hatalar)
         return 1
     print("✅ .waypoint/hooks/kontrol.py: Belgeler ve gizli dosya denetimleri geçti.")
     return 0

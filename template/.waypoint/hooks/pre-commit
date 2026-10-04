@@ -39,6 +39,7 @@ OUT=$(sh -c "$CMD" 2>&1)
 STATUS=$?
 if [ $STATUS -ne 0 ]; then
   echo "❌ Testler geçmedi, kayıt engellendi. Komut: $CMD"
+  printf '%s  ENGEL  Testler geçmedi: %s\n' "$(date '+%Y-%m-%d %H:%M')" "$CMD" >> .waypoint/oto-kayit.log 2>/dev/null
   echo "$OUT" | tail -n 30
   exit 1
 fi
