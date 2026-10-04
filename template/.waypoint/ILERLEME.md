@@ -7,10 +7,9 @@
 (Fikir / Plan / Yapılıyor / Deneniyor / Bitti)
 
 ## Nasıl açılır
-(Projeyi başlatmak için sırayla yapılacaklar — komutlar aynen, kopyala-yapıştır yapılabilir)
-1. Terminali proje klasöründe aç
-2. `...`
-3. Tarayıcıda `...` adresini aç
+(Önce çift tıklanan başlatıcı; terminal komutları yalnız yedek yol — aynen, kopyala-yapıştır yapılabilir)
+1. Proje klasöründe `baslat.bat` dosyasına çift tıkla
+2. Yedek yol: terminali proje klasöründe aç, `...` yaz
 
 ## Testleri çalıştırma
 `...`
