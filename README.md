@@ -67,7 +67,35 @@ Bitti. Şimdi aynı klasörde yapay zekâ aracını aç ve ne yapmak istediğini
 
 Yeni sürüm çıkınca kendin takip etmene gerek yok. Waypoint günde bir kez yeni sürüm var mı diye bakar. Varsa yapay zekâ sana yenilikleri anlatır ve "kurayım mı?" diye sorar. Sen onay vermeden hiçbir şey kurulmaz. Kurulu sürüm `.waypoint/VERSION` dosyasında yazar, yenilikler [CHANGELOG.md](CHANGELOG.md) dosyasında.
 
-Elle güncellemek istersen aynı kurulum komutunu tekrar çalıştır. Kurallar ve kontroller güncellenir; senin ilerleme, ders ve harita dosyalarına **dokunulmaz.**
+Beklemeden hemen güncellemek istersen iki yol var. İkisinde de kurallar ve kontroller güncellenir; senin ilerleme, ders ve harita dosyalarına **dokunulmaz.**
+
+**1. Yapay zekâya söyle (en kolayı).** Projede yapay zekâ aracını aç ve şunu yaz:
+
+```
+Waypoint'i güncelle
+```
+
+Yapay zekâ yenilikleri sade Türkçe anlatır, güncellemeyi kurar ve sonucu ayrı bir kayıt olarak alır.
+
+> Waypoint'i 1.3'ten eski bir sürümle kurduysan yapay zekâ bu cümleyi tanımayabilir. O zaman bir kereliğine şunu yapıştır; sonraki güncellemelerde kısa cümle yeter:
+>
+> ```
+> Waypoint'i güncelle: bu klasörde Windows'taysan `gh api repos/erenuzman/WaypointSkill/contents/install.ps1 -H "Accept: application/vnd.github.raw" | Out-String | iex`, macOS/Linux'taysan `gh api repos/erenuzman/WaypointSkill/contents/install.sh -H "Accept: application/vnd.github.raw" | sh` komutunu çalıştır. Sonra değişiklikleri tek başına "chore: update Waypoint" kaydı olarak al ve neyin değiştiğini bana sade Türkçe anlat.
+> ```
+
+**2. Komutu kendin çalıştır.** Projenin klasöründe bir terminal aç ve kurulum komutunu tekrar yapıştır:
+
+**Windows (PowerShell):**
+```powershell
+gh api repos/erenuzman/WaypointSkill/contents/install.ps1 -H "Accept: application/vnd.github.raw" | Out-String | iex
+```
+
+**macOS / Linux:**
+```bash
+gh api repos/erenuzman/WaypointSkill/contents/install.sh -H "Accept: application/vnd.github.raw" | sh
+```
+
+Sonra yapay zekâdan değişiklikleri kaydetmesini iste.
 
 ## Projene ne eklenir?
 
@@ -105,6 +133,7 @@ Yapay zekâya istediğin zaman şunları yazabilirsin:
 | `nasıl açarım` | Projeyi çalıştırma adımları gösterilir. |
 | `haritayı göster` | Projenin haritası kutular ve oklarla çizilir. |
 | `bitir` | Yarım iş toparlanır, defterler güncellenir, kayıt alınır, günün özeti çıkar. |
+| `Waypoint'i güncelle` | Waypoint'in en yeni sürümü kurulur, yenilikler sade dille anlatılır. |
 
 Haritayı kendin görmek istersen proje klasörünü **Obsidian**'da aç ve `.waypoint/HARITA.md` dosyasına bak. Şema resim olarak görünür.
 

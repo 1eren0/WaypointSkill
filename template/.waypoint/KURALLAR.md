@@ -86,4 +86,4 @@ The current stage is recorded in `ILERLEME.md`.
 - **`nasıl açarım`:** show the "Nasıl açılır" steps as they are.
 - **`haritayı göster`:** draw `HARITA.md` as a diagram in the chat, without creating a file; if you can't draw, explain it in plain Turkish.
 - **`bitir` / `bugünlük bu kadar`:** follow `komutlar/bitir.md`.
-- **Commit prints "Waypoint güncellemesi var":** follow `komutlar/guncelleme.md`. Never update without my OK.
+- **`Waypoint'i güncelle`, or a commit prints "Waypoint güncellemesi var":** follow `komutlar/guncelleme.md`. Never update without my OK.

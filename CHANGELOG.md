@@ -4,6 +4,10 @@ What changed in each Waypoint version, written for the AI assistant that install
 Summarize the relevant entries for the user in plain Turkish before asking to update.
 The installed version is in `.waypoint/VERSION`.
 
+## 1.3 — 2026-10-04
+
+- **New command `Waypoint'i güncelle`:** the user can ask for an update at any time. Typing it counts as the user's OK: the AI summarizes what's new, installs, and commits the update alone. The automatic daily notice still asks first.
+
 ## 1.2 — 2026-10-04
 
 Fixes from lessons recorded in real Waypoint projects.
