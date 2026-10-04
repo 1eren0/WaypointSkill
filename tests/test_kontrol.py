@@ -1,5 +1,7 @@
 import importlib.util
+import shutil
 import tempfile
+import time
 import unittest
 from pathlib import Path
 
@@ -280,6 +282,38 @@ class SurumKontroluTestleri(unittest.TestCase):
 
     def test_sablonda_surum_var(self):
         self.assertTrue(kontrol._surum((WAYPOINT / "VERSION").read_text(encoding="utf-8")))
+
+
+class TestKomutuTestleri(unittest.TestCase):
+    def test_komut_bulunur_ve_yer_tutucu_yok_sayilir(self):
+        self.assertEqual(kontrol.test_komutunu_bul("## Testleri çalıştırma\n`npm test`\n## Kararlar\n"), "npm test")
+        self.assertIsNone(kontrol.test_komutunu_bul((WAYPOINT / "ILERLEME.md").read_text(encoding="utf-8")))
+        self.assertIsNone(kontrol.test_komutunu_bul("## Kararlar\n`npm test`\n"))
+
+
+@unittest.skipUnless(shutil.which("sh"), "sh is required")
+class TestCalistirmaTestleri(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.root = Path(self.temp.name)
+
+    def tearDown(self):
+        self.temp.cleanup()
+
+    def test_gecen_ve_kalan_testler(self):
+        self.assertEqual(kontrol.testleri_calistir(self.root, "echo tamam", 30), ([], "tamam\n"))
+        errors, output = kontrol.testleri_calistir(self.root, "echo bozuk; exit 3", 30)
+        self.assertIn("Testler geçmedi", errors[0])
+        self.assertIn("bozuk", output)
+
+    def test_ci_ayari_verilir(self):
+        self.assertEqual(kontrol.testleri_calistir(self.root, 'test "$CI" = true', 30)[0], [])
+
+    def test_kapanmayan_test_sure_dolunca_durdurulur(self):
+        started = time.monotonic()
+        errors, _ = kontrol.testleri_calistir(self.root, "sleep 60", 1)
+        self.assertLess(time.monotonic() - started, 30)
+        self.assertIn("1 saniyede bitmedi", errors[0])
 
 
 class BugunKontrolTestleri(unittest.TestCase):

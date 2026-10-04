@@ -2,6 +2,7 @@
 # Checks project rules, then runs the project's tests before every commit.
 # The test command is the first `backticked` line under "## Testleri çalıştırma"
 # in .waypoint/ILERLEME.md. If it's missing or still "...", there are no tests yet → allow.
+# Tests stop after 5 minutes (WAYPOINT_TEST_TIMEOUT, in seconds, changes this).
 
 cd "$(git rev-parse --show-toplevel)" || exit 1
 
@@ -14,33 +15,12 @@ elif [ "${WAYPOINT_NO_PYTHON:-}" != "1" ] && command -v py >/dev/null 2>&1 && py
   PYTHON="py -3"
 fi
 
-if [ -n "$PYTHON" ]; then
-  if ! $PYTHON .waypoint/hooks/kontrol.py; then
-    exit 1
-  fi
-else
+if [ -z "$PYTHON" ]; then
   printf '%s\n' "❌ Python 3 bulunamadı; Waypoint kuralları denetlenemediği için kayıt engellendi." "   Python 3'ü kurun: https://www.python.org/downloads/ (Windows'ta kurulumda \"Add python.exe to PATH\" kutusunu işaretleyin), sonra tekrar deneyin." >&2
   exit 1
 fi
 
-FILE=".waypoint/ILERLEME.md"
-[ -f "$FILE" ] || exit 0
-
-CMD=$(awk '
-  /^## / { insec = ($0 ~ /^## Testleri/) ; next }
-  insec && match($0, /`[^`]+`/) { print substr($0, RSTART+1, RLENGTH-2); exit }
-' "$FILE")
-
-case "$CMD" in
-  ""|"..."|"…") exit 0 ;;
-esac
-
-OUT=$(sh -c "$CMD" 2>&1)
-STATUS=$?
-if [ $STATUS -ne 0 ]; then
-  echo "❌ Testler geçmedi, kayıt engellendi. Komut: $CMD"
-  printf '%s  ENGEL  Testler geçmedi: %s\n' "$(date '+%Y-%m-%d %H:%M')" "$CMD" >> .waypoint/oto-kayit.log 2>/dev/null
-  echo "$OUT" | tail -n 30
-  exit 1
-fi
+# Rules first, then the tests (with a time limit, so a test runner left in watch mode can't hang the commit).
+$PYTHON .waypoint/hooks/kontrol.py || exit 1
+$PYTHON .waypoint/hooks/kontrol.py --test || exit 1
 exit 0

@@ -2,9 +2,12 @@
 
 from __future__ import annotations
 
+import os
 import re
+import signal
 import subprocess
 import sys
+import tempfile
 from datetime import date, datetime
 from pathlib import Path
 
@@ -364,6 +367,58 @@ def test_komutu(ilerleme_text: str) -> bool:
     return any(command.strip() not in {"...", "…"} for command in re.findall(r"`([^`]+)`", section))
 
 
+def test_komutunu_bul(ilerleme_text: str) -> str | None:
+    """'Testleri çalıştırma' altındaki ilk `komut`; yoksa ya da hâlâ '...' ise None."""
+    match = re.search(r"`([^`\n]+)`", _section(ilerleme_text, "Testleri çalıştırma"))
+    command = match.group(1).strip() if match else ""
+    return None if command in {"", "...", "…"} else command
+
+
+TEST_SURESI = 300  # saniye; WAYPOINT_TEST_TIMEOUT ile değişir
+
+
+def _sureci_kapat(process: subprocess.Popen) -> None:
+    """Test komutunu, başlattığı alt süreçlerle (node, python…) birlikte kapatır."""
+    try:
+        if os.name == "nt":
+            subprocess.run(["taskkill", "/F", "/T", "/PID", str(process.pid)], capture_output=True, timeout=30)
+        else:
+            os.killpg(process.pid, signal.SIGKILL)
+    except (OSError, subprocess.SubprocessError):
+        pass
+    try:
+        process.kill()
+        process.wait(timeout=10)
+    except (OSError, subprocess.SubprocessError):
+        pass
+
+
+def testleri_calistir(root: Path, command: str, timeout: float) -> tuple[list[str], str]:
+    """Test komutunu süre sınırıyla çalıştırır; (hatalar, çıktı) döndürür."""
+    env = dict(os.environ)
+    env.setdefault("CI", "true")  # izleme modunda açılan test araçları (vitest, jest) bir kez çalışıp kapansın
+    group = {"creationflags": subprocess.CREATE_NEW_PROCESS_GROUP} if os.name == "nt" else {"start_new_session": True}
+    with tempfile.TemporaryFile() as output:  # boru değil dosya: kapanmayan alt süreç beklemeyi kilitlemesin
+        process = subprocess.Popen(["sh", "-c", command], cwd=root, env=env, stdout=output, stderr=subprocess.STDOUT, **group)
+        try:
+            process.wait(timeout=timeout)
+            timed_out = False
+        except subprocess.TimeoutExpired:
+            _sureci_kapat(process)
+            timed_out = True
+        output.seek(0)
+        text = output.read().decode("utf-8", errors="replace")
+    if timed_out:
+        minutes = f"{timeout / 60:g} dakikada" if timeout >= 60 else f"{timeout:g} saniyede"
+        return [
+            f"Testler {minutes} bitmedi, kayıt engellendi. Komut: {command}. Test komutu kendiliğinden kapanmıyor olabilir "
+            "(izleme modu); ILERLEME.md'deki komutu bir kez çalışıp kapanacak hale getirin (örn. 'vitest run')."
+        ], text
+    if process.returncode != 0:
+        return [f"Testler geçmedi, kayıt engellendi. Komut: {command}"], text
+    return [], text
+
+
 def ilerleme_bugun(ilerleme_text: str, today: str, staged_names: list[str]) -> tuple[list[str], list[str]]:
     if any(_is_code_file(name) for name in staged_names):
         daily = _section(ilerleme_text, "Günlük")
@@ -565,6 +620,21 @@ def main() -> int:
         if message:
             print(f"⬆️ {message}")
         return 0
+    if sys.argv[1:] == ["--test"]:
+        command = test_komutunu_bul(_oku(root, ".waypoint/ILERLEME.md") or "")
+        if command is None:
+            return 0
+        try:
+            timeout = float(os.environ.get("WAYPOINT_TEST_TIMEOUT") or TEST_SURESI)
+        except ValueError:
+            timeout = TEST_SURESI
+        errors, output = testleri_calistir(root, command, timeout)
+        if not errors:
+            return 0
+        print(f"❌ {errors[0]}")
+        print("\n".join(output.splitlines()[-30:]))
+        oto_kayit(root, "ENGEL", errors)
+        return 1
     if len(sys.argv) == 3 and sys.argv[1] == "--mesaj":
         try:
             message = Path(sys.argv[2]).read_text(encoding="utf-8")

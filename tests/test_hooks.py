@@ -90,6 +90,33 @@ class HookPythonRequiredTests(unittest.TestCase):
         self.assertIn("KAYIT  docs: add notes (1 dosya)", log)
         self.assertNotIn("oto-kayit.log", self.run_git("status", "--porcelain").stdout)
 
+    def docs_commit_with_test(self, command, timeout="300"):
+        progress = self.repo / ".waypoint" / "ILERLEME.md"
+        text = progress.read_text(encoding="utf-8").replace("## Testleri çalıştırma\n`...`", f"## Testleri çalıştırma\n`{command}`")
+        progress.write_text(text, encoding="utf-8")
+        self.run_git("reset", "-q")
+        (self.repo / "NOTLAR.md").write_text("not\n", encoding="utf-8")
+        self.run_git("add", "NOTLAR.md")
+        env = dict(os.environ, WAYPOINT_NO_UPDATE_CHECK="1", WAYPOINT_TEST_TIMEOUT=timeout)
+        return subprocess.run(
+            ["git", "commit", "-m", "docs: add notes"], cwd=self.repo, env=env, text=True, encoding="utf-8", capture_output=True
+        )
+
+    def test_kalan_test_kaydi_engeller(self):
+        result = self.docs_commit_with_test("echo kirik; exit 1")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Testler geçmedi", result.stdout + result.stderr)
+        self.assertIn("kirik", result.stdout + result.stderr)
+        self.assertIn("ENGEL  Testler geçmedi", (self.repo / ".waypoint" / "oto-kayit.log").read_text(encoding="utf-8"))
+
+    def test_kapanmayan_test_kaydi_kilitlemez(self):
+        result = self.docs_commit_with_test("sleep 60", timeout="2")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("2 saniyede bitmedi", result.stdout + result.stderr)
+
+    def test_gecen_test_kayda_izin_verir(self):
+        self.assertEqual(self.docs_commit_with_test("echo tamam").returncode, 0)
+
     def test_kayit_uzak_depoya_yuklenir(self):
         remote = self.repo / "uzak.git"
         subprocess.run(["git", "init", "-q", "--bare", str(remote)], check=True, capture_output=True)
