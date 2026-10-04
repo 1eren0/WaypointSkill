@@ -37,7 +37,7 @@ fi
 
 waypoint="$target/.waypoint"
 if [ -d "$waypoint" ]; then
-    for file in KURALLAR.md .gitattributes .gitignore; do cp "$source_dir/.waypoint/$file" "$waypoint/$file"; done
+    for file in KURALLAR.md VERSION .gitattributes .gitignore; do cp "$source_dir/.waypoint/$file" "$waypoint/$file"; done
     mkdir -p "$waypoint/hooks"
     find "$waypoint/hooks" -mindepth 1 -maxdepth 1 -type f -exec rm -f {} \;
     find "$source_dir/.waypoint/hooks" -type f ! -path '*/__pycache__/*' -exec cp {} "$waypoint/hooks/" \;

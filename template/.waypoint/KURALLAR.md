@@ -95,6 +95,10 @@ Every project goes through these stages; the current stage is recorded in `ILERL
 - Each "Sonra yapılacaklar" item stays one line. If an idea needs more, write the line as `<name> → ayrıntı: FIKIRLER.md › <name>` and put the details under `## <name>` in `.waypoint/FIKIRLER.md` (create it if missing). When the item is done or dropped, remove its section there too.
 - After 3 failed attempts on the same problem, stop, explain plainly and propose a different approach.
 
+## Waypoint updates
+
+`.waypoint/VERSION` is the installed Waypoint version. When a commit prints "Waypoint güncellemesi var", read what changed with `gh api repos/erenuzman/WaypointSkill/contents/CHANGELOG.md -H "Accept: application/vnd.github.raw"`, summarize it for me in plain Turkish, and ask. Never update without my OK. On OK, run the install command from the Waypoint README (Windows: `gh api repos/erenuzman/WaypointSkill/contents/install.ps1 -H "Accept: application/vnd.github.raw" | Out-String | iex`; macOS/Linux: `gh api repos/erenuzman/WaypointSkill/contents/install.sh -H "Accept: application/vnd.github.raw" | sh`), then commit the result alone as `chore: update Waypoint to <version>`. If new checks then block commits, fix what they say before other work.
+
 ## Commands I may type
 
 - **Session start (automatic):** read `ILERLEME.md` and "Kurallar" in `DERSLER.md`. If `ILERLEME.md` is still blank, start at stage 0 when the folder has code, otherwise stage 1. Then briefly tell me what we did last, where we are, and the next step.

@@ -1,4 +1,5 @@
 import importlib.util
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -234,6 +235,51 @@ class WaypointDuzeniTestleri(unittest.TestCase):
                 errors, _ = kontrol.waypoint_duzeni([name])
                 self.assertEqual(len(errors), 1)
                 self.assertIn("tarihle", errors[0])
+
+
+class SurumKontroluTestleri(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.root = Path(self.temp.name)
+        (self.root / ".waypoint").mkdir()
+        (self.root / ".waypoint" / "VERSION").write_text("1.9\n", encoding="utf-8")
+        self.calls = 0
+
+    def tearDown(self):
+        self.temp.cleanup()
+
+    def fetch(self, value):
+        def inner():
+            self.calls += 1
+            if isinstance(value, Exception):
+                raise value
+            return value
+        return inner
+
+    def test_yeni_surum_mesaj_verir(self):
+        message = kontrol.surum_kontrolu(self.root, "2026-10-04", self.fetch("1.10\n"))
+        self.assertIn("1.9 → 1.10", message)
+
+    def test_ayni_ya_da_eski_surum_sessiz(self):
+        for latest in ("1.9", "1.2"):
+            with self.subTest(latest=latest):
+                (self.root / ".waypoint" / ".son-surum").unlink(missing_ok=True)
+                self.assertIsNone(kontrol.surum_kontrolu(self.root, "2026-10-04", self.fetch(latest)))
+
+    def test_gunde_bir_kez_bakar(self):
+        kontrol.surum_kontrolu(self.root, "2026-10-04", self.fetch("2.0"))
+        self.assertIsNotNone(kontrol.surum_kontrolu(self.root, "2026-10-04", self.fetch("2.0")))
+        self.assertEqual(self.calls, 1)
+        kontrol.surum_kontrolu(self.root, "2026-10-05", self.fetch("2.0"))
+        self.assertEqual(self.calls, 2)
+
+    def test_internet_yoksa_sessiz_ve_gun_boyu_denemez(self):
+        self.assertIsNone(kontrol.surum_kontrolu(self.root, "2026-10-04", self.fetch(OSError("gh yok"))))
+        self.assertIsNone(kontrol.surum_kontrolu(self.root, "2026-10-04", self.fetch("2.0")))
+        self.assertEqual(self.calls, 1)
+
+    def test_sablonda_surum_var(self):
+        self.assertTrue(kontrol._surum((WAYPOINT / "VERSION").read_text(encoding="utf-8")))
 
 
 class BugunKontrolTestleri(unittest.TestCase):

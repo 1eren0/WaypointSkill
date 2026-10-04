@@ -74,8 +74,9 @@ class HookPythonRequiredTests(unittest.TestCase):
         self.assertNotIn("Python 3 bulunamadı", result.stdout + result.stderr)
 
     def commit(self, message):
+        env = dict(os.environ, WAYPOINT_NO_UPDATE_CHECK="1")  # testler internete çıkmasın
         return subprocess.run(
-            ["git", "commit", "-m", message], cwd=self.repo, text=True, encoding="utf-8", capture_output=True
+            ["git", "commit", "-m", message], cwd=self.repo, env=env, text=True, encoding="utf-8", capture_output=True
         )
 
     def test_oto_kayit_engel_ve_kayit_yazar(self):

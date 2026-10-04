@@ -290,7 +290,7 @@ def fikirler(ilerleme_text: str, fikirler_text: str | None) -> tuple[list[str], 
 
 _WAYPOINT_FILES = {
     "KURALLAR.md", "ILERLEME.md", "ILERLEME_ARSIV.md", "DERSLER.md", "DERS_ARSIV.md",
-    "HARITA.md", "FIKIRLER.md", "WAYPOINT_GUNLUGU.md", ".gitattributes", ".gitignore",
+    "HARITA.md", "FIKIRLER.md", "WAYPOINT_GUNLUGU.md", "VERSION", ".gitattributes", ".gitignore",
 }
 
 
@@ -494,6 +494,47 @@ def _oku(root: Path, relative: str) -> str | None:
         return None
 
 
+WAYPOINT_REPO = "erenuzman/WaypointSkill"
+
+
+def _surum(text: str) -> tuple[int, ...]:
+    """'1.10' -> (1, 10); sürüm yoksa boş."""
+    return tuple(int(part) for part in re.findall(r"\d+", text or "")[:3])
+
+
+def _github_surumu() -> str:
+    return subprocess.run(
+        ["gh", "api", f"repos/{WAYPOINT_REPO}/contents/template/.waypoint/VERSION", "-H", "Accept: application/vnd.github.raw"],
+        capture_output=True, encoding="utf-8", errors="replace", timeout=5, check=True,
+    ).stdout
+
+
+def surum_kontrolu(root: Path, today: str, fetch) -> str | None:
+    """Günde en fazla bir kez en yeni Waypoint sürümüne bakar; daha yeniyse yapay zekâya mesaj döndürür. Kendisi kurmaz."""
+    local = (_oku(root, ".waypoint/VERSION") or "").strip()
+    if not _surum(local):
+        return None
+    cache = root / ".waypoint/.son-surum"
+    cached = (_oku(root, ".waypoint/.son-surum") or "").split()
+    if len(cached) == 2 and cached[0] == today:
+        latest = cached[1]
+    else:
+        try:
+            latest = fetch().strip() or "-"
+        except (subprocess.SubprocessError, OSError):
+            latest = "-"  # internet ya da gh yok: yarın tekrar denenir
+        try:
+            cache.write_text(f"{today} {latest}\n", encoding="utf-8")
+        except OSError:
+            pass
+    if _surum(latest) > _surum(local):
+        return (
+            f"Waypoint güncellemesi var: {local} → {latest}. Kullanıcıya yenilikleri (CHANGELOG.md) sade Türkçe özetleyin "
+            "ve kurmak isteyip istemediğini sorun; kendiliğinden kurmayın."
+        )
+    return None
+
+
 OTO_KAYIT = ".waypoint/oto-kayit.log"
 
 
@@ -519,6 +560,11 @@ def main() -> int:
         if hasattr(stream, "reconfigure"):
             stream.reconfigure(encoding="utf-8", errors="replace")
     root = Path(__file__).resolve().parents[2]  # <proje>/.waypoint/hooks/kontrol.py
+    if sys.argv[1:] == ["--surum"]:
+        message = surum_kontrolu(root, date.today().isoformat(), _github_surumu)
+        if message:
+            print(f"⬆️ {message}")
+        return 0
     if len(sys.argv) == 3 and sys.argv[1] == "--mesaj":
         try:
             message = Path(sys.argv[2]).read_text(encoding="utf-8")

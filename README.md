@@ -65,7 +65,9 @@ Bitti. Şimdi aynı klasörde yapay zekâ aracını aç ve ne yapmak istediğini
 
 ### Güncelleme
 
-Aynı kurulum komutunu tekrar çalıştır. Kurallar ve kontroller güncellenir; senin ilerleme, ders ve harita dosyalarına **dokunulmaz.**
+Yeni sürüm çıkınca kendin takip etmene gerek yok. Waypoint günde bir kez yeni sürüm var mı diye bakar. Varsa yapay zekâ sana yenilikleri anlatır ve "kurayım mı?" diye sorar. Sen onay vermeden hiçbir şey kurulmaz. Kurulu sürüm `.waypoint/VERSION` dosyasında yazar, yenilikler [CHANGELOG.md](CHANGELOG.md) dosyasında.
+
+Elle güncellemek istersen aynı kurulum komutunu tekrar çalıştır. Kurallar ve kontroller güncellenir; senin ilerleme, ders ve harita dosyalarına **dokunulmaz.**
 
 ## Projene ne eklenir?
 
@@ -75,6 +77,7 @@ projen/
 ├── CLAUDE.md          ← Claude Code için tek satırlık yönlendirme
 └── .waypoint/
     ├── KURALLAR.md    ← yapay zekânın uyduğu çalışma kuralları
+    ├── VERSION        ← kurulu Waypoint sürümü
     ├── ILERLEME.md    ← hedef, plan, kararlar, günlük
     ├── DERSLER.md     ← hatalardan çıkan kurallar
     ├── HARITA.md      ← önemli fonksiyonlar + şema

@@ -54,7 +54,10 @@ class InstallerTests(unittest.TestCase):
         progress =self.target / ".waypoint/ILERLEME.md"
         progress.write_text("user progress data\n", encoding="utf-8")
         (self.target / ".waypoint/KURALLAR.md").write_text("modified rules\n", encoding="utf-8")
+        (self.target / ".waypoint/VERSION").write_text("0.1\n", encoding="utf-8")
         self.run_cmd(command)
+        self.assertEqual((self.target / ".waypoint/VERSION").read_text(encoding="utf-8"),
+                         (ROOT / "template/.waypoint/VERSION").read_text(encoding="utf-8"))
         self.assertEqual(progress.read_text(encoding="utf-8"), "user progress data\n")
         self.assertNotEqual((self.target / ".waypoint/KURALLAR.md").read_text(encoding="utf-8"), "modified rules\n")
 

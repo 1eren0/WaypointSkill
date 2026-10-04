@@ -88,7 +88,7 @@ try {
 
     if (Test-Path -LiteralPath $waypoint -PathType Container) {
 
-        foreach ($name in @('KURALLAR.md', '.gitattributes', '.gitignore')) {
+        foreach ($name in @('KURALLAR.md', 'VERSION', '.gitattributes', '.gitignore')) {
 
             Copy-Item -LiteralPath (Join-Path $sourceDir ".waypoint/$name") -Destination (Join-Path $waypoint $name) -Force
 

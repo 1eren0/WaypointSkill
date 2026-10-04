@@ -3,6 +3,14 @@
 # No remote → nothing to do. A failed push never undoes the commit; it is reported and retried on the next commit.
 
 cd "$(git rev-parse --show-toplevel 2>/dev/null)" 2>/dev/null || exit 0
+
+# Once a day: tell the AI when a newer Waypoint exists (it never installs anything by itself).
+if [ "${WAYPOINT_NO_UPDATE_CHECK:-}" != "1" ]; then
+  for PY in python3 python "py -3"; do
+    if $PY --version >/dev/null 2>&1; then $PY .waypoint/hooks/kontrol.py --surum; break; fi
+  done
+fi
+
 [ "${WAYPOINT_NO_PUSH:-}" = "1" ] && exit 0
 git remote get-url origin >/dev/null 2>&1 || exit 0
 BRANCH=$(git symbolic-ref --short -q HEAD) || exit 0  # mid-rebase (no branch): skip
