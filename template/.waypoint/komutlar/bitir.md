@@ -2,7 +2,7 @@
 
 Do these in order:
 
-1. Finish or revert any half-done step.
+1. Finish or revert any half-done step. If "Testleri çalıştırma" has a separate "Tüm testler" command, run it; if it fails, tell me plainly what broke.
 2. Record unrecorded lessons in `DERSLER.md`.
 3. Update `ILERLEME.md`. When the commit check asks, move old items to `ILERLEME_ARSIV.md`.
 4. Ask me once: "Bugün Waypoint'te seni zorlayan bir şey oldu mu?"

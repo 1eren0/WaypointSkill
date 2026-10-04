@@ -45,7 +45,7 @@ I can't tell when a change breaks an old feature, so tests do it for me.
 - Test the important features I use directly, not small helpers.
 - Never change or delete a test just to make it pass; if the feature really changed, tell me first.
 - If something breaks and you can't fix it, tell me plainly what broke.
-- Put the test command as one line in backticks under "Testleri çalıştırma" in `ILERLEME.md`. The pre-commit hook runs it; it must finish on its own (no watch mode).
+- Put the test command as one line in backticks under "Testleri çalıştırma" in `ILERLEME.md`. The pre-commit hook runs it before every commit, so it must finish on its own (no watch mode) and quickly (aim for under a minute). If the full suite is slower, put a fast subset there and the full command on the next line as ``Tüm testler: `...` ``; run the full suite at the end of each task and in `bitir`.
 - The hooks also check the `.waypoint/` docs and the commit message. Never bypass them (`--no-verify`); if they block, fix what their message says.
 
 ## Atomicity

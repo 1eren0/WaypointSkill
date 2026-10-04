@@ -317,6 +317,10 @@ class TestKomutuTestleri(unittest.TestCase):
         self.assertIsNone(kontrol.test_komutunu_bul((WAYPOINT / "ILERLEME.md").read_text(encoding="utf-8")))
         self.assertIsNone(kontrol.test_komutunu_bul("## Kararlar\n`npm test`\n"))
 
+    def test_kayitta_hizli_komut_calisir(self):
+        text = "## Testleri çalıştırma\n`npm run test:fast`\nTüm testler: `npm test`\n"
+        self.assertEqual(kontrol.test_komutunu_bul(text), "npm run test:fast")
+
 
 @unittest.skipUnless(shutil.which("sh"), "sh is required")
 class TestCalistirmaTestleri(unittest.TestCase):
