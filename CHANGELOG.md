@@ -4,6 +4,16 @@ What changed in each Waypoint version, written for the AI assistant that install
 Summarize the relevant entries for the user in plain Turkish before asking to update.
 The installed version is in `.waypoint/VERSION`.
 
+## 1.5 — 2026-10-05
+
+Fixes from the `oto-kayit.log` files of two real projects.
+
+- **Ignored warnings now block:** a size warning (Günlük, Plan, Kararlar, Sonra yapılacaklar, DERSLER Kayıtlar) that was already shown on an earlier day within the last week blocks the commit until it's fixed. In the logs these warnings repeated for two days and were never acted on.
+- **One line for changed map functions:** instead of one warning per changed function (often 5–12 per commit), a single line lists them.
+- **Only top-level functions must be mapped:** inner functions and indented methods (e.g. `schedule()` / `cancel()` inside a returned object) no longer block the commit; map the outer function or class. Names added to "Not mapped (small helpers)" only for this reason can be removed.
+- **Session log without `bitir`:** at each task close, if `WAYPOINT_GUNLUGU.md` has no entry for today, the AI asks the friction question and writes the entry. No project had used `bitir` yet.
+- **One-time tidy on update:** after installing an update, the AI moves old loose files in `.waypoint/` (reports from before 1.0) into `raporlar/` with dated names, and anything that isn't a report into the project.
+
 ## 1.4 — 2026-10-05
 
 - **Error diagnosis:** before fixing, the AI reproduces the error and reads the local evidence (full message, logs, versions). For unclear or version-related errors it searches the exact message (official docs, changelogs, issues first) when it can browse, applies an outside fix only if it matches the project's evidence, and tries risky fixes on a `deney/<name>` branch.

@@ -68,7 +68,7 @@ The current stage is recorded in `ILERLEME.md`.
 3. **Build:** one task at a time. Before a big task, tell me in 2–3 lines how you'll do it and how I'll try it, and wait for my OK. When how to start the project changes, update "Nasıl açılır" right away.
    If it's something I open (an app, a site, a bot), give me a double-click launcher (Windows: `baslat.bat`, macOS: `baslat.command`) and list it first in "Nasıl açılır"; terminal commands are only a fallback.
 4. **Let me test:** try it yourself first, tell me honestly what you checked and what you couldn't, then how I can try it step by step. Not done until I say it works.
-5. **Close:** update `ILERLEME.md`, commit, name the next task, and remind me I can start a fresh session (with the exact command for your tool).
+5. **Close:** update `ILERLEME.md`, commit, name the next task, and remind me I can start a fresh session (with the exact command for your tool). If `WAYPOINT_GUNLUGU.md` has no entry for today yet, also do steps 4–5 of `komutlar/bitir.md` (one question, one entry).
 
 ## Focus
 

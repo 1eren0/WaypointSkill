@@ -6,7 +6,7 @@ Do these in order:
 2. Record unrecorded lessons in `DERSLER.md`.
 3. Update `ILERLEME.md`. When the commit check asks, move old items to `ILERLEME_ARSIV.md`.
 4. Ask me once: "Bugün Waypoint'te seni zorlayan bir şey oldu mu?"
-5. Record the session in `.waypoint/WAYPOINT_GUNLUGU.md` (create it if missing) as `## YYYY-AA-GG` with four short lines:
+5. Record the session in `.waypoint/WAYPOINT_GUNLUGU.md` (create it if missing) as `## YYYY-AA-GG` with four short lines (if today's entry already exists, update it instead of adding a second one):
    - `Komutlar:` the commands I used today.
    - `Kontroller:` which checks blocked a commit today (see `.waypoint/oto-kayit.log`, which the hooks fill automatically) and whether each caught a real problem or was noise.
    - `Takılma:` where you or I got stuck.
