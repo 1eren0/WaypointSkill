@@ -4,6 +4,10 @@ What changed in each Waypoint version, written for the AI assistant that install
 Summarize the relevant entries for the user in plain Turkish before asking to update.
 The installed version is in `.waypoint/VERSION`.
 
+## 1.4 — 2026-10-05
+
+- **Error diagnosis:** before fixing, the AI reproduces the error and reads the local evidence (full message, logs, versions). For unclear or version-related errors it searches the exact message (official docs, changelogs, issues first) when it can browse, applies an outside fix only if it matches the project's evidence, and tries risky fixes on a `deney/<name>` branch.
+
 ## 1.3 — 2026-10-04
 
 - **New command `Waypoint'i güncelle`:** the user can ask for an update at any time. Typing it counts as the user's OK: the AI summarizes what's new, installs, and commits the update alone. The automatic daily notice still asks first.

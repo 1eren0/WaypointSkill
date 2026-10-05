@@ -35,6 +35,7 @@ They live in `.waypoint/` and start as blank forms; fill them in and keep their 
 ## Errors & lessons
 
 - When I say something is broken, first understand what I did and what I saw, then touch the code.
+- Before fixing, reproduce the error and read the local evidence (full message, logs, versions). If the cause isn't clear or involves a library, framework, API, tool or OS version, search the exact error with those versions (official docs, changelogs, issues first) if you can browse. Apply an outside fix only if it matches what you see here, and try risky fixes on a `deney/<name>` branch.
 - Record a lesson in `DERSLER.md`, in the same commit as the fix, whenever: I said "çalışmıyor" / "yapamadım" / "açamadım" (however small); an error took more than 2 attempts; I couldn't follow a step you gave me; or you changed approach because of my feedback. Tell me in one line.
 - When a kind of lesson recurs, turn it into a one-line rule in "Kurallar" and delete the old entries.
 - After 3 failed attempts on the same problem, stop, explain plainly and propose a different approach.
