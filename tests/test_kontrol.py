@@ -266,6 +266,25 @@ class WaypointDuzeniTestleri(unittest.TestCase):
                 self.assertIn("tarihle", errors[0])
 
 
+class TekrarlayanUyariTestleri(unittest.TestCase):
+    UYARI = ".waypoint/DERSLER.md: Kayıtlar bölümünde 22 ders var; kuralı 'Kurallar' bölümünde duran eski dersleri .waypoint/DERS_ARSIV.md dosyasına taşıyın."
+    DUNKU = "2026-10-04 14:38  UYARI  .waypoint/DERSLER.md: Kayıtlar bölümünde 21 ders var; kuralı …\n"
+
+    def test_dun_de_cikan_boyut_uyarisi_engel_olur(self):
+        errors, warnings = kontrol.tekrarlayan_uyarilar([self.UYARI], self.DUNKU, "2026-10-05")
+        self.assertEqual(warnings, [])
+        self.assertEqual(len(errors), 1)
+        self.assertIn("önceki bir günde de çıktı", errors[0])
+
+    def test_ayni_gun_eski_ya_da_baska_uyari_engel_olmaz(self):
+        for log, today in ((self.DUNKU, "2026-10-04"), (self.DUNKU, "2026-10-20"), ("", "2026-10-05")):
+            with self.subTest(log=log, today=today):
+                self.assertEqual(kontrol.tekrarlayan_uyarilar([self.UYARI], log, today), ([], [self.UYARI]))
+        harita = "Haritadaki 2 fonksiyon değişti: a.js::f(), a.js::g(). HARITA.md'de …"
+        log = f"2026-10-04 10:00  UYARI  {harita}\n"
+        self.assertEqual(kontrol.tekrarlayan_uyarilar([harita], log, "2026-10-05"), ([], [harita]))
+
+
 class SurumKontroluTestleri(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()

@@ -8,7 +8,7 @@ import signal
 import subprocess
 import sys
 import tempfile
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from pathlib import Path
 
 
@@ -638,6 +638,24 @@ def oto_kayit(root: Path, durum: str, satirlar: list[str]) -> None:
         pass
 
 
+_BOYUT_UYARISI = re.compile(r"^(\.waypoint/\w+\.md: .+? bölümünde) \d+ ")
+
+
+def tekrarlayan_uyarilar(uyarilar: list[str], log_text: str, today: str) -> tuple[list[str], list[str]]:
+    """Son 7 günde önceki bir günde de çıkmış boyut uyarısını kayıt engeline çevirir: uyarı görmezden gelinmesin."""
+    since = (date.fromisoformat(today) - timedelta(days=7)).isoformat()
+    earlier = [line for line in log_text.splitlines() if since <= line[:10] < today and "  UYARI  " in line]
+    hatalar: list[str] = []
+    kalan: list[str] = []
+    for uyari in uyarilar:
+        match = _BOYUT_UYARISI.match(uyari)
+        if match and any(match.group(1) in line for line in earlier):
+            hatalar.append(uyari + " Bu uyarı önceki bir günde de çıktı; bu yapılmadan kayıt alınamaz.")
+        else:
+            kalan.append(uyari)
+    return hatalar, kalan
+
+
 def main() -> int:
     # Windows konsolu emoji ve Türkçe karakterleri bozmasın
     for stream in (sys.stdout, sys.stderr):
@@ -734,6 +752,8 @@ def main() -> int:
             )
             hatalar.extend(errors)
             uyarilar.extend(warnings)
+    errors, uyarilar = tekrarlayan_uyarilar(uyarilar, _oku(root, OTO_KAYIT) or "", today)
+    hatalar.extend(errors)
     for hata in hatalar:
         print(f"❌ {hata}")
     for uyari in uyarilar:
