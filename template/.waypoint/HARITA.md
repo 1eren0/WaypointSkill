@@ -3,7 +3,8 @@ Last updated: —
 
 <!-- Important functions only: core parts of a feature, used from multiple places,
      or talking to the outside (DB, API). Skip small helpers. File paths are relative to the project root;
-     the commit check verifies each function still exists in its file. Format per entry:
+     the commit check verifies each function still exists in its file. New top-level functions and classes must be
+     mapped (or listed below as helpers); indented ones (inner functions, methods) are optional. Format per entry:
 
 ### girisYap() — auth.js
 - does: checks username and password, starts a session

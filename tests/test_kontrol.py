@@ -371,6 +371,20 @@ class YeniFonksiyonTestleri(unittest.TestCase):
 """
         self.assertEqual(kontrol.yeni_fonksiyonlar(diff), ["Ornek", "calistir", "hesapla", "ok"])
 
+    def test_ic_fonksiyon_ve_metotlar_zorunlu_degil(self):
+        diff = """+++ b/src/selection.js
++export function createSelectionScheduler() {
++  return {
++    schedule(selection) {
++    cancel() {
++  };
++  const emit = (state) => {
++class Kutu:
++    def ac(self):
++\tfunction ic() {}
+"""
+        self.assertEqual(kontrol.yeni_fonksiyonlar(diff), ["Kutu", "createSelectionScheduler"])
+
     def test_silinen_satir_ve_baslik_yok_sayilir(self):
         diff = "+++ b/file.js\n-function eski() {}\n+const yeni = x => x\n"
         self.assertEqual(kontrol.yeni_fonksiyonlar(diff), ["yeni"])
@@ -407,7 +421,15 @@ class DegisenFonksiyonTestleri(unittest.TestCase):
         diff = "--- a/auth.js\n+++ b/auth.js\n@@ -3 +3 @@ export function girisYap() {\n-  eskiServis()\n+  yeniServis()\n"
         errors, warnings = kontrol.degisen_harita_fonksiyonlari(self.MAP, diff)
         self.assertEqual(errors, [])
-        self.assertEqual(warnings, ["auth.js::girisYap() değişti. HARITA.md içindeki uses / used by bağlantılarının hâlâ doğru olduğunu kontrol edin."])
+        self.assertEqual(warnings, ["Haritadaki 1 fonksiyon değişti: auth.js::girisYap(). HARITA.md'de uses / used by bağlantılarının hâlâ doğru olduğunu kontrol edin."])
+
+    def test_cok_degisiklik_tek_satir(self):
+        entries = "".join(f"### f{i}() — a.js\n" for i in range(10))
+        diff = "+++ b/a.js\n" + "".join(f"+  f{i}()\n" for i in range(10))
+        _, warnings = kontrol.degisen_harita_fonksiyonlari("## Key functions / components\n" + entries, diff)
+        self.assertEqual(len(warnings), 1)
+        self.assertIn("Haritadaki 10 fonksiyon değişti", warnings[0])
+        self.assertIn("ve 2 tane daha", warnings[0])
 
     def test_diff_okunamazsa_kayit_durur(self):
         def broken():

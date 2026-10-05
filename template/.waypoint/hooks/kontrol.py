@@ -456,16 +456,16 @@ _FUNCTION_PATTERNS = (
     re.compile(r"^\+\s*(?:(?:private|public|internal|override|suspend|static)\s+)*(?:fun|func)\s+([A-Za-z_]\w*)\s*\(", re.MULTILINE),
     re.compile(r"^\+\s*(?:(?:public|private|protected|internal|static|final|abstract|override|virtual|async|synchronized|readonly)\s+)+[\w<>\[\],.?]+\s+(\w+)\s*\(", re.MULTILINE),
     re.compile(r"^\+\s*(?:(?:public|private|protected|static|async|readonly)\s+)+(\w+)\s*\(", re.MULTILINE),
-    re.compile(r"^\+\s{2,}(?:async\s+)?(\w+)\s*\([^)]*\)\s*\{\s*$", re.MULTILINE),
-    re.compile(r"^\+\s*def\s+(?:self\.)?([A-Za-z_]\w*)\b", re.MULTILINE),
 )
 
 
 def yeni_fonksiyonlar(diff_text: str) -> list[str]:
+    """Eklenen en dış düzey fonksiyon ve sınıflar. Girintili tanımlar (iç fonksiyonlar, nesne ve sınıf
+    metotları) zorunlu tutulmaz: haritada üst fonksiyonu ya da sınıfı temsil eder."""
     names: set[str] = set()
     added_lines = []
     for line in diff_text.splitlines():
-        if not line.startswith("+") or line.startswith("+++"):
+        if not line.startswith("+") or line.startswith("+++") or line[1:2] in (" ", "\t"):
             continue
         added_lines.append(line)
     added_text = "\n".join(added_lines)
@@ -498,11 +498,15 @@ def degisen_harita_fonksiyonlari(harita_text: str, diff_text: str) -> tuple[list
             current = target[2:] if target.startswith("b/") else None
         elif current and not line.startswith("--- ") and line.startswith(("+", "-", "@@")):
             changed.setdefault(current, []).append(line)
-    return [], [
-        f"{path}::{name} değişti. HARITA.md içindeki uses / used by bağlantılarının hâlâ doğru olduğunu kontrol edin."
+    names = [
+        f"{path}::{name}"
         for name, path in _harita_girdileri(harita_text)
         if path in changed and name != path and _kelime_var(_kimlik(name), "\n".join(changed[path]))
     ]
+    if not names:
+        return [], []
+    shown = ", ".join(names[:8]) + (f" ve {len(names) - 8} tane daha" if len(names) > 8 else "")
+    return [], [f"Haritadaki {len(names)} fonksiyon değişti: {shown}. HARITA.md'de uses / used by bağlantılarının hâlâ doğru olduğunu kontrol edin."]
 
 
 def harita_kapsami(harita_text: str, pairs: list[tuple[str, str]]) -> tuple[list[str], list[str]]:
