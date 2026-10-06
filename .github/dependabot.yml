@@ -1,0 +1,10 @@
+# Waypoint has no package dependencies (standard library only); the only third-party code is GitHub Actions.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ["*"]
