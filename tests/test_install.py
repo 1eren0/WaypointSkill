@@ -72,6 +72,8 @@ class InstallerTests(unittest.TestCase):
         self.check_install(["sh", str(script)])
 
     def test_powershell_installer(self):
+        if os.name != "nt":
+            self.skipTest("install.ps1 Windows kurulumu; macOS/Linux install.sh kullanır")
         executable = shutil.which("powershell") or shutil.which("pwsh")
         if not executable:
             self.skipTest("PowerShell bulunamadı")
