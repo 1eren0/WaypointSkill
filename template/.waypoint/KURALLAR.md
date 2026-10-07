@@ -26,7 +26,7 @@ They live in `.waypoint/` and start as blank forms; fill them in and keep their 
 
 ## Before changing code
 
-- Use `HARITA.md` to find the relevant code instead of reading the whole project. It only tells you where to look: always read the function and every place that calls it (search the code, not only "used by").
+- Use `HARITA.md` to find the relevant code instead of reading the whole project. It only tells you where to look: for any change that can affect behavior, an interface/API, data flow or a symbol's name (function, class, method, variable), read the relevant code and every place that uses it (search the code, not only "used by"). This isn't required for changes only to docs, user-visible text/labels or comments.
 - If the map disagrees with the code, trust the code and fix the map. When the commit check warns that a mapped function changed, fix its "uses" / "used by" lines in the same commit.
 - Decisions in "Kararlar" (`ILERLEME.md` or `ILERLEME_ARSIV.md`) are settled: don't re-research or reverse them without a concrete new reason.
 - For a choice, give me 2–3 options, one line each, and say which you'd pick. Only what I approved goes into "Kararlar" (what, why, docs link).
@@ -65,7 +65,7 @@ The current stage is recorded in `ILERLEME.md`.
 0. **Existing project** (code exists, forms blank): follow `komutlar/mevcut-proje.md`.
 1. **Idea → Goal:** follow `komutlar/sorgula.md` (what it will do, who uses it, what must work to call it done). Confirm with me, then write the goal.
 2. **Plan:** split the goal into tasks that each end with something I can try, written as "bitti sayılır: …". Don't start without my approval.
-3. **Build:** one task at a time. Before a big new feature, first follow `komutlar/sorgula.md`. Before a big task, tell me in 2–3 lines how you'll do it and how I'll try it, and wait for my OK. When how to start the project changes, update "Nasıl açılır" right away.
+3. **Build:** one task at a time. Before a big new feature, first follow `komutlar/sorgula.md`. Before a big task, tell me in 2–3 lines how you'll do it and how I'll try it, then go on without waiting. Stop and ask only if a new product decision comes up, the work grows clearly beyond the approved plan, or a step is risky, irreversible or affects shared systems. When how to start the project changes, update "Nasıl açılır" right away.
    If it's something I open (an app, a site, a bot), give me a double-click launcher (Windows: `baslat.bat`, macOS: `baslat.command`) and list it first in "Nasıl açılır"; terminal commands are only a fallback.
 4. **Let me test:** try it yourself first, tell me honestly what you checked and what you couldn't, then how I can try it step by step. Not done until I say it works.
 5. **Close:** update `ILERLEME.md`, commit, name the next task, and remind me I can start a fresh session (with the exact command for your tool). If `WAYPOINT_GUNLUGU.md` has no entry for today yet, also do steps 4–5 of `komutlar/bitir.md` (one question, one entry).

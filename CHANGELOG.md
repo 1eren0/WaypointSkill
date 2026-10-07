@@ -4,6 +4,11 @@ What changed in each Waypoint version, written for the AI assistant that install
 Summarize the relevant entries for the user in plain Turkish before asking to update.
 The installed version is in `.waypoint/VERSION`.
 
+## 1.8 — 2026-10-07
+
+- **Reading callers only where it matters:** the code and every place that uses it must be read for changes that can affect behavior, an interface/API, data flow or a symbol's name. Changes only to docs, user-visible text/labels or comments no longer require it.
+- **No second OK after the plan:** before a big task the AI still says in 2–3 lines what it will do and how the user will try it, but then goes on. It stops only for a new product decision, work growing clearly beyond the approved plan, or a risky, irreversible or shared-system step.
+
 ## 1.7 — 2026-10-07
 
 - **`sorgula` no longer skips the plan step:** at stage 1 its summary only fills "Proje hedefi"; the plan is still made and approved in stage 2.
