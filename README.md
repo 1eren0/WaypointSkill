@@ -75,13 +75,9 @@ Beklemeden hemen güncellemek istersen iki yol var. İkisinde de kurallar ve kon
 Waypoint'i güncelle
 ```
 
-Yapay zekâ yenilikleri sade Türkçe anlatır, güncellemeyi kurar ve sonucu ayrı bir kayıt olarak alır.
+Yapay zekâ yenilikleri sade Türkçe anlatır ve senden `.waypoint/guncelle.bat` dosyasına (macOS'ta `guncelle.command`) çift tıklamanı ister. Kurulum bitince "güncelledim" yazarsın, o da sonucu ayrı bir kayıt olarak alır. İnternetten gelen kodu çalıştırma kararı sende olsun diye kurulumu yapay zekâ kendisi çalıştırmaz.
 
-> Waypoint'i 1.3'ten eski bir sürümle kurduysan yapay zekâ bu cümleyi tanımayabilir. O zaman bir kereliğine şunu yapıştır; sonraki güncellemelerde kısa cümle yeter:
->
-> ```
-> Waypoint'i güncelle: bu klasörde Windows'taysan `gh api repos/erenuzman/WaypointSkill/contents/install.ps1 -H "Accept: application/vnd.github.raw" | Out-String | iex`, macOS/Linux'taysan `gh api repos/erenuzman/WaypointSkill/contents/install.sh -H "Accept: application/vnd.github.raw" | sh` komutunu çalıştır. Sonra değişiklikleri tek başına "chore: update Waypoint" kaydı olarak al ve neyin değiştiğini bana sade Türkçe anlat.
-> ```
+> Waypoint'i 1.9'dan eski bir sürümle kurduysan bu dosya henüz yok. O zaman bir kereliğine 2. yolu kullan; sonraki güncellemelerde çift tıklamak yeter.
 
 **2. Komutu kendin çalıştır.** Projenin klasöründe bir terminal aç ve kurulum komutunu tekrar yapıştır:
 

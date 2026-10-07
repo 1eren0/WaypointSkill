@@ -4,6 +4,11 @@ What changed in each Waypoint version, written for the AI assistant that install
 Summarize the relevant entries for the user in plain Turkish before asking to update.
 The installed version is in `.waypoint/VERSION`.
 
+## 1.9 — 2026-10-07
+
+- **The user starts the update, not the AI:** Claude Code's auto mode blocked the AI from running the installer ("Code from External"), and rightly so: it runs code downloaded from the internet. The AI still summarizes what's new, then asks the user to double-click the new `.waypoint/guncelle.bat` (macOS: `.waypoint/guncelle.command`) and write "güncelledim"; then it commits and tidies as before. It never runs the installer itself.
+- **This one update is by hand:** projects on 1.8 or older don't have `guncelle.bat` yet. The AI gives the user one line to paste into a terminal in the project folder; from 1.9 on, double-clicking is enough.
+
 ## 1.8 — 2026-10-07
 
 - **Reading callers only where it matters:** the code and every place that uses it must be read for changes that can affect behavior, an interface/API, data flow or a symbol's name. Changes only to docs, user-visible text/labels or comments no longer require it.

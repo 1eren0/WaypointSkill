@@ -1,1 +1,3 @@
 hooks/* text eol=lf
+guncelle.bat text eol=crlf
+guncelle.command text eol=lf

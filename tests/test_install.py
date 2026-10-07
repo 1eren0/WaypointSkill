@@ -25,7 +25,8 @@ class InstallerTests(unittest.TestCase):
 
     def check_install(self, command):
         self.run_cmd(command)
-        for relative in (".waypoint/KURALLAR.md", ".waypoint/komutlar/bitir.md", ".waypoint/hooks/kontrol.py", "AGENTS.md", "CLAUDE.md"):
+        for relative in (".waypoint/KURALLAR.md", ".waypoint/komutlar/bitir.md", ".waypoint/guncelle.bat",
+                         ".waypoint/guncelle.command", ".waypoint/hooks/kontrol.py", "AGENTS.md", "CLAUDE.md"):
             self.assertTrue((self.target / relative).is_file(), relative)
         configured = subprocess.run(["git", "config", "core.hooksPath"], cwd=self.target,
                                     env=self.env, text=True, stdout=subprocess.PIPE, check=True)
@@ -57,7 +58,9 @@ class InstallerTests(unittest.TestCase):
         (self.target / ".waypoint/VERSION").write_text("0.1\n", encoding="utf-8")
         (self.target / ".waypoint/komutlar/bitir.md").write_text("old recipe\n", encoding="utf-8")
         (self.target / ".waypoint/komutlar/eski.md").write_text("removed recipe\n", encoding="utf-8")
+        (self.target / ".waypoint/guncelle.bat").unlink()
         self.run_cmd(command)
+        self.assertTrue((self.target / ".waypoint/guncelle.bat").is_file())
         self.assertEqual((self.target / ".waypoint/komutlar/bitir.md").read_text(encoding="utf-8"),
                          (ROOT / "template/.waypoint/komutlar/bitir.md").read_text(encoding="utf-8"))
         self.assertFalse((self.target / ".waypoint/komutlar/eski.md").exists())

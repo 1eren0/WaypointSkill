@@ -37,7 +37,7 @@ fi
 
 waypoint="$target/.waypoint"
 if [ -d "$waypoint" ]; then
-    for file in KURALLAR.md VERSION .gitattributes .gitignore; do cp "$source_dir/.waypoint/$file" "$waypoint/$file"; done
+    for file in KURALLAR.md VERSION .gitattributes .gitignore guncelle.bat guncelle.command; do cp "$source_dir/.waypoint/$file" "$waypoint/$file"; done
     mkdir -p "$waypoint/hooks"
     find "$waypoint/hooks" -mindepth 1 -maxdepth 1 -type f -exec rm -f {} \;
     find "$source_dir/.waypoint/hooks" -type f ! -path '*/__pycache__/*' -exec cp {} "$waypoint/hooks/" \;
@@ -75,7 +75,7 @@ elif [ -z "$old_hooks" ] && [ -n "$(find "$target/.git/hooks" -maxdepth 1 -type 
     info "Uyarı: Bu projenin .git/hooks klasöründe önceden kayıt kontrolleri vardı. Waypoint onların yerine geçti; eski kontroller artık çalışmayacak."
 fi
 git -C "$target" config core.hooksPath .waypoint/hooks || fail 'Git hook yolu ayarlanamadı.'
-chmod +x "$waypoint/hooks"/* 2>/dev/null || true
+chmod +x "$waypoint/hooks"/* "$waypoint/guncelle.command" 2>/dev/null || true
 
 python_ok=
 for candidate in python3 python; do
