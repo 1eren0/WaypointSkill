@@ -24,7 +24,7 @@ jobs:
         with:
           version: "0.16.7"
       - name: ShellCheck (installer and git hooks)
-        run: shellcheck -s sh -S warning install.sh template/.waypoint/hooks/pre-commit template/.waypoint/hooks/commit-msg template/.waypoint/hooks/post-commit
+        run: shellcheck -s sh -S warning install.sh template/.waypoint/hooks/pre-commit template/.waypoint/hooks/commit-msg template/.waypoint/hooks/post-commit template/.waypoint/guncelle.command
 
   test:
     strategy:
