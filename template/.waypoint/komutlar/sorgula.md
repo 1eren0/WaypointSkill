@@ -1,13 +1,10 @@
 # `sorgula` — question an idea until it's clear
 
-Runs automatically at stage 1 (Idea → Goal) and before a big new feature (one that adds something new I'll see or use, or takes more than one task). Skip it for small fixes and tweaks. I can also start it any time by typing `sorgula`.
+Runs at stage 1 and before a big new feature (something new I'll see or use, or more than one task); skip it for small fixes. I can also type `sorgula`.
 
-1. Collect the open questions about the idea. Ask only product questions (what it does, who uses it, what I should see when, what happens in edge cases), never technical ones: technical choices are yours.
-2. Facts are your job: anything the code, the files or `.waypoint/` can tell you, look up yourself instead of asking me. Decisions are mine: never answer them for me, but always give your recommendation.
-3. Ask one question per message, with your recommended answer, worded so that "evet" accepts it. Ask a question only once the answers it depends on are settled; start with the basics.
-4. If I answer too quickly to something that matters, ask once more in other words.
-5. "Bilmiyorum" is a valid answer: use your recommendation, mark it "(sonra bakılacak)" in the summary, and don't ask it again.
-6. For a look-and-feel question (layout, one page or several…), first ask whether to show me a quick throwaway mock-up instead of talking it through; delete it once I've decided.
-7. Stop when nothing important is left unanswered, or after about 10 questions. If questions keep coming, the idea is too big: suggest splitting it into smaller parts.
-8. Summarize what we settled in 3–5 plain lines and ask me to confirm. Don't start building before I confirm.
-9. Record it: at stage 1 in "Proje hedefi" and the plan; for a feature in its task's "bitti sayılır" line. Only real choices between options go into "Kararlar".
+1. Ask only product questions (what it does, who uses it, what I see when, edge cases), basics first, one per message, each with your recommendation worded so "evet" accepts it. Never answer a decision for me.
+2. Look up facts yourself (code, files, `.waypoint/`) instead of asking me.
+3. If I answer something important too quickly, ask once more in other words. "Bilmiyorum" is valid: use your recommendation, mark it "(sonra bakılacak)", don't ask again.
+4. For a look-and-feel question, offer a quick throwaway mock-up; delete it once I've decided.
+5. Stop when nothing important is open, or after about 10 questions; if more keep coming, suggest splitting the idea.
+6. Summarize in 3–5 plain lines and wait for my OK before building. Then record it: "Proje hedefi" and the plan, or the task's "bitti sayılır" line; only real choices between options go into "Kararlar".
