@@ -4,6 +4,12 @@ What changed in each Waypoint version, written for the AI assistant that install
 Summarize the relevant entries for the user in plain Turkish before asking to update.
 The installed version is in `.waypoint/VERSION`.
 
+## 1.7 — 2026-10-07
+
+- **`sorgula` no longer skips the plan step:** at stage 1 its summary only fills "Proje hedefi"; the plan is still made and approved in stage 2.
+- **"Bilmiyorum" is a temporary assumption:** the AI's recommendation is used for now but is not a decision and never goes into "Kararlar"; the question is parked in "Sonra yapılacaklar" with "(cevap bekleniyor)" to confirm later.
+- Fixed duplicate step number in the update recipe.
+
 ## 1.6 — 2026-10-07
 
 - **New `sorgula` step (inspired by the `grill-me` skill):** at stage 1 and before a big new feature, the AI questions the idea before building: product questions only, one per message with a recommended answer, basics first, about 10 at most. It then confirms a 3–5 line summary and records it in the goal, plan or the task's "bitti sayılır" line. Skipped for small fixes; the user can start it any time by typing `sorgula`.
