@@ -132,6 +132,7 @@ Yapay zekâya istediğin zaman şunları yazabilirsin:
 | `liste` | Yapılanlar ve yapılacaklar alt alta gösterilir. |
 | `nasıl açarım` | Projeyi çalıştırma adımları gösterilir. |
 | `haritayı göster` | Projenin haritası kutular ve oklarla çizilir. |
+| `sorgula` | Fikir ya da yeni özellik, tek tek sorularla netleştirilir (en fazla ~10 soru). Proje başında ve büyük özelliklerde kendiliğinden yapılır. |
 | `bitir` | Yarım iş toparlanır, defterler güncellenir, kayıt alınır, günün özeti çıkar. |
 | `Waypoint'i güncelle` | Waypoint'in en yeni sürümü kurulur, yenilikler sade dille anlatılır. |
 

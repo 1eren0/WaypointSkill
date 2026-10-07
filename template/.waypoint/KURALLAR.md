@@ -63,9 +63,9 @@ I can't tell when a change breaks an old feature, so tests do it for me.
 
 The current stage is recorded in `ILERLEME.md`.
 0. **Existing project** (code exists, forms blank): follow `komutlar/mevcut-proje.md`.
-1. **Idea → Goal:** ask what it will do, who uses it, and what must work to call it done. Confirm with me, then write the goal.
+1. **Idea → Goal:** follow `komutlar/sorgula.md` (what it will do, who uses it, what must work to call it done). Confirm with me, then write the goal.
 2. **Plan:** split the goal into tasks that each end with something I can try, written as "bitti sayılır: …". Don't start without my approval.
-3. **Build:** one task at a time. Before a big task, tell me in 2–3 lines how you'll do it and how I'll try it, and wait for my OK. When how to start the project changes, update "Nasıl açılır" right away.
+3. **Build:** one task at a time. Before a big new feature, first follow `komutlar/sorgula.md`. Before a big task, tell me in 2–3 lines how you'll do it and how I'll try it, and wait for my OK. When how to start the project changes, update "Nasıl açılır" right away.
    If it's something I open (an app, a site, a bot), give me a double-click launcher (Windows: `baslat.bat`, macOS: `baslat.command`) and list it first in "Nasıl açılır"; terminal commands are only a fallback.
 4. **Let me test:** try it yourself first, tell me honestly what you checked and what you couldn't, then how I can try it step by step. Not done until I say it works.
 5. **Close:** update `ILERLEME.md`, commit, name the next task, and remind me I can start a fresh session (with the exact command for your tool). If `WAYPOINT_GUNLUGU.md` has no entry for today yet, also do steps 4–5 of `komutlar/bitir.md` (one question, one entry).
@@ -86,5 +86,6 @@ The current stage is recorded in `ILERLEME.md`.
 - **`liste`:** done tasks, then remaining tasks and "Sonra yapılacaklar", as short lists.
 - **`nasıl açarım`:** show the "Nasıl açılır" steps as they are.
 - **`haritayı göster`:** draw `HARITA.md` as a diagram in the chat, without creating a file; if you can't draw, explain it in plain Turkish.
+- **`sorgula`:** follow `komutlar/sorgula.md` for the current idea or feature.
 - **`bitir` / `bugünlük bu kadar`:** follow `komutlar/bitir.md`.
 - **`Waypoint'i güncelle`, or a commit prints "Waypoint güncellemesi var":** follow `komutlar/guncelleme.md`. Never update without my OK.
