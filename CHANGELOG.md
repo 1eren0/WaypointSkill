@@ -7,6 +7,7 @@ The installed version is in `.waypoint/VERSION`.
 ## 1.6 — 2026-10-07
 
 - **New `sorgula` step (inspired by the `grill-me` skill):** at stage 1 and before a big new feature, the AI questions the idea before building: product questions only, one per message with a recommended answer, basics first, about 10 at most. It then confirms a 3–5 line summary and records it in the goal, plan or the task's "bitti sayılır" line. Skipped for small fixes; the user can start it any time by typing `sorgula`.
+  It looks facts up in the code and files instead of asking, never answers a decision for the user (but always recommends), accepts "bilmiyorum" (uses the recommendation and marks it for later), offers a throwaway mock-up for look-and-feel questions, and doesn't start building before the summary is confirmed.
 
 ## 1.5 — 2026-10-05
 
