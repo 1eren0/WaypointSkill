@@ -7,7 +7,7 @@
 A way of working for Claude Code, Codex, Antigravity and other AI coding tools.
 Installs with one command and moves your project forward in small, saved and tested steps.
 
-**English** · [Türkçe](README.tr.md)
+🌐 [waypoint.eren.ink/en](https://waypoint.eren.ink/en/) · **English** · [Türkçe](README.tr.md)
 
 </div>
 

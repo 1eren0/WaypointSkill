@@ -7,7 +7,7 @@
 Claude Code, Codex, Antigravity ve diğer yapay zekâ araçları için Türkçe çalışma düzeni.
 Tek komutla kurulur; projeyi küçük, kayıtlı ve test edilmiş adımlarla ilerletir.
 
-[English](README.md) · **Türkçe**
+🌐 [waypoint.eren.ink](https://waypoint.eren.ink) · [English](README.md) · **Türkçe**
 
 </div>
 
