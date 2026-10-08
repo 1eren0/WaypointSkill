@@ -119,17 +119,17 @@ Yapay zekâya istediğin zaman şunları yazabilirsin:
 
 | Komut | Ne olur |
 |---|---|
-| `neredeyiz` | Hedef, plan, şu an ne yapıldığı ve sıradaki adım özetlenir. |
-| `sadece soru` (kısaca `sos`) | Yapay zekâ sadece cevap verir, hiçbir şeyi değiştirmez. |
-| `ne yaptık` (kısaca `nep`) | Son yapılan işlem kısaca, sade dille anlatılır. |
-| `sırada ne var` (kısaca `snv`) | Sadece sıradaki adım tek cümleyle söylenir. |
-| `sonraya ekle <fikir>` (kısaca `parket`) | Yeni fikir, mevcut iş bölünmeden "Sonra yapılacaklar"a yazılır. |
-| `liste` | Yapılanlar ve yapılacaklar alt alta gösterilir. |
-| `nasıl açarım` | Projeyi çalıştırma adımları gösterilir. |
-| `haritayı göster` | Projenin haritası kutular ve oklarla çizilir. |
-| `sorgula` | Fikir ya da yeni özellik, tek tek sorularla netleştirilir (en fazla ~10 soru). Proje başında ve büyük özelliklerde kendiliğinden yapılır. |
-| `bitir` | Yarım iş toparlanır, defterler güncellenir, kayıt alınır, günün özeti çıkar. |
-| `Waypoint'i güncelle` | Waypoint'in en yeni sürümü kurulur, yenilikler sade dille anlatılır. |
+| `neredeyiz` (İngilizce: `where`) | Hedef, plan, şu an ne yapıldığı ve sıradaki adım özetlenir. |
+| `sadece soru` (kısaca `sos`, İngilizce: `ask`) | Yapay zekâ sadece cevap verir, hiçbir şeyi değiştirmez. |
+| `ne yaptık` (kısaca `nep`, İngilizce: `recap`) | Son yapılan işlem kısaca, sade dille anlatılır. |
+| `sırada ne var` (kısaca `snv`, İngilizce: `next`) | Sadece sıradaki adım tek cümleyle söylenir. |
+| `sonraya ekle <fikir>` (kısaca `parket`, İngilizce: `park`) | Yeni fikir, mevcut iş bölünmeden "Sonra yapılacaklar"a yazılır. |
+| `liste` (İngilizce: `list`) | Yapılanlar ve yapılacaklar alt alta gösterilir. |
+| `nasıl açarım` (İngilizce: `run`) | Projeyi çalıştırma adımları gösterilir. |
+| `haritayı göster` (İngilizce: `map`) | Projenin haritası kutular ve oklarla çizilir. |
+| `sorgula` (İngilizce: `clarify`) | Fikir ya da yeni özellik, tek tek sorularla netleştirilir (en fazla ~10 soru). Proje başında ve büyük özelliklerde kendiliğinden yapılır. |
+| `bitir` (İngilizce: `finish`) | Yarım iş toparlanır, defterler güncellenir, kayıt alınır, günün özeti çıkar. |
+| `Waypoint'i güncelle` (İngilizce: `update Waypoint`) | Waypoint'in en yeni sürümü kurulur, yenilikler sade dille anlatılır. |
 
 Haritayı kendin görmek istersen proje klasörünü **Obsidian**'da aç ve `.waypoint/HARITA.md` dosyasına bak. Şema resim olarak görünür.
 

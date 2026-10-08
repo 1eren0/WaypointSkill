@@ -117,21 +117,21 @@ Everything Waypoint owns is in one folder. It doesn't mess with your files.
 
 ## Commands
 
-Type these to the AI any time. The Turkish form works too.
+Type these to the AI any time. Most have a one-word short form, and the Turkish forms work too. A one-word short form counts only when it is the whole message.
 
-| Command | Turkish | What happens |
-|---|---|---|
-| `where are we` | `neredeyiz` | Summary of the goal, the plan, what's happening now and the next step. |
-| `just a question` | `sos` | The AI only answers and changes nothing. |
-| `what did we do` | `nep` | The last action, briefly and in plain words. |
-| `what's next` | `snv` | Only the next step, in one sentence. |
-| `park <idea>` | `parket <fikir>` | A new idea goes to the "later" list without interrupting the current work. |
-| `list` | `liste` | Done and remaining tasks, one under the other. |
-| `how do I run it` | `nasıl açarım` | The steps to run the project. |
-| `show the map` | `haritayı göster` | The project map drawn as boxes and arrows. |
-| `clarify` | `sorgula` | An idea or new feature gets clear through questions, one at a time (about 10 at most). Done automatically at the start of a project and for big features. |
-| `finish` | `bitir` | Loose ends tied up, notes updated, a commit made and a summary of the day. |
-| `update Waypoint` | `Waypoint'i güncelle` | The latest Waypoint is installed and what's new is explained in plain words. |
+| Command | Short | Turkish | What happens |
+|---|---|---|---|
+| `where are we` | `where` | `neredeyiz` | Summary of the goal, the plan, what's happening now and the next step. |
+| `just a question` | `ask` | `sadece soru` / `sos` | The AI only answers and changes nothing. |
+| `what did we do` | `recap` | `ne yaptık` / `nep` | The last action, briefly and in plain words. |
+| `what's next` | `next` | `sırada ne var` / `snv` | Only the next step, in one sentence. |
+| `park <idea>` | | `sonraya ekle <fikir>` / `parket` | A new idea goes to the "later" list without interrupting the current work. |
+| `list` | | `liste` | Done and remaining tasks, one under the other. |
+| `how do I run it` | `run` | `nasıl açarım` | The steps to run the project. |
+| `show the map` | `map` | `haritayı göster` | The project map drawn as boxes and arrows. |
+| `clarify` | | `sorgula` | An idea or new feature gets clear through questions, one at a time (about 10 at most). Done automatically at the start of a project and for big features. |
+| `finish` | | `bitir` | Loose ends tied up, notes updated, a commit made and a summary of the day. |
+| `update Waypoint` | | `Waypoint'i güncelle` | The latest Waypoint is installed and what's new is explained in plain words. |
 
 To see the map yourself, open the project folder in **Obsidian** and look at `.waypoint/HARITA.md`. The diagram shows up as a picture.
 

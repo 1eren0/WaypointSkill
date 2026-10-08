@@ -4,6 +4,10 @@ What changed in each Waypoint version, written for the AI assistant that install
 Summarize the relevant entries for the user in plain Turkish before asking to update.
 The installed version is in `.waypoint/VERSION`.
 
+## 1.13 — 2026-10-08
+
+- **English short forms:** `where` (where are we), `ask` (just a question), `recap` (what did we do), `next` (what's next), `run` (how do I run it), `map` (show the map). A one-word short form, Turkish or English, counts as a command only when it is the user's whole message, so a normal sentence containing "next" isn't mistaken for one.
+
 ## 1.12 — 2026-10-08
 
 - **English commands and replies:** every command also works in English (`where are we`, `just a question`, `what did we do`, `what's next`, `park <idea>`, `list`, `how do I run it`, `show the map`, `clarify`, `finish`, `update Waypoint`). If the user writes in English, the AI answers in plain English; project notes stay in Turkish.
