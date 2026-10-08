@@ -360,6 +360,12 @@ class SurumKontroluTestleri(unittest.TestCase):
 
 
 class TestKomutuTestleri(unittest.TestCase):
+    def test_komut_yoksa_kod_degisince_uyarir(self):
+        bos = "## Testleri çalıştırma\n`...`\n"
+        self.assertIn("Testler çalışmadı", kontrol.test_komutu_uyarisi(bos, ["app.py"])[0])
+        self.assertEqual(kontrol.test_komutu_uyarisi(bos, ["NOTLAR.md", ".waypoint/ILERLEME.md"]), [])
+        self.assertEqual(kontrol.test_komutu_uyarisi("## Testleri çalıştırma\n`pytest`\n", ["app.py"]), [])
+
     def test_komut_bulunur_ve_yer_tutucu_yok_sayilir(self):
         self.assertEqual(kontrol.test_komutunu_bul("## Testleri çalıştırma\n`npm test`\n## Kararlar\n"), "npm test")
         self.assertIsNone(kontrol.test_komutunu_bul((WAYPOINT / "ILERLEME.md").read_text(encoding="utf-8")))

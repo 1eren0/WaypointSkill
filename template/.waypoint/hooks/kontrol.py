@@ -385,6 +385,16 @@ def test_komutunu_bul(ilerleme_text: str) -> str | None:
     return None if command in {"", "...", "…"} else command
 
 
+def test_komutu_uyarisi(ilerleme_text: str, staged_names: list[str]) -> list[str]:
+    """Kod değişti ama test komutu yoksa testler hiç çalışmaz; bu sessizce geçmesin."""
+    if test_komutunu_bul(ilerleme_text) is not None or not any(_is_code_file(name) for name in staged_names):
+        return []
+    return [
+        "Testler çalışmadı: .waypoint/ILERLEME.md › 'Testleri çalıştırma' altında test komutu yok. Önemli özellikler "
+        "için test yazın ve komutu oraya ekleyin; o zamana kadar bozulan eski özellikler kayıtta yakalanmaz."
+    ]
+
+
 TEST_SURESI = 300  # saniye; WAYPOINT_TEST_TIMEOUT ile değişir
 
 # Git, hook'a kaydı alınan deponun yerini bu ayarlarla verir (`git rev-parse --local-env-vars`).
@@ -744,6 +754,7 @@ def main() -> int:
                 uyarilar.extend(warnings)
                 errors, _ = fikirler(file_text, _kayittaki(root, ".waypoint/FIKIRLER.md"))
                 hatalar.extend(errors)
+                uyarilar.extend(test_komutu_uyarisi(file_text, staged))
     map_text = _kayittaki(root, ".waypoint/HARITA.md")
     if map_text is not None:
         errors, _ = harita_gercek(map_text, lambda path: _oku(root, path))

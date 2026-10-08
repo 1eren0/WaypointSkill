@@ -1,7 +1,7 @@
 #!/bin/sh
 # Checks project rules, then runs the project's tests before every commit.
 # The test command is the first `backticked` line under "## Testleri çalıştırma"
-# in .waypoint/ILERLEME.md. If it's missing or still "...", there are no tests yet → allow.
+# in .waypoint/ILERLEME.md. If it's missing or still "...", there are no tests yet → allow (kontrol.py warns when code changed).
 # Tests stop after 5 minutes (WAYPOINT_TEST_TIMEOUT, in seconds, changes this).
 
 cd "$(git rev-parse --show-toplevel)" || exit 1

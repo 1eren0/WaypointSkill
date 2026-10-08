@@ -32,7 +32,7 @@ Waypoint bunların her birine bir kural ve bir kontrol koyar. Kurallar rica değ
 | 🎯 **Tek görev** | Plan küçük görevlere bölünür; aynı anda tek görev yapılır. Yeni fikirler "Sonra yapılacaklar" listesine tek satır olarak park edilir; uzun fikirlerin ayrıntısı `FIKIRLER.md`'ye yazılır. |
 | 🧱 **Küçük adımlar** | Her değişiklik tek bir iş yapar ve ayrı bir kayıt noktasıdır. Bozulan adım tek başına geri alınır. |
 | ☁️ **Otomatik yedek** | Projenin GitHub bağlantısı varsa her kayıt kendiliğinden GitHub'a yüklenir. Deneysel ya da aynı anda yürüyen işler ayrı dallarda (branch) tutulur. |
-| 🧪 **Otomatik testler** | Önemli özelliklerin testi yazılır. Testler geçmezse kayıt **alınmaz**. |
+| 🧪 **Otomatik testler** | Önemli özelliklerin testi yazılır ve her kayıttan önce çalışır. Testler geçmezse kayıt **alınmaz**. Test komutu henüz yoksa, kod değişen her kayıtta "testler çalışmadı" uyarısı çıkar. |
 | 📒 **İlerleme defteri** | Hedef, plan, kararlar ve günlük tek dosyada. Kod değiştiği gün günlüğe yazılmadan kayıt **alınmaz**. Defter büyüyünce eski kayıtlar arşive taşınır, hep kısa kalır. |
 | 🗺️ **Proje haritası** | Önemli fonksiyonlar ve bağlantıları, Obsidian'da resim olarak görünen bir şemayla. Haritada olmayan yeni fonksiyon kayda **giremez** (JavaScript/TypeScript, Python, Go, Rust, Java, C#, Kotlin, Swift, PHP, Ruby gibi yaygın dillerde). Koddan silinmiş ya da yanlış dosyaya yazılmış fonksiyon haritada **kalamaz**. Haritadaki bir fonksiyon değişince bağlantılarını kontrol etmesi için yapay zekâya hatırlatılır. |
 | 📝 **Dersler** | Yapay zekânın hatalarından çıkan kurallar. Düzeltme kayıtlarında ders yazmayı hatırlatır. |
