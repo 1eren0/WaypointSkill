@@ -7,9 +7,9 @@
 Claude Code, Codex, Antigravity ve diğer yapay zekâ araçları için Türkçe çalışma düzeni.
 Tek komutla kurulur; projeyi küçük, kayıtlı ve test edilmiş adımlarla ilerletir.
 
-</div>
+**Türkçe** · [English](README.en.md)
 
-> 🇬🇧 **English:** Waypoint is Turkish-first, but commands also work in English (`where are we`, `what's next`, `finish`…), and the AI answers in English if you write in English.
+</div>
 
 ---
 
