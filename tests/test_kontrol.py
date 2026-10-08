@@ -351,7 +351,7 @@ class SurumKontroluTestleri(unittest.TestCase):
     def test_guncelleme_github_cli_istemez(self):
         root = WAYPOINT.parent.parent
         for path in (WAYPOINT / "guncelle.bat", WAYPOINT / "guncelle.command",
-                     WAYPOINT / "komutlar" / "guncelleme.md", root / "README.md"):
+                     WAYPOINT / "komutlar" / "guncelleme.md", root / "README.md", root / "README.tr.md"):
             with self.subTest(path=path.name):
                 self.assertNotIn("gh api", path.read_text(encoding="utf-8"))
 
