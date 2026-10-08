@@ -68,11 +68,14 @@ if ! git -C "$target" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
     git -C "$target" init >/dev/null || fail 'Git deposu başlatılamadı.'
     info 'Kayıt noktası alabilmek için git kurdum.'
 fi
+# The project's own hooks keep running: Waypoint's hooks call them first (see .waypoint/hooks/onceki-hook).
 old_hooks=$(git -C "$target" config --get core.hooksPath 2>/dev/null || true)
 if [ -n "$old_hooks" ] && [ "$old_hooks" != ".waypoint/hooks" ]; then
-    info "Uyarı: Bu projede önceden başka bir kayıt kontrolü klasörü vardı ($old_hooks). Waypoint onun yerine geçti; eski kontroller artık çalışmayacak."
-elif [ -z "$old_hooks" ] && [ -n "$(find "$target/.git/hooks" -maxdepth 1 -type f ! -name '*.sample' 2>/dev/null | head -n 1)" ]; then
-    info "Uyarı: Bu projenin .git/hooks klasöründe önceden kayıt kontrolleri vardı. Waypoint onların yerine geçti; eski kontroller artık çalışmayacak."
+    git -C "$target" config waypoint.oncekiHooks "$old_hooks"
+    info "Not: Bu projede önceden başka kayıt kontrolleri vardı ($old_hooks). Waypoint onları da çalıştırmaya devam edecek."
+elif { [ -z "$old_hooks" ] || [ "$old_hooks" = ".waypoint/hooks" ]; } && [ -z "$(git -C "$target" config --get waypoint.oncekiHooks 2>/dev/null)" ] && [ -n "$(find "$target/.git/hooks" -maxdepth 1 -type f ! -name '*.sample' 2>/dev/null | head -n 1)" ]; then
+    git -C "$target" config waypoint.oncekiHooks "$(git -C "$target" rev-parse --git-common-dir)/hooks"
+    info "Not: Bu projenin .git/hooks klasöründe önceden kayıt kontrolleri vardı. Waypoint onları da çalıştırmaya devam edecek."
 fi
 git -C "$target" config core.hooksPath .waypoint/hooks || fail 'Git hook yolu ayarlanamadı.'
 chmod +x "$waypoint/hooks"/* "$waypoint/guncelle.command" 2>/dev/null || true

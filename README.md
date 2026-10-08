@@ -162,7 +162,7 @@ No. Commands work in English and the AI answers in English if you write in Engli
 Any tool that reads `AGENTS.md` (Codex, Antigravity, Cursor…) and Claude Code through `CLAUDE.md`. Since the checks are tied to git, they work in all of them.
 
 **Can I add it to an existing project?**
-Yes. If `AGENTS.md` and `CLAUDE.md` exist, their content is kept and only a Waypoint pointer is added at the end.
+Yes. If `AGENTS.md` and `CLAUDE.md` exist, their content is kept and only a Waypoint pointer is added at the end. The project's own git hooks (Husky etc.) keep running before Waypoint's checks.
 
 **How do I remove Waypoint from a project?**
 Delete the `.waypoint` folder, remove the Waypoint line from `AGENTS.md` and `CLAUDE.md`, and run this in a terminal:

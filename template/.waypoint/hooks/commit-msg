@@ -3,6 +3,9 @@
 
 cd "$(git rev-parse --show-toplevel 2>/dev/null)" 2>/dev/null || exit 0
 
+# The project's own commit-msg hook from before Waypoint (if any) runs first.
+sh .waypoint/hooks/onceki-hook commit-msg "$1" || exit 1
+
 PYTHON=""
 if [ "${WAYPOINT_NO_PYTHON:-}" != "1" ] && command -v python3 >/dev/null 2>&1 && python3 --version >/dev/null 2>&1; then
   PYTHON="python3"

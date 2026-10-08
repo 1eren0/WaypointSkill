@@ -4,6 +4,10 @@ What changed in each Waypoint version, written for the AI assistant that install
 Summarize the relevant entries for the user in plain Turkish before asking to update.
 The installed version is in `.waypoint/VERSION`.
 
+## 1.14 — 2026-10-08
+
+- **The project's own git hooks keep running:** if a project already had hooks (a custom `core.hooksPath` such as Husky, or files in `.git/hooks`), installing Waypoint used to switch them off. Now the installer remembers that folder (`git config waypoint.oncekiHooks`) and Waypoint's hooks run the old ones first; hooks Waypoint doesn't use itself (`pre-push`, `post-merge`…) are passed through. Updating also turns old hooks left in `.git/hooks` back on. An earlier custom `core.hooksPath` wasn't saved by older versions; set it with `git config waypoint.oncekiHooks <folder>`.
+
 ## 1.13 — 2026-10-08
 
 - **English short forms:** `where` (where are we), `ask` (just a question), `recap` (what did we do), `next` (what's next), `run` (how do I run it), `map` (show the map). A one-word short form, Turkish or English, counts as a command only when it is the user's whole message, so a normal sentence containing "next" isn't mistaken for one.

@@ -80,6 +80,41 @@ class HookPythonRequiredTests(unittest.TestCase):
             ["git", "commit", "-m", message], cwd=self.repo, env=env, text=True, encoding="utf-8", capture_output=True
         )
 
+    def onceki_hook(self, name, body):
+        folder = self.repo / "eski-hooks"
+        folder.mkdir(exist_ok=True)
+        hook = folder / name
+        hook.write_bytes(f"#!/bin/sh\n{body}\n".encode("utf-8"))
+        hook.chmod(0o755)
+        self.run_git("config", "waypoint.oncekiHooks", "eski-hooks")
+
+    def docs_staged(self):
+        self.run_git("reset", "-q")
+        (self.repo / "NOTLAR.md").write_text("not\n", encoding="utf-8")
+        self.run_git("add", "NOTLAR.md")
+
+    def test_projenin_onceki_hooklari_da_calisir(self):
+        for name in ("pre-commit", "commit-msg", "post-commit"):
+            self.onceki_hook(name, f"echo {name} >> calisan.txt")
+        self.docs_staged()
+        self.assertEqual(self.commit("docs: add notes").returncode, 0)
+        ran = (self.repo / "calisan.txt").read_text(encoding="utf-8").split()
+        self.assertEqual(ran, ["pre-commit", "commit-msg", "post-commit"])
+
+    def test_onceki_hook_engellerse_kayit_alinmaz(self):
+        self.onceki_hook("pre-commit", "echo eski kontrol bozuk; exit 1")
+        self.docs_staged()
+        result = self.commit("docs: add notes")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("eski kontrol bozuk", result.stdout + result.stderr)
+
+    def test_waypointin_olmadigi_hook_da_aktarilir(self):
+        self.onceki_hook("pre-push", 'echo "$1 $(cat)" > push.txt')
+        result = subprocess.run(["sh", ".waypoint/hooks/pre-push", "origin"], cwd=self.repo, input="refs/heads/main",
+                                text=True, encoding="utf-8", capture_output=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual((self.repo / "push.txt").read_text(encoding="utf-8").strip(), "origin refs/heads/main")
+
     def test_oto_kayit_engel_ve_kayit_yazar(self):
         self.assertNotEqual(self.commit("feat: add sample").returncode, 0)  # Günlük satırı yok
         self.run_git("reset", "-q")

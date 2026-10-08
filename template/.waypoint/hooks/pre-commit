@@ -6,6 +6,9 @@
 
 cd "$(git rev-parse --show-toplevel)" || exit 1
 
+# The project's own pre-commit hook from before Waypoint (if any) runs first, e.g. a formatter.
+sh .waypoint/hooks/onceki-hook pre-commit || exit 1
+
 PYTHON=""
 if [ "${WAYPOINT_NO_PYTHON:-}" != "1" ] && command -v python3 >/dev/null 2>&1 && python3 --version >/dev/null 2>&1; then
   PYTHON="python3"

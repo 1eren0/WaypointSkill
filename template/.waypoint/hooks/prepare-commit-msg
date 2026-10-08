@@ -1,0 +1,3 @@
+#!/bin/sh
+# Waypoint has no check for this hook; it only runs the project's earlier hook of the same name, if there was one.
+exec sh "$(dirname "$0")/onceki-hook" "$(basename "$0")" "$@"

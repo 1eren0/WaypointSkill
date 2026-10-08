@@ -20,11 +20,17 @@ class InstallerTests(unittest.TestCase):
         self.temp.cleanup()
 
     def run_cmd(self, args):
-        return subprocess.run(args, cwd=self.target, env=self.env, text=True,
+        return subprocess.run(args, cwd=self.target, env=self.env, text=True, encoding="utf-8", errors="replace",
                               stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
 
     def check_install(self, command):
+        # The project's own hooks folder is remembered so Waypoint keeps running it.
+        self.run_cmd(["git", "init", "-q"])
+        self.run_cmd(["git", "config", "core.hooksPath", "eski-hooks"])
         self.run_cmd(command)
+        remembered = subprocess.run(["git", "config", "waypoint.oncekiHooks"], cwd=self.target,
+                                    env=self.env, text=True, stdout=subprocess.PIPE, check=True)
+        self.assertEqual(remembered.stdout.strip(), "eski-hooks")
         for relative in (".waypoint/KURALLAR.md", ".waypoint/komutlar/bitir.md", ".waypoint/guncelle.bat",
                          ".waypoint/guncelle.command", ".waypoint/hooks/kontrol.py", "AGENTS.md", "CLAUDE.md"):
             self.assertTrue((self.target / relative).is_file(), relative)
@@ -34,6 +40,9 @@ class InstallerTests(unittest.TestCase):
         agents = self.target / "AGENTS.md"
         self.run_cmd(command)
         self.assertEqual(agents.read_text(encoding="utf-8").count(".waypoint/KURALLAR.md"), 1)
+        remembered = subprocess.run(["git", "config", "waypoint.oncekiHooks"], cwd=self.target,
+                                    env=self.env, text=True, stdout=subprocess.PIPE, check=True)
+        self.assertEqual(remembered.stdout.strip(), "eski-hooks")
 
         # Existing project instructions remain, with the pointer appended once.
         shutil.rmtree(self.target / ".waypoint")
@@ -68,6 +77,22 @@ class InstallerTests(unittest.TestCase):
                          (ROOT / "template/.waypoint/VERSION").read_text(encoding="utf-8"))
         self.assertEqual(progress.read_text(encoding="utf-8"), "user progress data\n")
         self.assertNotEqual((self.target / ".waypoint/KURALLAR.md").read_text(encoding="utf-8"), "modified rules\n")
+
+    def check_update_restores_git_hooks(self, command):
+        # Older versions switched off hooks in .git/hooks; updating turns them back on.
+        self.run_cmd(["git", "init", "-q"])
+        self.run_cmd(["git", "config", "core.hooksPath", ".waypoint/hooks"])
+        hooks = self.target / ".git" / "hooks"
+        hooks.mkdir(exist_ok=True)
+        (hooks / "pre-commit").write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+        self.run_cmd(command)
+        remembered = subprocess.run(["git", "config", "waypoint.oncekiHooks"], cwd=self.target,
+                                    env=self.env, text=True, stdout=subprocess.PIPE, check=True)
+        self.assertEqual(remembered.stdout.strip(), ".git/hooks")
+
+    @unittest.skipUnless(shutil.which("sh"), "sh bulunamadı")
+    def test_shell_update_restores_git_hooks(self):
+        self.check_update_restores_git_hooks(["sh", str((ROOT / "install.sh").resolve())])
 
     @unittest.skipUnless(shutil.which("sh"), "sh bulunamadı")
     def test_shell_installer(self):

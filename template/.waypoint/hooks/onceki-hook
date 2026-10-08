@@ -1,0 +1,13 @@
+#!/bin/sh
+# Runs the project's own git hook from before Waypoint was installed, so Waypoint adds its checks instead of replacing them.
+# Usage: onceki-hook <hook name> [args...]. The old hooks folder is in `git config waypoint.oncekiHooks` (set by the installer).
+# No old folder or no such hook → nothing to do.
+
+name=$1
+shift
+dir=$(git config --get waypoint.oncekiHooks 2>/dev/null) || exit 0
+[ -n "$dir" ] || exit 0
+case "$dir" in .waypoint/hooks|./.waypoint/hooks|.waypoint/hooks/) exit 0 ;; esac
+hook="$dir/$name"
+[ -f "$hook" ] && [ -x "$hook" ] || exit 0
+exec "$hook" "$@"

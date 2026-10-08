@@ -192,12 +192,16 @@ try {
 
     }
 
+    # The project's own hooks keep running: Waypoint's hooks call them first (see .waypoint/hooks/onceki-hook).
     $oldHooks = (& git -C $target config --get core.hooksPath 2>$null | Select-Object -First 1)
     $gitHookDir = Join-Path $target '.git/hooks'
     if ($oldHooks -and $oldHooks -ne '.waypoint/hooks') {
-        Write-Output "Uyarı: Bu projede önceden başka bir kayıt kontrolü klasörü vardı ($oldHooks). Waypoint onun yerine geçti; eski kontroller artık çalışmayacak."
-    } elseif (-not $oldHooks -and (Test-Path -LiteralPath $gitHookDir) -and (Get-ChildItem -LiteralPath $gitHookDir -File -ErrorAction SilentlyContinue | Where-Object { $_.Extension -ne '.sample' })) {
-        Write-Output 'Uyarı: Bu projenin .git/hooks klasöründe önceden kayıt kontrolleri vardı. Waypoint onların yerine geçti; eski kontroller artık çalışmayacak.'
+        & git -C $target config waypoint.oncekiHooks $oldHooks 2>$null
+        Write-Output "Not: Bu projede önceden başka kayıt kontrolleri vardı ($oldHooks). Waypoint onları da çalıştırmaya devam edecek."
+    } elseif ((-not $oldHooks -or $oldHooks -eq '.waypoint/hooks') -and -not (& git -C $target config --get waypoint.oncekiHooks 2>$null) -and (Test-Path -LiteralPath $gitHookDir) -and (Get-ChildItem -LiteralPath $gitHookDir -File -ErrorAction SilentlyContinue | Where-Object { $_.Extension -ne '.sample' })) {
+        $hookPath = (& git -C $target rev-parse --git-common-dir 2>$null | Select-Object -First 1) + '/hooks'
+        & git -C $target config waypoint.oncekiHooks $hookPath 2>$null
+        Write-Output 'Not: Bu projenin .git/hooks klasöründe önceden kayıt kontrolleri vardı. Waypoint onları da çalıştırmaya devam edecek.'
     }
     & git -C $target config core.hooksPath .waypoint/hooks 2>$null
 

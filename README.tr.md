@@ -157,7 +157,7 @@ Hayır. Waypoint tam olarak kod bilmeyenler için tasarlandı. Sen ne istediğin
 `AGENTS.md` dosyasını okuyan her araçla (Codex, Antigravity, Cursor…) ve `CLAUDE.md` üzerinden Claude Code ile. Kontroller git'e bağlı olduğu için hepsinde çalışır.
 
 **Mevcut bir projeye kurabilir miyim?**
-Evet. Varsa `AGENTS.md` ve `CLAUDE.md` dosyalarının içeriği korunur, sonuna sadece Waypoint yönlendirmesi eklenir.
+Evet. Varsa `AGENTS.md` ve `CLAUDE.md` dosyalarının içeriği korunur, sonuna sadece Waypoint yönlendirmesi eklenir. Projenin kendi kayıt kontrolleri (Husky gibi) de Waypoint'in kontrollerinden önce çalışmaya devam eder.
 
 **Waypoint'i projeden nasıl kaldırırım?**
 `.waypoint` klasörünü sil, `AGENTS.md` ve `CLAUDE.md` içindeki Waypoint satırını kaldır ve terminalde şunu çalıştır:
