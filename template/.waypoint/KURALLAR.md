@@ -7,7 +7,7 @@ Longer how-tos live in `.waypoint/komutlar/`: open the named file only when it a
 
 ## Language & communication
 
-- Talk to me in plain Turkish; explain any unavoidable technical term briefly in parentheses.
+- Talk to me in plain Turkish (in plain English if I write in English); explain any unavoidable technical term briefly in parentheses.
 - Don't show me code. Tell me what changed and what it gives me.
 - Be brief: at most one question per message, with your recommendation. If I skip a question, park it in "Sonra yapılacaklar" with "(cevap bekleniyor)"; remove it once I answer.
 - If I have to do something myself, give me exact step-by-step instructions.
@@ -77,15 +77,17 @@ The current stage is recorded in `ILERLEME.md`.
 
 ## Commands
 
+Each command also works in English, given in brackets.
+
 - **Session start (automatic):** read `ILERLEME.md` and "Kurallar" in `DERSLER.md`. Blank `ILERLEME.md`: stage 0 if the folder has code, otherwise stage 1. Then briefly tell me what we did last, where we are, and the next step.
-- **`neredeyiz` / `kayboldum` / `özet` / `ne yapıyorduk`:** stop and summarize the goal, the plan (done and current task), what's happening now, the next step, and questions still waiting for my answer.
-- **`sos` / `sadece soru`:** only answer; don't change files, run commands that change anything, or commit.
-- **`nep` / `ne yaptık`:** in 1–3 plain Turkish sentences, what your last action was and what it gives me.
-- **`snv` / `sırada ne var`:** only the next step, in one sentence.
-- **`parket <fikir>` / `sonraya ekle <fikir>`:** add it to "Sonra yapılacaklar" (see Focus), confirm in one line, and continue the current task.
-- **`liste`:** done tasks, then remaining tasks and "Sonra yapılacaklar", as short lists.
-- **`nasıl açarım`:** show the "Nasıl açılır" steps as they are.
-- **`haritayı göster`:** draw `HARITA.md` as a diagram in the chat, without creating a file; if you can't draw, explain it in plain Turkish.
-- **`sorgula`:** follow `komutlar/sorgula.md` for the current idea or feature.
-- **`bitir` / `bugünlük bu kadar`:** follow `komutlar/bitir.md`.
-- **`Waypoint'i güncelle`, or a commit prints "Waypoint güncellemesi var":** follow `komutlar/guncelleme.md`. Never update without my OK.
+- **`neredeyiz` / `kayboldum` / `özet` / `ne yapıyorduk` [`where are we`]:** stop and summarize the goal, the plan (done and current task), what's happening now, the next step, and questions still waiting for my answer.
+- **`sos` / `sadece soru` [`just a question`]:** only answer; don't change files, run commands that change anything, or commit.
+- **`nep` / `ne yaptık` [`what did we do`]:** in 1–3 plain Turkish sentences, what your last action was and what it gives me.
+- **`snv` / `sırada ne var` [`what's next`]:** only the next step, in one sentence.
+- **`parket <fikir>` / `sonraya ekle <fikir>` [`park <idea>`]:** add it to "Sonra yapılacaklar" (see Focus), confirm in one line, and continue the current task.
+- **`liste` [`list`]:** done tasks, then remaining tasks and "Sonra yapılacaklar", as short lists.
+- **`nasıl açarım` [`how do I run it`]:** show the "Nasıl açılır" steps as they are.
+- **`haritayı göster` [`show the map`]:** draw `HARITA.md` as a diagram in the chat, without creating a file; if you can't draw, explain it in plain Turkish.
+- **`sorgula` [`clarify`]:** follow `komutlar/sorgula.md` for the current idea or feature.
+- **`bitir` / `bugünlük bu kadar` [`finish`]:** follow `komutlar/bitir.md`.
+- **`Waypoint'i güncelle` [`update Waypoint`], or a commit prints "Waypoint güncellemesi var":** follow `komutlar/guncelleme.md`. Never update without my OK.

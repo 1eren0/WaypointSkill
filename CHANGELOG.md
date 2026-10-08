@@ -4,6 +4,10 @@ What changed in each Waypoint version, written for the AI assistant that install
 Summarize the relevant entries for the user in plain Turkish before asking to update.
 The installed version is in `.waypoint/VERSION`.
 
+## 1.12 — 2026-10-08
+
+- **English commands and replies:** every command also works in English (`where are we`, `just a question`, `what did we do`, `what's next`, `park <idea>`, `list`, `how do I run it`, `show the map`, `clarify`, `finish`, `update Waypoint`). If the user writes in English, the AI answers in plain English; project notes stay in Turkish.
+
 ## 1.11 — 2026-10-08
 
 - **Commands anyone can guess:** the short commands now have plain Turkish long forms that work the same way: `sadece soru` (= `sos`), `ne yaptık` (= `nep`), `sırada ne var` (= `snv`), `sonraya ekle <fikir>` (= `parket <fikir>`). The short forms keep working.

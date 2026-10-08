@@ -9,6 +9,8 @@ Tek komutla kurulur; projeyi küçük, kayıtlı ve test edilmiş adımlarla ile
 
 </div>
 
+> 🇬🇧 **English:** Waypoint is Turkish-first, but commands also work in English (`where are we`, `what's next`, `finish`…), and the AI answers in English if you write in English.
+
 ---
 
 ## Neden?
