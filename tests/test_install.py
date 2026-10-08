@@ -99,7 +99,7 @@ class InstallerTests(unittest.TestCase):
         script = (ROOT / "install.sh").resolve()
         self.check_install(["sh", str(script)])
 
-    def test_powershell_installer(self):
+    def powershell_command(self):
         if os.name != "nt":
             self.skipTest("install.ps1 Windows kurulumu; macOS/Linux install.sh kullanır")
         executable = shutil.which("powershell") or shutil.which("pwsh")
@@ -108,8 +108,13 @@ class InstallerTests(unittest.TestCase):
         command = [executable, "-NoProfile"]
         if Path(executable).name.lower().startswith("powershell"):
             command += ["-ExecutionPolicy", "Bypass"]
-        command += ["-File", str((ROOT / "install.ps1").resolve())]
-        self.check_install(command)
+        return command + ["-File", str((ROOT / "install.ps1").resolve())]
+
+    def test_powershell_installer(self):
+        self.check_install(self.powershell_command())
+
+    def test_powershell_update_restores_git_hooks(self):
+        self.check_update_restores_git_hooks(self.powershell_command())
 
 
 if __name__ == "__main__":
