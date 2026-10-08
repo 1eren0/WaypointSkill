@@ -4,6 +4,10 @@ What changed in each Waypoint version, written for the AI assistant that install
 Summarize the relevant entries for the user in plain Turkish before asking to update.
 The installed version is in `.waypoint/VERSION`.
 
+## 1.17 — 2026-10-08
+
+- **No "Bitti" after a failed update:** `guncelle.bat` and `guncelle.command` printed "Bitti" even when the download or the installer failed. Now they say "Güncelleme OLMADI" and ask the user to show the error to the AI. On macOS/Linux the download is checked separately, since `curl | sh` looked successful even when nothing was downloaded.
+
 ## 1.16 — 2026-10-08
 
 - **English replies everywhere:** five rules still asked for Turkish (the commit note, `ne yaptık`, the map explanation, `bitir` and the update summary). They now follow the one language rule: Turkish by default, English if the user writes in English. The commit checks' own messages are still Turkish.

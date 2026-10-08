@@ -117,5 +117,52 @@ class InstallerTests(unittest.TestCase):
         self.check_update_restores_git_hooks(self.powershell_command())
 
 
+
+@unittest.skipUnless(shutil.which("sh") and shutil.which("curl"), "sh ve curl gerekli")
+class UpdateLauncherTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory(prefix="Waypoint ü ")
+        self.root = Path(self.temp.name)
+        (self.root / ".waypoint").mkdir()
+        shutil.copy(ROOT / "template/.waypoint/guncelle.command", self.root / ".waypoint/guncelle.command")
+
+    def tearDown(self):
+        self.temp.cleanup()
+
+    def run_launcher(self, url):
+        env = dict(os.environ, WAYPOINT_INSTALL_URL=url)
+        return subprocess.run(["sh", ".waypoint/guncelle.command"], cwd=self.root, env=env, text=True,
+                              encoding="utf-8", errors="replace", capture_output=True)
+
+    def script_url(self, body):
+        # Windows curl doesn't decode %20 in file:// URLs, so the script sits in a plain-named folder.
+        folder = tempfile.TemporaryDirectory(prefix="waypoint-")
+        self.addCleanup(folder.cleanup)
+        script = Path(folder.name) / "install.sh"
+        script.write_text(body, encoding="utf-8")
+        return script.resolve().as_uri()
+
+    def test_basarili_kurulumda_bitti_der(self):
+        result = self.run_launcher(self.script_url("echo kuruldu\n"))
+        self.assertIn("Bitti.", result.stdout)
+        self.assertNotIn("OLMADI", result.stdout)
+
+    def test_kurulum_hata_verirse_bitti_demez(self):
+        result = self.run_launcher(self.script_url("echo bozuk >&2; exit 1\n"))
+        self.assertIn("Güncelleme OLMADI", result.stdout)
+        self.assertNotIn("Bitti.", result.stdout)
+
+    def test_indirme_basarisizsa_bitti_demez(self):
+        result = self.run_launcher(self.script_url("")[:-len("install.sh")] + "yok.sh")
+        self.assertIn("Güncelleme OLMADI", result.stdout)
+        self.assertNotIn("Bitti.", result.stdout)
+
+    def test_windows_baslaticisi_hatada_bitti_demez(self):
+        lines = (ROOT / "template/.waypoint/guncelle.bat").read_text(encoding="ascii").splitlines()
+        command = [line for line in lines if line and not line.startswith(("@echo", "rem "))]
+        self.assertEqual(len(command), 1)  # kurulum dosyayı değiştirirken cmd tek satırı okumuş olmalı
+        self.assertIn("&& (echo. & echo Bitti.", command[0])
+        self.assertIn("|| (echo. & echo Guncelleme OLMADI.", command[0])
+
 if __name__ == "__main__":
     unittest.main()
