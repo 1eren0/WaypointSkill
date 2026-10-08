@@ -35,6 +35,7 @@ Waypoint puts a rule and a check on each of these. The rules aren't requests: th
 | 🧱 **Small steps** | Each change does one thing and is its own save point. A step that breaks something can be undone on its own. |
 | ☁️ **Automatic backup** | If the project has a GitHub remote, every commit is pushed automatically. Experiments and parallel work live on separate branches. |
 | 🧪 **Automatic tests** | Important features get tests, and they run before every commit. If the tests fail, the commit is **refused**. Until a test command is set, every commit that changes code warns that no tests ran. |
+| 🖱️ **Live check** | Before you try a site or web app, the AI opens it in its own browser and clicks through it. If it has no browser, it says so instead of claiming it works. |
 | 📒 **Progress log** | Goal, plan, decisions and a daily log in one file. On a day the code changes, the commit is **refused** until the log is written. Old entries move to an archive, so the log stays short. |
 | 🗺️ **Project map** | Important functions and how they connect, as a diagram that shows up as a picture in Obsidian. A new function missing from the map **can't be committed** (in common languages like JavaScript/TypeScript, Python, Go, Rust, Java, C#, Kotlin, Swift, PHP, Ruby). A function deleted from the code or listed under the wrong file **can't stay** in the map. When a mapped function changes, the AI is reminded to check its connections. |
 | 📝 **Lessons** | Rules learned from the AI's mistakes. Fix commits remind it to write a lesson. |

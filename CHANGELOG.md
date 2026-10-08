@@ -4,6 +4,10 @@ What changed in each Waypoint version, written for the AI assistant that install
 Summarize the relevant entries for the user in plain Turkish before asking to update.
 The installed version is in `.waypoint/VERSION`.
 
+## 1.18 — 2026-10-08
+
+- **Live check in the browser:** before handing over a site or web app to try, the AI opens it in whatever browser tool it has and clicks through the task's "bitti sayılır" steps itself, then says in one line what it saw (with a screenshot if it can). With no browser tool it says so plainly instead of claiming it works. Nothing extra gets installed. See `komutlar/canli-kontrol.md`.
+
 ## 1.17 — 2026-10-08
 
 - **No "Bitti" after a failed update:** `guncelle.bat` and `guncelle.command` printed "Bitti" even when the download or the installer failed. Now they say "Güncelleme OLMADI" and ask the user to show the error to the AI. On macOS/Linux the download is checked separately, since `curl | sh` looked successful even when nothing was downloaded.
