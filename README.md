@@ -118,10 +118,10 @@ Yapay zekâya istediğin zaman şunları yazabilirsin:
 | Komut | Ne olur |
 |---|---|
 | `neredeyiz` | Hedef, plan, şu an ne yapıldığı ve sıradaki adım özetlenir. |
-| `sos` | Sadece soru: yapay zekâ cevap verir, hiçbir şeyi değiştirmez. |
-| `nep` | Ne yaptık: son yapılan işlem kısaca, sade dille anlatılır. |
-| `snv` | Sırada ne var: sadece sıradaki adım tek cümleyle söylenir. |
-| `parket <fikir>` | Yeni fikir, mevcut iş bölünmeden "Sonra yapılacaklar"a yazılır. |
+| `sadece soru` (kısaca `sos`) | Yapay zekâ sadece cevap verir, hiçbir şeyi değiştirmez. |
+| `ne yaptık` (kısaca `nep`) | Son yapılan işlem kısaca, sade dille anlatılır. |
+| `sırada ne var` (kısaca `snv`) | Sadece sıradaki adım tek cümleyle söylenir. |
+| `sonraya ekle <fikir>` (kısaca `parket`) | Yeni fikir, mevcut iş bölünmeden "Sonra yapılacaklar"a yazılır. |
 | `liste` | Yapılanlar ve yapılacaklar alt alta gösterilir. |
 | `nasıl açarım` | Projeyi çalıştırma adımları gösterilir. |
 | `haritayı göster` | Projenin haritası kutular ve oklarla çizilir. |

@@ -79,10 +79,10 @@ The current stage is recorded in `ILERLEME.md`.
 
 - **Session start (automatic):** read `ILERLEME.md` and "Kurallar" in `DERSLER.md`. Blank `ILERLEME.md`: stage 0 if the folder has code, otherwise stage 1. Then briefly tell me what we did last, where we are, and the next step.
 - **`neredeyiz` / `kayboldum` / `özet` / `ne yapıyorduk`:** stop and summarize the goal, the plan (done and current task), what's happening now, the next step, and questions still waiting for my answer.
-- **`sos`:** only answer; don't change files, run commands that change anything, or commit.
-- **`nep`:** in 1–3 plain Turkish sentences, what your last action was and what it gives me.
-- **`snv`:** only the next step, in one sentence.
-- **`parket <fikir>`:** add it to "Sonra yapılacaklar" (see Focus), confirm in one line, and continue the current task.
+- **`sos` / `sadece soru`:** only answer; don't change files, run commands that change anything, or commit.
+- **`nep` / `ne yaptık`:** in 1–3 plain Turkish sentences, what your last action was and what it gives me.
+- **`snv` / `sırada ne var`:** only the next step, in one sentence.
+- **`parket <fikir>` / `sonraya ekle <fikir>`:** add it to "Sonra yapılacaklar" (see Focus), confirm in one line, and continue the current task.
 - **`liste`:** done tasks, then remaining tasks and "Sonra yapılacaklar", as short lists.
 - **`nasıl açarım`:** show the "Nasıl açılır" steps as they are.
 - **`haritayı göster`:** draw `HARITA.md` as a diagram in the chat, without creating a file; if you can't draw, explain it in plain Turkish.

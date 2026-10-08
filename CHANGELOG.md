@@ -4,6 +4,10 @@ What changed in each Waypoint version, written for the AI assistant that install
 Summarize the relevant entries for the user in plain Turkish before asking to update.
 The installed version is in `.waypoint/VERSION`.
 
+## 1.11 — 2026-10-08
+
+- **Commands anyone can guess:** the short commands now have plain Turkish long forms that work the same way: `sadece soru` (= `sos`), `ne yaptık` (= `nep`), `sırada ne var` (= `snv`), `sonraya ekle <fikir>` (= `parket <fikir>`). The short forms keep working.
+
 ## 1.10 — 2026-10-08
 
 - **No GitHub CLI needed anymore:** the Waypoint repo is public now. Installing, `guncelle.bat` / `guncelle.command` and the daily new-version check download straight from GitHub, so `gh` and `gh auth login` are no longer required. Projects on 1.9 still update with their old `guncelle.bat` if `gh` is set up; after that, the new launcher works without it.
