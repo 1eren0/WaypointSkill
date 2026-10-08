@@ -4,6 +4,7 @@ import shutil
 import tempfile
 import time
 import unittest
+from unittest import mock
 from pathlib import Path
 
 
@@ -326,6 +327,33 @@ class SurumKontroluTestleri(unittest.TestCase):
         self.assertIsNone(kontrol.surum_kontrolu(self.root, "2026-10-04", self.fetch(OSError("gh yok"))))
         self.assertIsNone(kontrol.surum_kontrolu(self.root, "2026-10-04", self.fetch("2.0")))
         self.assertEqual(self.calls, 1)
+
+    def test_bozuk_cevap_da_sessiz(self):
+        import http.client
+        self.assertIsNone(kontrol.surum_kontrolu(self.root, "2026-10-04", self.fetch(http.client.IncompleteRead(b""))))
+
+    def test_surum_github_cli_olmadan_okunur(self):
+        class Cevap:
+            def __enter__(self):
+                return self
+            def __exit__(self, *args):
+                return False
+            def read(self, size):
+                return b"1.10\n"
+        urls = []
+        def urlopen(url, timeout):
+            urls.append(url)
+            return Cevap()
+        with mock.patch.object(kontrol.urllib.request, "urlopen", urlopen):
+            self.assertEqual(kontrol._github_surumu(), "1.10\n")
+        self.assertEqual(urls, ["https://raw.githubusercontent.com/erenuzman/WaypointSkill/main/template/.waypoint/VERSION"])
+
+    def test_guncelleme_github_cli_istemez(self):
+        root = WAYPOINT.parent.parent
+        for path in (WAYPOINT / "guncelle.bat", WAYPOINT / "guncelle.command",
+                     WAYPOINT / "komutlar" / "guncelleme.md", root / "README.md"):
+            with self.subTest(path=path.name):
+                self.assertNotIn("gh api", path.read_text(encoding="utf-8"))
 
     def test_sablonda_surum_var(self):
         self.assertTrue(kontrol._surum((WAYPOINT / "VERSION").read_text(encoding="utf-8")))

@@ -43,16 +43,14 @@ Waypoint bunların her birine bir kural ve bir kontrol koyar. Kurallar rica değ
 
 Projenin klasöründe bir terminal aç ve tek komutu yapıştır.
 
-> **Şu an repo gizli** olduğu için kurulum GitHub girişini kullanır. Bilgisayarında [GitHub CLI](https://cli.github.com) kurulu ve `gh auth login` ile giriş yapılmış olmalı.
-
 **Windows (PowerShell):**
 ```powershell
-gh api repos/erenuzman/WaypointSkill/contents/install.ps1 -H "Accept: application/vnd.github.raw" | Out-String | iex
+irm https://raw.githubusercontent.com/erenuzman/WaypointSkill/main/install.ps1 | iex
 ```
 
 **macOS / Linux:**
 ```bash
-gh api repos/erenuzman/WaypointSkill/contents/install.sh -H "Accept: application/vnd.github.raw" | sh
+curl -fsSL https://raw.githubusercontent.com/erenuzman/WaypointSkill/main/install.sh | sh
 ```
 
 Bitti. Şimdi aynı klasörde yapay zekâ aracını aç ve ne yapmak istediğini anlat. Gerisini Waypoint yönetir: önce hedefi netleştirir, sonra planı sana onaylatır, sonra adım adım yapar.
@@ -61,7 +59,6 @@ Bitti. Şimdi aynı klasörde yapay zekâ aracını aç ve ne yapmak istediğini
 
 - **Git**: kayıt noktaları için. [İndir](https://git-scm.com)
 - **Python 3.10+** (zorunlu): kural kontrolleri Python ile çalışır. Python yoksa kontroller atlanmaz, **kayıt engellenir** ve nasıl kurulacağı söylenir. Windows'ta kurarken "Add python.exe to PATH" kutusunu işaretle. [İndir](https://www.python.org/downloads/)
-- **GitHub CLI**: repo gizliyken kurulum için. [İndir](https://cli.github.com)
 
 ### Güncelleme
 
@@ -83,12 +80,12 @@ Yapay zekâ yenilikleri sade Türkçe anlatır ve senden `.waypoint/guncelle.bat
 
 **Windows (PowerShell):**
 ```powershell
-gh api repos/erenuzman/WaypointSkill/contents/install.ps1 -H "Accept: application/vnd.github.raw" | Out-String | iex
+irm https://raw.githubusercontent.com/erenuzman/WaypointSkill/main/install.ps1 | iex
 ```
 
 **macOS / Linux:**
 ```bash
-gh api repos/erenuzman/WaypointSkill/contents/install.sh -H "Accept: application/vnd.github.raw" | sh
+curl -fsSL https://raw.githubusercontent.com/erenuzman/WaypointSkill/main/install.sh | sh
 ```
 
 Sonra yapay zekâdan değişiklikleri kaydetmesini iste.

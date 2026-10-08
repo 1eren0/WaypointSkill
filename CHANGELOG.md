@@ -4,6 +4,10 @@ What changed in each Waypoint version, written for the AI assistant that install
 Summarize the relevant entries for the user in plain Turkish before asking to update.
 The installed version is in `.waypoint/VERSION`.
 
+## 1.10 — 2026-10-08
+
+- **No GitHub CLI needed anymore:** the Waypoint repo is public now. Installing, `guncelle.bat` / `guncelle.command` and the daily new-version check download straight from GitHub, so `gh` and `gh auth login` are no longer required. Projects on 1.9 still update with their old `guncelle.bat` if `gh` is set up; after that, the new launcher works without it.
+
 ## 1.9 — 2026-10-07
 
 - **The user starts the update, not the AI:** Claude Code's auto mode blocked the AI from running the installer ("Code from External"), and rightly so: it runs code downloaded from the internet. The AI still summarizes what's new, then asks the user to double-click the new `.waypoint/guncelle.bat` (macOS: `.waypoint/guncelle.command`) and write "güncelledim"; then it commits and tidies as before. It never runs the installer itself.

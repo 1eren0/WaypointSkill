@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
+import http.client
 import os
 import re
 import signal
 import subprocess
 import sys
 import tempfile
+import urllib.request
 from datetime import date, datetime, timedelta
 from pathlib import Path
 
@@ -587,11 +589,12 @@ def _surum(text: str) -> tuple[int, ...]:
     return tuple(int(part) for part in re.findall(r"\d+", text or "")[:3])
 
 
+WAYPOINT_RAW = f"https://raw.githubusercontent.com/{WAYPOINT_REPO}/main"
+
+
 def _github_surumu() -> str:
-    return subprocess.run(
-        ["gh", "api", f"repos/{WAYPOINT_REPO}/contents/template/.waypoint/VERSION", "-H", "Accept: application/vnd.github.raw"],
-        capture_output=True, encoding="utf-8", errors="replace", timeout=5, check=True,
-    ).stdout
+    with urllib.request.urlopen(f"{WAYPOINT_RAW}/template/.waypoint/VERSION", timeout=5) as response:
+        return response.read(100).decode("utf-8", errors="replace")
 
 
 def surum_kontrolu(root: Path, today: str, fetch) -> str | None:
@@ -606,8 +609,8 @@ def surum_kontrolu(root: Path, today: str, fetch) -> str | None:
     else:
         try:
             latest = fetch().strip() or "-"
-        except (subprocess.SubprocessError, OSError):
-            latest = "-"  # internet ya da gh yok: yarın tekrar denenir
+        except (subprocess.SubprocessError, OSError, ValueError, http.client.HTTPException):
+            latest = "-"  # internet yok: yarın tekrar denenir
         try:
             cache.write_text(f"{today} {latest}\n", encoding="utf-8")
         except OSError:
