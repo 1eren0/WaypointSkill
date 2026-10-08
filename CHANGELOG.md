@@ -4,6 +4,10 @@ What changed in each Waypoint version, written for the AI assistant that install
 Summarize the relevant entries for the user in plain Turkish before asking to update.
 The installed version is in `.waypoint/VERSION`.
 
+## 1.16 — 2026-10-08
+
+- **English replies everywhere:** five rules still asked for Turkish (the commit note, `ne yaptık`, the map explanation, `bitir` and the update summary). They now follow the one language rule: Turkish by default, English if the user writes in English. The commit checks' own messages are still Turkish.
+
 ## 1.15 — 2026-10-08
 
 - **No silent "tests passed":** when no test command is set under "Testleri çalıştırma", tests never run. Commits that change code now print a warning ("Testler çalışmadı…") instead of passing quietly; the commit still goes through. Write tests for important features and put the command there.

@@ -12,6 +12,6 @@ Do these in order:
    - `Takılma:` where you or I got stuck.
    - `Kullanıcı:` my answer to the question.
 6. Commit.
-7. Tell me in plain Turkish what we did today and which lessons were recorded, if any.
+7. Tell me in plain words what we did today and which lessons were recorded, if any.
 
 When `WAYPOINT_GUNLUGU.md` reaches 10 entries, offer a review: write `.waypoint/raporlar/YYYY-AA-GG-waypoint-degerlendirme.md` on what helped and what was useless, using that file and `oto-kayit.log`. Empty `WAYPOINT_GUNLUGU.md` only after my OK.

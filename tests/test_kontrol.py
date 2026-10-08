@@ -359,6 +359,17 @@ class SurumKontroluTestleri(unittest.TestCase):
         self.assertTrue(kontrol._surum((WAYPOINT / "VERSION").read_text(encoding="utf-8")))
 
 
+class DilTestleri(unittest.TestCase):
+    def test_cevap_dili_tek_kuraldan_gelir(self):
+        # Only the language rule picks Turkish or English; other rules must not force Turkish replies.
+        for path in [WAYPOINT / "KURALLAR.md", *sorted((WAYPOINT / "komutlar").glob("*.md"))]:
+            for line in path.read_text(encoding="utf-8").splitlines():
+                if "plain English if I write in English" in line:
+                    continue
+                with self.subTest(path=path.name, line=line[:60]):
+                    self.assertNotRegex(line, r"(?i)in plain Turkish|Turkish (line|sentences)")
+
+
 class TestKomutuTestleri(unittest.TestCase):
     def test_komut_yoksa_kod_degisince_uyarir(self):
         bos = "## Testleri çalıştırma\n`...`\n"
