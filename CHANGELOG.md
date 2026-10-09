@@ -4,6 +4,10 @@ What changed in each Waypoint version, written for the AI assistant that install
 Summarize the relevant entries for the user in plain Turkish before asking to update.
 The installed version is in `.waypoint/VERSION`.
 
+## 1.19 — 2026-10-09
+
+- **Fix bugs without asking:** when the user says something is broken, the AI no longer treats it as a new topic to park; it fixes it right away. Small, safe fixes (including bugs the AI finds itself) are made without asking and reported in one line. It still asks first if the fix is risky, irreversible or changes how the product works.
+
 ## 1.18 — 2026-10-08
 
 - **Live check in the browser:** before handing over a site or web app to try, the AI opens it in whatever browser tool it has and clicks through the task's "bitti sayılır" steps itself, then says in one line what it saw (with a screenshot if it can). With no browser tool it says so plainly instead of claiming it works. Nothing extra gets installed. See `komutlar/canli-kontrol.md`.
