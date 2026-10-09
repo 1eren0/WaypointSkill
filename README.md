@@ -103,7 +103,7 @@ your-project/
 ├── CLAUDE.md          ← one-line pointer for Claude Code
 └── .waypoint/
     ├── KURALLAR.md    ← the working rules the AI follows
-    ├── komutlar/      ← longer how-tos (finish, update…), read when needed
+    ├── komutlar/      ← how-tos for each situation (an error, a handover, finish…), read when it comes up
     ├── VERSION        ← installed Waypoint version
     ├── ILERLEME.md    ← goal, plan, decisions, daily log
     ├── DERSLER.md     ← rules learned from mistakes

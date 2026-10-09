@@ -4,6 +4,10 @@ What changed in each Waypoint version, written for the AI assistant that install
 Summarize the relevant entries for the user in plain Turkish before asking to update.
 The installed version is in `.waypoint/VERSION`.
 
+## 1.28 — 2026-10-09
+
+- **Shorter rules file:** `KURALLAR.md` (read on every message) went from about 1,800 to about 1,050 words. It keeps only the always-on rules (language, bug fixing, decisions, tests, hooks, commits, branches, focus, commands) plus a "When…" list that points to a situation file. The details moved, unchanged in meaning, into new files in `komutlar/`: `oturum-basi.md` (session start), `hata.md` (something breaks), `kod-degisikligi.md` (before changing code), `testler.md` (tests and the test command), `rapor.md` (research and reports) and `teslim.md` (let me test, close). The AI opens each one when its situation comes up.
+
 ## 1.27 — 2026-10-09
 
 - **Research before planning:** after `sorgula` makes clear what the user wants, the AI checks whether it lacks technical knowledge for a good plan (current docs and versions, existing solutions, alternatives, risks). If so it researches on its own, as deep as the project needs, writes a report and bases the plan on it. It makes technical choices itself and tells the user only what they mean for them; product choices stay with the user. See `komutlar/arastirma.md`.

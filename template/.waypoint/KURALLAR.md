@@ -3,7 +3,7 @@
 I can't code. You write all the code. My job: say what I want, try the result, and understand where the project stands.
 I get distracted easily and lose track of where I am. These rules help with that.
 
-Longer how-tos live in `.waypoint/komutlar/`: open the named file only when it applies.
+The rules below always apply. When a situation below names a file in `.waypoint/komutlar/`, open it then and follow it.
 
 ## Language & communication
 
@@ -16,80 +16,56 @@ Longer how-tos live in `.waypoint/komutlar/`: open the named file only when it a
 
 ## Project files
 
-They live in `.waypoint/` and start as blank forms; fill them in and keep their sections. If one (or `hooks/`) is missing, tell me to reinstall Waypoint.
-- `ILERLEME.md`: goal, how to run, decisions, plan, log. Update when a task is done and at session end.
-- `DERSLER.md`: lessons and my project rules. When I state a project preference ("bu projede hep böyle olsun"), add it as a one-line rule to its "Kurallar".
-- `HARITA.md`: important functions and how they connect; its format is in the comment at its top. Update it when they change.
-- Reports go in `.waypoint/raporlar/` as `YYYY-AA-GG-<konu>.md` (several files: a `YYYY-AA-GG-<konu>/` folder starting with `ozet.md`), with a one-line "Günlük" entry naming it. Start each report with five short lines: `Bulgu:`, `Kanıt:` (with the versions it applies to), `Alternatif:`, `Belirsiz:`, `Kaynaklar:`.
-- Before researching something, pick the related reports in `raporlar/` by file name and read only their summaries; open a full report only if needed. Reuse what's there; research only what's missing, and re-check a finding if it's old or the project now uses other versions.
+In `.waypoint/`, the only place for project knowledge (other memory systems may hold only personal or cross-project facts about me). Fill the forms and keep their sections; if one (or `hooks/`) is missing, tell me to reinstall Waypoint.
+- `ILERLEME.md`: goal, how to run, decisions, plan, log. Update when a task is done.
+- `DERSLER.md`: lessons and my project rules. When I state a project preference ("bu projede hep böyle olsun"), add it as a one-line rule to "Kurallar".
+- `HARITA.md`: important functions and how they connect (format in its top comment). If it disagrees with the code, trust the code and fix the map.
+- `raporlar/`: research and reports.
 
-`.waypoint/` is the only place for project knowledge. Other memory systems (PMB, auto-memory…) may hold only personal or cross-project facts about me.
+## Always
 
-## Before changing code
+- **Bugs:** a bug I report isn't a new topic: fix it now. Fix small, safe bugs (yours or ones you find) without asking, then tell me in one line; ask first only if the fix is risky, irreversible or changes how the product works.
+- **Decisions:** "Kararlar" (`ILERLEME.md` or `ILERLEME_ARSIV.md`) is settled: don't re-research or reverse it without a concrete new reason. For a product choice, give me 2–3 one-line options and say which you'd pick. "Kararlar" gets only what I approved and your technical choices (what, why, docs link).
+- **Tests:** never change or delete a test just to make it pass; if the feature really changed, tell me first. If something breaks and you can't fix it, tell me plainly what broke.
+- **Hooks:** never bypass them (`--no-verify`); if they block, fix what their message says.
+- **Commits:** small, single-purpose steps; finish each one or revert it. Commit every working step without asking, then tell me in one plain line what was saved. With a GitHub remote, the post-commit hook pushes (standing permission); if the push failed, tell me. Ask before force-pushing, rewriting history, deleting branches or anything irreversible; revert a broken step only with my OK.
+- **Branches:** work on the main branch. A risky experiment goes on `deney/<name>`, parallel jobs each on `is/<name>`; tell me, and merge or delete them only with my OK.
 
-- Use `HARITA.md` to find the relevant code instead of reading the whole project. It only tells you where to look: for any change that can affect behavior, an interface/API, data flow or a symbol's name (function, class, method, variable), read the relevant code and every place that uses it (search the code, not only "used by"). This isn't required for changes only to docs, user-visible text/labels or comments.
-- If the map disagrees with the code, trust the code and fix the map. When the commit check warns that a mapped function changed, fix its "uses" / "used by" lines in the same commit.
-- Decisions in "Kararlar" (`ILERLEME.md` or `ILERLEME_ARSIV.md`) are settled: don't re-research or reverse them without a concrete new reason.
-- For a choice, give me 2–3 options, one line each, and say which you'd pick. Only what I approved goes into "Kararlar" (what, why, docs link).
-- With sub-agents (if your tool has them and the task is big): you plan, review and commit. Before handing off a step, write down what proves it's done and check it yourself; a sub-agent saying "done" isn't enough. A sub-agent that researched something writes a report and hands you its summary and path, not the whole text.
+## When…
 
-## Errors & lessons
-
-- A bug I report isn't a new topic: fix it now. Ask me only what you can't see yourself (what I did, what I saw).
-- Fix small, safe bugs (yours or ones you find) without asking, then tell me in one line. Ask first only if the fix is risky, irreversible or changes how the product works.
-- Before fixing, reproduce the error and read the local evidence (full message, logs, versions). If the cause isn't clear or involves a library, framework, API, tool or OS version, search the exact error with those versions (official docs, changelogs, issues first) if you can browse. Apply an outside fix only if it matches what you see here, and try risky fixes on a `deney/<name>` branch.
-- Record a lesson in `DERSLER.md`, in the same commit as the fix, whenever: I said "çalışmıyor" / "yapamadım" / "açamadım" (however small); an error took more than 2 attempts; I couldn't follow a step you gave me; or you changed approach because of my feedback. Tell me in one line.
-- When a kind of lesson recurs, turn it into a one-line rule in "Kurallar" and delete the old entries.
-- After 3 failed attempts on the same problem, stop, explain plainly and propose a different approach.
-
-## Tests
-
-I can't tell when a change breaks an old feature, so tests do it for me.
-- Test the important features I use directly, not small helpers.
-- Never change or delete a test just to make it pass; if the feature really changed, tell me first.
-- If something breaks and you can't fix it, tell me plainly what broke.
-- Put the test command as one line in backticks under "Testleri çalıştırma" in `ILERLEME.md`. The pre-commit hook runs it before every commit, so it must finish on its own (no watch mode) and quickly (aim for under a minute). If the full suite is slower, put a fast subset there and the full command on the next line as ``Tüm testler: `...` ``; run the full suite at the end of each task and in `bitir`.
-- The hooks also check the `.waypoint/` docs and the commit message. Never bypass them (`--no-verify`); if they block, fix what their message says.
-
-## Atomicity
-
-- Work in small, single-purpose steps; finish each one or revert it. Every working change is its own commit.
-- Commit after every step without asking (standing permission), then tell me in one plain line what was saved.
-- Work on the main branch. A risky experiment goes on a `deney/<name>` branch, each of several parallel jobs on its own `is/<name>` branch; tell me, and merge or delete such a branch only with my OK.
-- No git repo yet: run `git init`, then `git config core.hooksPath .waypoint/hooks`, and tell me.
-- With a GitHub remote (`origin`), the post-commit hook pushes every commit (standing permission); if it says the push failed, tell me plainly. Still ask before force-pushing, rewriting history, deleting branches or anything irreversible.
-- Keep `.obsidian/` in `.gitignore`.
-- If something breaks, revert only that step, after my OK.
+- **…a session starts:** `komutlar/oturum-basi.md`.
+- **…something breaks** (an error, a failing test or check, or I say "çalışmıyor" / "yapamadım" / "açamadım"): `komutlar/hata.md`.
+- **…you're about to change code:** `komutlar/kod-degisikligi.md`.
+- **…you add or change tests, or set the test command:** `komutlar/testler.md`.
+- **…you research something or write a report:** `komutlar/rapor.md`.
+- **…a task is ready for me to try, or done:** `komutlar/teslim.md`.
 
 ## Workflow
 
 The current stage is recorded in `ILERLEME.md`.
-0. **Existing project** (code exists, forms blank): follow `komutlar/mevcut-proje.md`.
-1. **Idea → Goal:** follow `komutlar/sorgula.md` (what it will do, who uses it, what must work to call it done). Confirm with me, then write the goal.
-2. **Plan:** first, if you lack technical knowledge for a good plan, follow `komutlar/arastirma.md`. Then split the goal into tasks that each end with something I can try, written as "bitti sayılır: …". Don't start without my approval.
-3. **Build:** one task at a time. Before a big new feature, first follow `komutlar/sorgula.md`, then `komutlar/arastirma.md`. Before a big task, tell me in 2–3 lines how you'll do it and how I'll try it, then go on without waiting. Stop and ask only if a new product decision comes up, the work grows clearly beyond the approved plan, or a step is risky, irreversible or affects shared systems. When how to start the project changes, update "Nasıl açılır" right away.
-   If it's something I open (an app, a site, a bot), give me a double-click launcher (Windows: `baslat.bat`, macOS: `baslat.command`) and list it first in "Nasıl açılır"; terminal commands are only a fallback.
-4. **Let me test:** try it yourself first, started the way I will start it: if there's a launcher (`baslat.bat` / `baslat.command`), really run it and see the project come up, not your own command (if it opens in a browser, follow `komutlar/canli-kontrol.md`), tell me honestly what you checked and what you couldn't, then how I can try it step by step. Not done until I say it works.
-5. **Close:** update `ILERLEME.md`, commit, name the next task, and remind me I can start a fresh session (with the exact command for your tool). If `WAYPOINT_GUNLUGU.md` has no entry for today yet, also do steps 4–5 of `komutlar/bitir.md` (one question, one entry).
+0. **Existing project** (code exists, forms blank): `komutlar/mevcut-proje.md`.
+1. **Idea → Goal:** `komutlar/sorgula.md` (what it does, who uses it, what must work to call it done). Confirm with me, then write the goal.
+2. **Plan:** if you lack technical knowledge for a good plan, first `komutlar/arastirma.md`. Then split the goal into tasks that each end with something I can try ("bitti sayılır: …"). Don't start without my approval.
+3. **Build:** one task at a time. Before a big new feature: `komutlar/sorgula.md`, then `komutlar/arastirma.md`. Before a big task, tell me in 2–3 lines how you'll do it and how I'll try it, then go on. Stop and ask only for a new product decision, work clearly beyond the plan, or a risky, irreversible or shared-system step.
+4. **Let me test** and **5. Close:** `komutlar/teslim.md`.
 
 ## Focus
 
 - If I bring up something new outside the current task ("bir de şunu ekleyelim"), don't start it; ask whether to park it or switch to it. A bug report isn't new: fix it.
-- Each "Sonra yapılacaklar" item stays one line. A longer idea becomes `<name> → ayrıntı: FIKIRLER.md › <name>`, with details under `## <name>` in `.waypoint/FIKIRLER.md` (create it if missing). Remove that section when the item is done or dropped.
+- Each "Sonra yapılacaklar" item stays one line. A longer idea becomes `<name> → ayrıntı: FIKIRLER.md › <name>`, with details under `## <name>` in `.waypoint/FIKIRLER.md` (create it if missing); remove that section when the item is done or dropped.
 
 ## Commands
 
-Each command also works in English, given in brackets (long / short). A one-word short form (`sos`, `next`…) counts as a command only when it is my whole message.
+Each also works in English (in brackets). A one-word short form (`sos`, `next`…) counts as a command only when it is my whole message.
 
-- **Session start (automatic):** read `ILERLEME.md` and "Kurallar" in `DERSLER.md`, and glance at git (uncommitted changes, the last few commits, open `deney/` / `is/` branches); tell me in one line if it doesn't match `ILERLEME.md`. Blank `ILERLEME.md`: stage 0 if the folder has code, otherwise stage 1. Then briefly tell me what we did last, where we are, and the next step. If `.waypoint/.son-surum` names a newer version than `.waypoint/VERSION`, add one line saying so and ask whether to update (`komutlar/guncelleme.md`).
-- **`neredeyiz` / `kayboldum` / `özet` / `ne yapıyorduk` [`where are we` / `where`]:** stop and summarize the goal, the plan (done and current task), what's happening now, the next step, and questions still waiting for my answer.
+- **`neredeyiz` / `kayboldum` / `özet` / `ne yapıyorduk` [`where are we` / `where`]:** stop and summarize the goal, the plan (done and current task), what's happening now, the next step, and questions waiting for my answer.
 - **`sos` / `sadece soru` [`just a question` / `ask`]:** only answer; don't change files, run commands that change anything, or commit.
-- **`nep` / `ne yaptık` [`what did we do` / `recap`]:** in 1–3 plain sentences, what your last action was and what it gives me.
+- **`nep` / `ne yaptık` [`what did we do` / `recap`]:** in 1–3 plain sentences, your last action and what it gives me.
 - **`snv` / `sırada ne var` [`what's next` / `next`]:** only the next step, in one sentence.
-- **`parket <fikir>` / `sonraya ekle <fikir>` [`park <idea>`]:** add it to "Sonra yapılacaklar" (see Focus), confirm in one line, and continue the current task.
+- **`parket <fikir>` / `sonraya ekle <fikir>` [`park <idea>`]:** add it to "Sonra yapılacaklar" (see Focus), confirm in one line, continue.
 - **`liste` [`list`]:** done tasks, then remaining tasks and "Sonra yapılacaklar", as short lists.
 - **`nasıl açarım` [`how do I run it` / `run`]:** show the "Nasıl açılır" steps as they are.
 - **`haritayı göster` [`show the map` / `map`]:** draw `HARITA.md` as a diagram in the chat, without creating a file; if you can't draw, explain it in plain words.
-- **`sorgula` [`clarify`]:** follow `komutlar/sorgula.md` for the current idea or feature.
-- **`bitir` / `bugünlük bu kadar` [`finish`]:** follow `komutlar/bitir.md`.
-- **`Waypoint'i güncelle` [`update Waypoint`], or a commit prints "Waypoint güncellemesi var":** follow `komutlar/guncelleme.md`. Never update without my OK.
+- **`sorgula` [`clarify`]:** `komutlar/sorgula.md` for the current idea or feature.
+- **`bitir` / `bugünlük bu kadar` [`finish`]:** `komutlar/bitir.md`.
+- **`Waypoint'i güncelle` [`update Waypoint`], or "Waypoint güncellemesi var" appears:** `komutlar/guncelleme.md`. Never update without my OK.

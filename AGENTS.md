@@ -7,4 +7,4 @@ This repo IS the Waypoint product (not a project using it).
 - `README.md` is the product page (English); `README.tr.md` is its Turkish version. Keep both in sync.
 - Keep `template/.waypoint/KURALLAR.md` small: it is loaded on every message. Only always-on rules and one-line command triggers go there; a longer or situational how-to goes in its own `template/.waypoint/komutlar/<name>.md`, referenced from KURALLAR by name.
 - Versioning: for every user-facing change, bump `template/.waypoint/VERSION` (1.0 → 1.1; major only for breaking changes) and add an English entry to `CHANGELOG.md`. Installed projects compare their `.waypoint/VERSION` with the one on GitHub once a day.
-- Talk to the user in plain Turkish, follow the "Language & communication", "Atomicity" and "Focus rules" sections of `template/.waypoint/KURALLAR.md`.
+- Talk to the user in plain Turkish, follow the "Language & communication", "Always" (commits) and "Focus" sections of `template/.waypoint/KURALLAR.md`.
