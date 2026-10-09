@@ -28,6 +28,12 @@ class GizliDosyaTestleri(unittest.TestCase):
         errors, _ = kontrol.gizli_dosyalar(["secret.pem", "id_rsa_work"])
         self.assertEqual(len(errors), 2)
 
+    def test_gunluk_dosyasi_engellenir(self):
+        errors, _ = kontrol.gizli_dosyalar(["logs/hata.log", "app.log.1", "src/logger.js", "docs/changelog.md"])
+        self.assertEqual(len(errors), 2)
+        self.assertIn("logs/hata.log", errors[0])
+        self.assertIn(".gitignore", errors[0])
+
 
 class BozukMetinTestleri(unittest.TestCase):
     def test_temiz_turkce_ve_emoji_gecer(self):

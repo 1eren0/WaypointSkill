@@ -88,6 +88,11 @@ def gizli_dosyalar(staged_names: list[str]) -> tuple[list[str], list[str]]:
             hatalar.append(
                 f"{name}: gizli dosyayı commit'ten çıkarın ve .gitignore dosyasına ekleyin."
             )
+        elif not sample and re.search(r"\.log(\.\d+)?$", lower):
+            hatalar.append(
+                f"{name}: günlük (log) dosyası kullanıcı verisi içerebilir; commit'ten çıkarın (git rm --cached) "
+                "ve yolunu .gitignore dosyasına ekleyin."
+            )
     return hatalar, []
 
 

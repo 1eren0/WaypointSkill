@@ -40,7 +40,7 @@ Waypoint bunların her birine bir kural ve bir kontrol koyar. Kurallar rica değ
 | 🚨 **Gizlenmeyen hatalar** | Bir şey ters giderse uygulama sana ne olduğunu ve ne yapman gerektiğini sade dille söyler; ayrıntıları yapay zekânın ilk baktığı bir günlük dosyasına yazar. Hatayı sessizce yutan boş bir `except` / `catch` eklenen kayıtta uyarı çıkar. |
 | 🏷️ **Düzenli kayıtlar** | Her kayıt İngilizce ve standart [Conventional Commits](https://www.conventionalcommits.org) biçiminde: `feat: add expense form`, `fix: prevent empty tasks`, `docs: …`. Testsiz hata düzeltmesi kayda **giremez**. |
 | 🔤 **Bozuk karakter koruması** | Türkçe harfleri bozulmuş (yanlış kodlanmış) dosyalar ve kayıt mesajları kayda **giremez**. |
-| 🔒 **Gizli bilgi koruması** | `.env`, anahtar, sertifika ve servis hesabı dosyaları kayda **giremez**. Koda gömülü GitHub/AWS/Google/yapay zekâ anahtarları ve özel anahtarlar da yakalanır. |
+| 🔒 **Gizli bilgi koruması** | `.env`, anahtar, sertifika, servis hesabı ve günlük (log) dosyaları kayda **giremez**. Koda gömülü GitHub/AWS/Google/yapay zekâ anahtarları ve özel anahtarlar da yakalanır. |
 | 🇹🇷 **Sade Türkçe** | Yapay zekâ seninle teknik terim kullanmadan, kısa ve net konuşur. |
 
 ## Kurulum

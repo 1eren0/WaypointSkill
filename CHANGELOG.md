@@ -4,6 +4,10 @@ What changed in each Waypoint version, written for the AI assistant that install
 Summarize the relevant entries for the user in plain Turkish before asking to update.
 The installed version is in `.waypoint/VERSION`.
 
+## 1.31 — 2026-10-09
+
+- **Log files stay off GitHub:** a log file can hold user data. The commit check now refuses `.log` files (also rotated ones like `app.log.1`), like it does `.env` files, and `komutlar/kod-degisikligi.md` tells the AI to add the log file's path to `.gitignore` as soon as it creates it.
+
 ## 1.30 — 2026-10-09
 
 - **No hidden errors:** research shows AI-written code often hides failures (an empty `except` / `catch`, or a quiet fallback that returns a safe-looking value). Now:

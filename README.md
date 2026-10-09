@@ -42,7 +42,7 @@ Waypoint puts a rule and a check on each of these. The rules aren't requests: th
 | 🚨 **No hidden errors** | When something fails, the app tells you in plain words what happened and what to do, and writes the details to a log file the AI reads first. A commit that adds an empty `except` / `catch` (an error silently swallowed) gets a warning. |
 | 🏷️ **Tidy commits** | Every commit is in English and in the standard [Conventional Commits](https://www.conventionalcommits.org) format: `feat: add expense form`, `fix: prevent empty tasks`, `docs: …`. A bug fix without a test **can't be committed**. |
 | 🔤 **Broken character guard** | Files and commit messages with garbled (wrongly encoded) Turkish letters **can't be committed**. |
-| 🔒 **Secret protection** | `.env`, key, certificate and service account files **can't be committed**. GitHub/AWS/Google/AI keys and private keys pasted into code are caught too. |
+| 🔒 **Secret protection** | `.env`, key, certificate, service account and log files **can't be committed**. GitHub/AWS/Google/AI keys and private keys pasted into code are caught too. |
 | 💬 **Plain language** | The AI talks to you without jargon, short and clear, in the language you write in. |
 
 ## Install
