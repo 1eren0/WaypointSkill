@@ -4,6 +4,11 @@ What changed in each Waypoint version, written for the AI assistant that install
 Summarize the relevant entries for the user in plain Turkish before asking to update.
 The installed version is in `.waypoint/VERSION`.
 
+## 1.26 — 2026-10-09
+
+- **Session start checks git:** besides `ILERLEME.md`, the AI glances at uncommitted changes, the last few commits and open `deney/` / `is/` branches, and says in one line if they don't match `ILERLEME.md` (a session cut off midway, work done in another tool).
+- **Smarter report reuse:** before researching, the AI picks related reports by file name and reads only their summaries, opening a full report only when needed. The `Kanıt:` line names the versions a finding applies to, and an old finding or one for other versions is re-checked. A sub-agent that researched something hands over a report's summary and path, not the whole text.
+
 ## 1.25 — 2026-10-09
 
 - **New GitHub address:** the Waypoint repo moved to `github.com/1eren0/WaypointSkill`. The installer, `guncelle.bat` / `guncelle.command`, the daily version check and the update steps now use the new address. The old address still redirects for now, but installed projects should update so they don't depend on it.

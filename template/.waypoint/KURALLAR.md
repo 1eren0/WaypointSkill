@@ -20,8 +20,8 @@ They live in `.waypoint/` and start as blank forms; fill them in and keep their 
 - `ILERLEME.md`: goal, how to run, decisions, plan, log. Update when a task is done and at session end.
 - `DERSLER.md`: lessons and my project rules. When I state a project preference ("bu projede hep böyle olsun"), add it as a one-line rule to its "Kurallar".
 - `HARITA.md`: important functions and how they connect; its format is in the comment at its top. Update it when they change.
-- Reports go in `.waypoint/raporlar/` as `YYYY-AA-GG-<konu>.md` (several files: a `YYYY-AA-GG-<konu>/` folder starting with `ozet.md`), with a one-line "Günlük" entry naming it. Start each report with five short lines: `Bulgu:`, `Kanıt:`, `Alternatif:`, `Belirsiz:`, `Kaynaklar:`.
-- Before researching something, read the summaries in `raporlar/` first: reuse what's there and research only what's missing or outdated.
+- Reports go in `.waypoint/raporlar/` as `YYYY-AA-GG-<konu>.md` (several files: a `YYYY-AA-GG-<konu>/` folder starting with `ozet.md`), with a one-line "Günlük" entry naming it. Start each report with five short lines: `Bulgu:`, `Kanıt:` (with the versions it applies to), `Alternatif:`, `Belirsiz:`, `Kaynaklar:`.
+- Before researching something, pick the related reports in `raporlar/` by file name and read only their summaries; open a full report only if needed. Reuse what's there; research only what's missing, and re-check a finding if it's old or the project now uses other versions.
 
 `.waypoint/` is the only place for project knowledge. Other memory systems (PMB, auto-memory…) may hold only personal or cross-project facts about me.
 
@@ -31,7 +31,7 @@ They live in `.waypoint/` and start as blank forms; fill them in and keep their 
 - If the map disagrees with the code, trust the code and fix the map. When the commit check warns that a mapped function changed, fix its "uses" / "used by" lines in the same commit.
 - Decisions in "Kararlar" (`ILERLEME.md` or `ILERLEME_ARSIV.md`) are settled: don't re-research or reverse them without a concrete new reason.
 - For a choice, give me 2–3 options, one line each, and say which you'd pick. Only what I approved goes into "Kararlar" (what, why, docs link).
-- With sub-agents (if your tool has them and the task is big): you plan, review and commit. Before handing off a step, write down what proves it's done and check it yourself; a sub-agent saying "done" isn't enough.
+- With sub-agents (if your tool has them and the task is big): you plan, review and commit. Before handing off a step, write down what proves it's done and check it yourself; a sub-agent saying "done" isn't enough. A sub-agent that researched something writes a report and hands you its summary and path, not the whole text.
 
 ## Errors & lessons
 
@@ -81,7 +81,7 @@ The current stage is recorded in `ILERLEME.md`.
 
 Each command also works in English, given in brackets (long / short). A one-word short form (`sos`, `next`…) counts as a command only when it is my whole message.
 
-- **Session start (automatic):** read `ILERLEME.md` and "Kurallar" in `DERSLER.md`. Blank `ILERLEME.md`: stage 0 if the folder has code, otherwise stage 1. Then briefly tell me what we did last, where we are, and the next step. If `.waypoint/.son-surum` names a newer version than `.waypoint/VERSION`, add one line saying so and ask whether to update (`komutlar/guncelleme.md`).
+- **Session start (automatic):** read `ILERLEME.md` and "Kurallar" in `DERSLER.md`, and glance at git (uncommitted changes, the last few commits, open `deney/` / `is/` branches); tell me in one line if it doesn't match `ILERLEME.md`. Blank `ILERLEME.md`: stage 0 if the folder has code, otherwise stage 1. Then briefly tell me what we did last, where we are, and the next step. If `.waypoint/.son-surum` names a newer version than `.waypoint/VERSION`, add one line saying so and ask whether to update (`komutlar/guncelleme.md`).
 - **`neredeyiz` / `kayboldum` / `özet` / `ne yapıyorduk` [`where are we` / `where`]:** stop and summarize the goal, the plan (done and current task), what's happening now, the next step, and questions still waiting for my answer.
 - **`sos` / `sadece soru` [`just a question` / `ask`]:** only answer; don't change files, run commands that change anything, or commit.
 - **`nep` / `ne yaptık` [`what did we do` / `recap`]:** in 1–3 plain sentences, what your last action was and what it gives me.
