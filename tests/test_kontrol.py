@@ -346,7 +346,7 @@ class SurumKontroluTestleri(unittest.TestCase):
             return Cevap()
         with mock.patch.object(kontrol.urllib.request, "urlopen", urlopen):
             self.assertEqual(kontrol._github_surumu(), "1.10\n")
-        self.assertEqual(urls, ["https://raw.githubusercontent.com/erenuzman/WaypointSkill/main/template/.waypoint/VERSION"])
+        self.assertEqual(urls, ["https://raw.githubusercontent.com/1eren0/WaypointSkill/main/template/.waypoint/VERSION"])
 
     def test_guncelleme_github_cli_istemez(self):
         root = WAYPOINT.parent.parent

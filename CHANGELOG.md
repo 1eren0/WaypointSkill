@@ -4,6 +4,10 @@ What changed in each Waypoint version, written for the AI assistant that install
 Summarize the relevant entries for the user in plain Turkish before asking to update.
 The installed version is in `.waypoint/VERSION`.
 
+## 1.25 — 2026-10-09
+
+- **New GitHub address:** the Waypoint repo moved to `github.com/1eren0/WaypointSkill`. The installer, `guncelle.bat` / `guncelle.command`, the daily version check and the update steps now use the new address. The old address still redirects for now, but installed projects should update so they don't depend on it.
+
 ## 1.24 — 2026-10-09
 
 - **Reusable research:** every report in `.waypoint/raporlar/` now starts with five short lines (`Bulgu:`, `Kanıt:`, `Alternatif:`, `Belirsiz:`, `Kaynaklar:`), so the AI can use a past finding without reading the whole report. Before researching, the AI reads these summaries first and researches only what's missing or outdated, instead of repeating the same research.

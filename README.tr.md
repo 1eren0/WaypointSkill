@@ -48,12 +48,12 @@ Projenin klasöründe bir terminal aç ve tek komutu yapıştır.
 
 **Windows (PowerShell):**
 ```powershell
-irm https://raw.githubusercontent.com/erenuzman/WaypointSkill/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/1eren0/WaypointSkill/main/install.ps1 | iex
 ```
 
 **macOS / Linux:**
 ```bash
-curl -fsSL https://raw.githubusercontent.com/erenuzman/WaypointSkill/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/1eren0/WaypointSkill/main/install.sh | sh
 ```
 
 Bitti. Şimdi aynı klasörde yapay zekâ aracını aç ve ne yapmak istediğini anlat. Gerisini Waypoint yönetir: önce hedefi netleştirir, sonra planı sana onaylatır, sonra adım adım yapar.
@@ -83,12 +83,12 @@ Yapay zekâ yenilikleri sade Türkçe anlatır ve senden `.waypoint/guncelle.bat
 
 **Windows (PowerShell):**
 ```powershell
-irm https://raw.githubusercontent.com/erenuzman/WaypointSkill/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/1eren0/WaypointSkill/main/install.ps1 | iex
 ```
 
 **macOS / Linux:**
 ```bash
-curl -fsSL https://raw.githubusercontent.com/erenuzman/WaypointSkill/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/1eren0/WaypointSkill/main/install.sh | sh
 ```
 
 Sonra yapay zekâdan değişiklikleri kaydetmesini iste.

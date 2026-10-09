@@ -20,7 +20,7 @@ else
     command -v tar >/dev/null 2>&1 || fail 'Arşivi açmak için tar gerekli.'
     temp_dir=$(mktemp -d "${TMPDIR:-/tmp}/waypoint.XXXXXX") || fail 'Geçici klasör oluşturulamadı.'
     trap 'rm -rf "$temp_dir"' EXIT HUP INT TERM
-    repo=${WAYPOINT_REPO:-erenuzman/WaypointSkill}
+    repo=${WAYPOINT_REPO:-1eren0/WaypointSkill}
     ref=${WAYPOINT_REF:-main}
     source_dir=
     if curl -fsSL "https://codeload.github.com/$repo/tar.gz/refs/heads/$ref" 2>/dev/null | tar -xz -C "$temp_dir" 2>/dev/null; then

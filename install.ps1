@@ -42,7 +42,7 @@ try {
 
         New-Item -ItemType Directory -Path $tempDir | Out-Null
 
-        $repo = if ($env:WAYPOINT_REPO) { $env:WAYPOINT_REPO } else { 'erenuzman/WaypointSkill' }
+        $repo = if ($env:WAYPOINT_REPO) { $env:WAYPOINT_REPO } else { '1eren0/WaypointSkill' }
 
         $ref = if ($env:WAYPOINT_REF) { $env:WAYPOINT_REF } else { 'main' }
 

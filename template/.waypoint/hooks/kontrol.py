@@ -591,7 +591,7 @@ def _kayittaki(root: Path, relative: str) -> str | None:
         return _oku(root, relative)
 
 
-WAYPOINT_REPO = "erenuzman/WaypointSkill"
+WAYPOINT_REPO = "1eren0/WaypointSkill"
 
 
 def _surum(text: str) -> tuple[int, ...]:

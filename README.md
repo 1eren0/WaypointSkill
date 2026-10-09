@@ -50,12 +50,12 @@ Open a terminal in your project folder and paste one command.
 
 **Windows (PowerShell):**
 ```powershell
-irm https://raw.githubusercontent.com/erenuzman/WaypointSkill/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/1eren0/WaypointSkill/main/install.ps1 | iex
 ```
 
 **macOS / Linux:**
 ```bash
-curl -fsSL https://raw.githubusercontent.com/erenuzman/WaypointSkill/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/1eren0/WaypointSkill/main/install.sh | sh
 ```
 
 That's it. Now open your AI tool in the same folder and say what you want to build. Waypoint handles the rest: it clarifies the goal first, has you approve the plan, then goes step by step.
@@ -85,12 +85,12 @@ The AI explains what's new in plain words and asks you to double-click `.waypoin
 
 **Windows (PowerShell):**
 ```powershell
-irm https://raw.githubusercontent.com/erenuzman/WaypointSkill/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/1eren0/WaypointSkill/main/install.ps1 | iex
 ```
 
 **macOS / Linux:**
 ```bash
-curl -fsSL https://raw.githubusercontent.com/erenuzman/WaypointSkill/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/1eren0/WaypointSkill/main/install.sh | sh
 ```
 
 Then ask the AI to commit the changes.

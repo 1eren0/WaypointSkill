@@ -4,7 +4,7 @@
 # İndirme ayrı yapılır: `curl | sh` indirme başarısız olsa da başarılı görünürdü.
 {
     cd "$(dirname "$0")/.." || exit 1
-    if script=$(curl -fsSL "${WAYPOINT_INSTALL_URL:-https://raw.githubusercontent.com/erenuzman/WaypointSkill/main/install.sh}") && printf '%s\n' "$script" | sh; then
+    if script=$(curl -fsSL "${WAYPOINT_INSTALL_URL:-https://raw.githubusercontent.com/1eren0/WaypointSkill/main/install.sh}") && printf '%s\n' "$script" | sh; then
         printf '\n%s\n' 'Bitti. Bu pencereyi kapatıp yapay zekâya "güncelledim" yaz.'
     else
         printf '\n%s\n' 'Güncelleme OLMADI. Yukarıdaki hatayı kopyalayıp yapay zekâya göster.'
