@@ -20,7 +20,8 @@ They live in `.waypoint/` and start as blank forms; fill them in and keep their 
 - `ILERLEME.md`: goal, how to run, decisions, plan, log. Update when a task is done and at session end.
 - `DERSLER.md`: lessons and my project rules. When I state a project preference ("bu projede hep böyle olsun"), add it as a one-line rule to its "Kurallar".
 - `HARITA.md`: important functions and how they connect; its format is in the comment at its top. Update it when they change.
-- Reports go in `.waypoint/raporlar/` as `YYYY-AA-GG-<konu>.md` (several files: a `YYYY-AA-GG-<konu>/` folder starting with `ozet.md`), with a one-line "Günlük" entry naming it.
+- Reports go in `.waypoint/raporlar/` as `YYYY-AA-GG-<konu>.md` (several files: a `YYYY-AA-GG-<konu>/` folder starting with `ozet.md`), with a one-line "Günlük" entry naming it. Start each report with five short lines: `Bulgu:`, `Kanıt:`, `Alternatif:`, `Belirsiz:`, `Kaynaklar:`.
+- Before researching something, read the summaries in `raporlar/` first: reuse what's there and research only what's missing or outdated.
 
 `.waypoint/` is the only place for project knowledge. Other memory systems (PMB, auto-memory…) may hold only personal or cross-project facts about me.
 

@@ -4,6 +4,10 @@ What changed in each Waypoint version, written for the AI assistant that install
 Summarize the relevant entries for the user in plain Turkish before asking to update.
 The installed version is in `.waypoint/VERSION`.
 
+## 1.24 — 2026-10-09
+
+- **Reusable research:** every report in `.waypoint/raporlar/` now starts with five short lines (`Bulgu:`, `Kanıt:`, `Alternatif:`, `Belirsiz:`, `Kaynaklar:`), so the AI can use a past finding without reading the whole report. Before researching, the AI reads these summaries first and researches only what's missing or outdated, instead of repeating the same research.
+
 ## 1.23 — 2026-10-09
 
 - **Try the launcher before handing over:** in real use the AI said a project was ready after its own tests passed, but `baslat.bat` didn't start (wrong line endings) and the user found it. Now, before "let me test", the AI starts the project the way the user will, by really running `baslat.bat` / `baslat.command`, and fixes it first if it doesn't come up. The browser live check also starts the project with the launcher.
