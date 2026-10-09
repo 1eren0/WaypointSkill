@@ -4,6 +4,10 @@ What changed in each Waypoint version, written for the AI assistant that install
 Summarize the relevant entries for the user in plain Turkish before asking to update.
 The installed version is in `.waypoint/VERSION`.
 
+## 1.27 — 2026-10-09
+
+- **Research before planning:** after `sorgula` makes clear what the user wants, the AI checks whether it lacks technical knowledge for a good plan (current docs and versions, existing solutions, alternatives, risks). If so it researches on its own, as deep as the project needs, writes a report and bases the plan on it. It makes technical choices itself and tells the user only what they mean for them; product choices stay with the user. See `komutlar/arastirma.md`.
+
 ## 1.26 — 2026-10-09
 
 - **Session start checks git:** besides `ILERLEME.md`, the AI glances at uncommitted changes, the last few commits and open `deney/` / `is/` branches, and says in one line if they don't match `ILERLEME.md` (a session cut off midway, work done in another tool).
