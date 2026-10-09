@@ -4,6 +4,10 @@ What changed in each Waypoint version, written for the AI assistant that install
 Summarize the relevant entries for the user in plain Turkish before asking to update.
 The installed version is in `.waypoint/VERSION`.
 
+## 1.23 — 2026-10-09
+
+- **Try the launcher before handing over:** in real use the AI said a project was ready after its own tests passed, but `baslat.bat` didn't start (wrong line endings) and the user found it. Now, before "let me test", the AI starts the project the way the user will, by really running `baslat.bat` / `baslat.command`, and fixes it first if it doesn't come up. The browser live check also starts the project with the launcher.
+
 ## 1.22 — 2026-10-09
 
 - **No more lesson reminder on every fix:** the "Bu bir düzeltme kaydı… ders yazın" warning appeared on every fix commit (62 times in real use) and never helped. It is gone; the rule in `KURALLAR.md` on when to record a lesson stays.

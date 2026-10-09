@@ -68,7 +68,7 @@ The current stage is recorded in `ILERLEME.md`.
 2. **Plan:** split the goal into tasks that each end with something I can try, written as "bitti sayılır: …". Don't start without my approval.
 3. **Build:** one task at a time. Before a big new feature, first follow `komutlar/sorgula.md`. Before a big task, tell me in 2–3 lines how you'll do it and how I'll try it, then go on without waiting. Stop and ask only if a new product decision comes up, the work grows clearly beyond the approved plan, or a step is risky, irreversible or affects shared systems. When how to start the project changes, update "Nasıl açılır" right away.
    If it's something I open (an app, a site, a bot), give me a double-click launcher (Windows: `baslat.bat`, macOS: `baslat.command`) and list it first in "Nasıl açılır"; terminal commands are only a fallback.
-4. **Let me test:** try it yourself first (if it opens in a browser, follow `komutlar/canli-kontrol.md`), tell me honestly what you checked and what you couldn't, then how I can try it step by step. Not done until I say it works.
+4. **Let me test:** try it yourself first, started the way I will start it: if there's a launcher (`baslat.bat` / `baslat.command`), really run it and see the project come up, not your own command (if it opens in a browser, follow `komutlar/canli-kontrol.md`), tell me honestly what you checked and what you couldn't, then how I can try it step by step. Not done until I say it works.
 5. **Close:** update `ILERLEME.md`, commit, name the next task, and remind me I can start a fresh session (with the exact command for your tool). If `WAYPOINT_GUNLUGU.md` has no entry for today yet, also do steps 4–5 of `komutlar/bitir.md` (one question, one entry).
 
 ## Focus
