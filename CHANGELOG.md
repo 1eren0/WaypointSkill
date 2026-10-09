@@ -4,6 +4,13 @@ What changed in each Waypoint version, written for the AI assistant that install
 Summarize the relevant entries for the user in plain Turkish before asking to update.
 The installed version is in `.waypoint/VERSION`.
 
+## 1.30 — 2026-10-09
+
+- **No hidden errors:** research shows AI-written code often hides failures (an empty `except` / `catch`, or a quiet fallback that returns a safe-looking value). Now:
+  - `komutlar/kod-degisikligi.md`: never swallow an error. The user sees a short plain message (what happened, what to do); the details go to one fixed log file kept out of git (e.g. `logs/hata.log`), named under "Nasıl açılır". A fallback is a product decision: only with the user's OK, marked with a comment and logged when used.
+  - `komutlar/hata.md`: when something breaks, read that log file first; if the error left no trace there, fix that too.
+  - The commit check warns (doesn't block) when new code adds an empty `except` / `catch` block in Python or C-style languages. One with a comment explaining why it's empty is left alone.
+
 ## 1.29 — 2026-10-09
 
 - **Two rules back where they're seen:** after 1.28 split the rules, two could be missed. The full test suite ("Tüm testler") now also runs from `teslim.md`, which opens at the end of every task, not only when tests are edited. The rule that a researching sub-agent hands over a report's summary and path moved from `kod-degisikligi.md` to `rapor.md`, which opens whenever research happens.

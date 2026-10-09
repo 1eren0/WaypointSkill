@@ -549,6 +549,40 @@ def harita_kapsami(harita_text: str, pairs: list[tuple[str, str]]) -> tuple[list
     ]
 
 
+_BOS_YAKALAMA_TEK = re.compile(r"\bcatch\s*(\([^)]*\))?\s*\{\s*\}|^\s*except\b[^:]*:\s*(pass|\.\.\.)\s*$")
+_YAKALAMA_BASI = re.compile(r"\bcatch\s*(\([^)]*\))?\s*\{\s*$|^\s*except\b[^:]*:\s*(#.*)?$")
+_BOS_GOVDE = re.compile(r"^\s*(\}|pass|\.\.\.)\s*$")
+
+
+def yutulan_hatalar(diff_text: str) -> tuple[list[str], list[str]]:
+    """Eklenen satırlarda içi boş hata yakalama bloğu (except: pass, catch {}) olan dosyalar için tek bir uyarı verir."""
+    files: list[str] = []
+    current = None
+    previous = None
+    for line in diff_text.splitlines():
+        if line.startswith("+++ "):
+            target = line[4:].strip()
+            current = target[2:] if target.startswith("b/") else None
+            previous = None
+            continue
+        if not current or not line.startswith("+"):
+            previous = None
+            continue
+        code = line[1:]
+        empty = bool(_BOS_YAKALAMA_TEK.search(code)) or (
+            previous is not None and _YAKALAMA_BASI.search(previous) is not None and _BOS_GOVDE.match(code) is not None
+        )
+        if empty and current not in files:
+            files.append(current)
+        previous = code
+    if not files:
+        return [], []
+    return [], [
+        f"Hata sessizce yutuluyor olabilir (içi boş except/catch): {', '.join(files)}. Hatayı kullanıcıya sade bir mesajla "
+        "gösterin ya da günlüğe yazın; bilerek boş bırakıldıysa nedenini yanına yorum olarak yazın."
+    ]
+
+
 def harita_diff_denetimi(harita_text: str, read_diff) -> tuple[list[str], list[str]]:
     """Kod diff'ine göre haritada olmayan yeni fonksiyon ve değişen fonksiyon uyarılarını üretir; diff okunamazsa kaydı durdurur."""
     try:
@@ -753,11 +787,17 @@ def main() -> int:
                 errors, _ = fikirler(file_text, _kayittaki(root, ".waypoint/FIKIRLER.md"))
                 hatalar.extend(errors)
                 uyarilar.extend(test_komutu_uyarisi(file_text, staged))
+    code_paths = [name for name in staged if _is_code_file(name) and not _is_test_file(name)]
+    if code_paths:
+        try:
+            diff_text = "\n".join(_git_output(root, "diff", "--cached", "-U0", "--diff-filter=ACMR", "--", *code_paths))
+            uyarilar.extend(yutulan_hatalar(diff_text)[1])
+        except (subprocess.CalledProcessError, OSError):
+            pass  # yalnızca bir uyarı; diff okunamazsa harita denetimi kaydı zaten durdurur
     map_text = _kayittaki(root, ".waypoint/HARITA.md")
     if map_text is not None:
         errors, _ = harita_gercek(map_text, lambda path: _oku(root, path))
         hatalar.extend(errors)
-        code_paths = [name for name in staged if _is_code_file(name) and not _is_test_file(name)]
         if code_paths:
             errors, warnings = harita_diff_denetimi(
                 map_text,

@@ -597,6 +597,38 @@ class KayitTuruTestleri(unittest.TestCase):
         self.assertTrue(kontrol.test_komutu("## Testleri \u00e7al\u0131\u015ft\u0131rma\n`node --test`"))
         self.assertFalse(kontrol.test_komutu("## Testleri \u00e7al\u0131\u015ft\u0131rma\n`...`"))
 
+class YutulanHataTestleri(unittest.TestCase):
+    def test_bos_except_ve_catch_uyari_verir(self):
+        for diff in (
+            "+++ b/a.py\n+try:\n+    x()\n+except Exception:\n+    pass\n",
+            "+++ b/a.py\n+except: pass\n",
+            "+++ b/a.js\n+} catch (e) {}\n",
+            "+++ b/a.js\n+} catch (e) {\n+}\n",
+            "+++ b/a.ts\n+} catch {}\n",
+        ):
+            with self.subTest(diff=diff):
+                errors, warnings = kontrol.yutulan_hatalar(diff)
+                self.assertEqual(errors, [])
+                self.assertEqual(len(warnings), 1)
+
+    def test_islenen_ya_da_aciklanan_hata_uyari_vermez(self):
+        for diff in (
+            "+++ b/a.py\n+except Exception as e:\n+    log(e)\n",
+            "+++ b/a.js\n+} catch (e) {\n+  console.error(e)\n+}\n",
+            "+++ b/a.py\n+except ValueError:\n+    pass  # optional field\n",
+            "+++ b/a.py\n+exceptional = 1\n+def catcher(): pass\n",
+        ):
+            with self.subTest(diff=diff):
+                self.assertEqual(kontrol.yutulan_hatalar(diff), ([], []))
+
+    def test_dosyalar_tek_uyarida(self):
+        diff = "+++ b/a.py\n+except: pass\n+++ b/b.js\n+catch (e) {}\n"
+        _, warnings = kontrol.yutulan_hatalar(diff)
+        self.assertEqual(len(warnings), 1)
+        self.assertIn("a.py", warnings[0])
+        self.assertIn("b.js", warnings[0])
+
+
 class YorumSatiriTestleri(unittest.TestCase):
     def test_yorumdaki_function_kelimesi_sayilmaz(self):
         diff = "+// this function handles clicks\n+  return value; // helper function x\n"

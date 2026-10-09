@@ -3,7 +3,7 @@
 Read this when there's an error, a failing test or check, or I say "çalışmıyor" / "yapamadım" / "açamadım". Fix it now (see "Always" in `KURALLAR.md`).
 
 1. If I reported it, ask me only what you can't see yourself (what I did, what I saw).
-2. Reproduce the error and read the local evidence: the full message, logs, versions.
+2. Read the project's log file first (named under "Nasıl açılır" in `ILERLEME.md`, e.g. `logs/hata.log`). Then reproduce the error and read the rest of the local evidence: the full message, other logs, versions. If the error left no trace in the log, fix that too.
 3. If the cause isn't clear or involves a library, framework, API, tool or OS version, check `raporlar/` first (`rapor.md`), then search the exact error with those versions (official docs, changelogs, issues first) if you can browse. Apply an outside fix only if it matches what you see here. Try risky fixes on a `deney/<name>` branch.
 4. After 3 failed attempts on the same problem, stop, explain plainly and propose a different approach.
 5. Record a lesson in `DERSLER.md`, in the same commit as the fix, whenever: I said "çalışmıyor" / "yapamadım" / "açamadım" (however small); it took more than 2 attempts; I couldn't follow a step you gave me; or you changed approach because of my feedback. Tell me in one line.
