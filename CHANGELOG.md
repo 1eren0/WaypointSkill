@@ -4,6 +4,10 @@ What changed in each Waypoint version, written for the AI assistant that install
 Summarize the relevant entries for the user in plain Turkish before asking to update.
 The installed version is in `.waypoint/VERSION`.
 
+## 1.29 — 2026-10-09
+
+- **Two rules back where they're seen:** after 1.28 split the rules, two could be missed. The full test suite ("Tüm testler") now also runs from `teslim.md`, which opens at the end of every task, not only when tests are edited. The rule that a researching sub-agent hands over a report's summary and path moved from `kod-degisikligi.md` to `rapor.md`, which opens whenever research happens.
+
 ## 1.28 — 2026-10-09
 
 - **Shorter rules file:** `KURALLAR.md` (read on every message) went from about 1,800 to about 1,050 words. It keeps only the always-on rules (language, bug fixing, decisions, tests, hooks, commits, branches, focus, commands) plus a "When…" list that points to a situation file. The details moved, unchanged in meaning, into new files in `komutlar/`: `oturum-basi.md` (session start), `hata.md` (something breaks), `kod-degisikligi.md` (before changing code), `testler.md` (tests and the test command), `rapor.md` (research and reports) and `teslim.md` (let me test, close). The AI opens each one when its situation comes up.
