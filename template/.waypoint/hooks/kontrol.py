@@ -559,15 +559,6 @@ def harita_diff_denetimi(harita_text: str, read_diff) -> tuple[list[str], list[s
     return [], warnings + degisen_harita_fonksiyonlari(harita_text, diff_text)[1]
 
 
-def ders_hatirlatma(message_text: str) -> tuple[list[str], list[str]]:
-    normalized = message_text.replace("İ", "i").replace("I", "ı").lower()
-    if any(word in normalized for word in ("düzelt", "hata", "fix", "bug", "onar")):
-        return [], [
-            "Bu bir düzeltme kaydı. Hata 2 denemeden uzun sürdüyse ya da kullanıcı sizi düzelttiyse .waypoint/DERSLER.md dosyasına ders yazın."
-        ]
-    return [], []
-
-
 def _git_output(root: Path, *args: str) -> list[str]:
     result = subprocess.run(
         ["git", "-c", "core.quotepath=false", *args],
@@ -718,8 +709,6 @@ def main() -> int:
         errors, warnings = kayit_turu(message, staged_names, test_komutu(progress_text))
         text_errors, _ = bozuk_metin("Kayıt mesajı", message)
         errors.extend(text_errors)
-        _, lesson_warnings = ders_hatirlatma(message)
-        warnings.extend(lesson_warnings)
         for error in errors:
             print(f"❌ {error}")
         for warning in warnings:

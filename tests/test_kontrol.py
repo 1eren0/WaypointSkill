@@ -544,21 +544,6 @@ class HaritaGercekTestleri(unittest.TestCase):
         self.assertEqual(kontrol.harita(text)[0], [])
 
 
-class DersHatirlatmaTestleri(unittest.TestCase):
-    def test_duzeltme_mesajlari_uyari_verir(self):
-        for message in ("Hata düzeltildi", "Giriş butonu düzeltildi"):
-            with self.subTest(message=message):
-                self.assertEqual(kontrol.ders_hatirlatma(message)[0], [])
-                self.assertEqual(len(kontrol.ders_hatirlatma(message)[1]), 1)
-
-    def test_ozellik_ekleme_uyari_vermez(self):
-        self.assertEqual(kontrol.ders_hatirlatma("Giriş butonu eklendi"), ([], []))
-
-
-    def test_fix_turu_uyari_verir(self):
-        self.assertEqual(len(kontrol.ders_hatirlatma("fix: Handle crash")[1]), 1)
-
-
 class KayitTuruTestleri(unittest.TestCase):
     def test_gecerli_turler(self):
         for kind in ("feat", "fix", "docs", "refactor", "test", "chore", "style", "perf"):
@@ -619,10 +604,6 @@ class YorumSatiriTestleri(unittest.TestCase):
 
     def test_export_function_bulunur(self):
         self.assertEqual(kontrol.yeni_fonksiyonlar("+export async function girisYap() {}"), ["girisYap"])
-
-    def test_buyuk_i_ile_duzeltme(self):
-        _, uyarilar = kontrol.ders_hatirlatma("İLK HATA DÜZELTİLDİ")
-        self.assertEqual(len(uyarilar), 1)
 
 
 class TestDosyasiSifreTestleri(unittest.TestCase):
