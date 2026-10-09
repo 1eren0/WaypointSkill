@@ -31,10 +31,12 @@ Waypoint bunların her birine bir kural ve bir kontrol koyar. Kurallar rica değ
 |---|---|
 | 🎯 **Tek görev** | Plan küçük görevlere bölünür; aynı anda tek görev yapılır. Yeni fikirler "Sonra yapılacaklar" listesine tek satır olarak park edilir; uzun fikirlerin ayrıntısı `FIKIRLER.md`'ye yazılır. |
 | 🧱 **Küçük adımlar** | Her değişiklik tek bir iş yapar ve ayrı bir kayıt noktasıdır. Bozulan adım tek başına geri alınır. |
+| 🛠️ **Hatalar düzeltilir** | Bir şeyin bozuk olduğunu söylediğinde yapay zekâ sormadan ya da park etmeden hemen düzeltir. Kendi bulduğu küçük ve güvenli hataları da düzeltir, sana tek satırla söyler. |
+| 🔎 **Plandan önce araştırma** | Hedef netleşince yapay zekâ bilmediği şeyleri (güncel belgeler, var olan çözümler, riskler) araştırır ve planı buna dayandırır. Teknik seçimler onun işidir; sana sadece senin için ne anlama geldiğini söyler. Bulgular kısa raporlar olarak saklanır, tekrar araştırılmak yerine yeniden kullanılır. |
 | ☁️ **Otomatik yedek** | Projenin GitHub bağlantısı varsa her kayıt kendiliğinden GitHub'a yüklenir. Deneysel ya da aynı anda yürüyen işler ayrı dallarda (branch) tutulur. |
 | 🧪 **Otomatik testler** | Önemli özelliklerin testi yazılır ve her kayıttan önce çalışır. Testler geçmezse kayıt **alınmaz**. Test komutu henüz yoksa, kod değişen her kayıtta "testler çalışmadı" uyarısı çıkar. |
-| 🖱️ **Canlı kontrol** | Sen bir siteyi ya da web uygulamasını denemeden önce yapay zekâ onu kendi tarayıcısında açıp tıklayarak dener. Tarayıcısı yoksa "çalışıyor" demez, bakamadığını söyler. |
-| 📒 **İlerleme defteri** | Hedef, plan, kararlar ve günlük tek dosyada. Kod değiştiği gün günlüğe yazılmadan kayıt **alınmaz**. Defter büyüyünce eski kayıtlar arşive taşınır, hep kısa kalır. |
+| 🖱️ **Canlı kontrol** | Sen denemeden önce yapay zekâ projeyi senin açacağın şekilde, aynı çift tıklama dosyasıyla (`baslat.bat`) başlatır. Site ya da web uygulamasıysa kendi tarayıcısında açıp tıklayarak da dener. Bakamadıysa "çalışıyor" demez, bakamadığını söyler. |
+| 📒 **İlerleme defteri** | Hedef, plan, kararlar ve günlük tek dosyada. Her oturum nerede kaldığınla başlar; yarıda kesilmiş bir oturumdan kalan kaydedilmemiş ya da deftere yazılmamış iş varsa söylenir. Kod değiştiği gün günlüğe yazılmadan kayıt **alınmaz**. Defter büyüyünce eski kayıtlar arşive taşınır, hep kısa kalır. |
 | 🗺️ **Proje haritası** | Önemli fonksiyonlar ve bağlantıları, Obsidian'da resim olarak görünen bir şemayla. Haritada olmayan yeni bir fonksiyon önemliyse eklemesi için yapay zekâya hatırlatılır (JavaScript/TypeScript, Python, Go, Rust, Java, C#, Kotlin, Swift, PHP, Ruby gibi yaygın dillerde). Koddan silinmiş ya da yanlış dosyaya yazılmış fonksiyon haritada **kalamaz**. Haritadaki bir fonksiyon değişince bağlantılarını kontrol etmesi için yapay zekâya hatırlatılır. |
 | 📝 **Dersler** | Yapay zekânın hatalarından çıkan kurallar. |
 | 🚨 **Gizlenmeyen hatalar** | Bir şey ters giderse uygulama sana ne olduğunu ve ne yapman gerektiğini sade dille söyler; ayrıntıları yapay zekânın ilk baktığı bir günlük dosyasına yazar. Hatayı sessizce yutan boş bir `except` / `catch` eklenen kayıtta uyarı çıkar. |
@@ -66,7 +68,7 @@ Bitti. Şimdi aynı klasörde yapay zekâ aracını aç ve ne yapmak istediğini
 
 ### Güncelleme
 
-Yeni sürüm çıkınca kendin takip etmene gerek yok. Waypoint günde bir kez yeni sürüm var mı diye bakar. Varsa yapay zekâ sana yenilikleri anlatır ve "kurayım mı?" diye sorar. Sen onay vermeden hiçbir şey kurulmaz. Kurulu sürüm `.waypoint/VERSION` dosyasında yazar, yenilikler [CHANGELOG.md](CHANGELOG.md) dosyasında.
+Yeni sürüm çıkınca kendin takip etmene gerek yok. Waypoint günde bir kez yeni sürüm var mı diye bakar. Varsa yapay zekâ bir sonraki oturumun başında sana yenilikleri anlatır ve "kurayım mı?" diye sorar. Sen onay vermeden hiçbir şey kurulmaz. Kurulu sürüm `.waypoint/VERSION` dosyasında yazar, yenilikler [CHANGELOG.md](CHANGELOG.md) dosyasında.
 
 Beklemeden hemen güncellemek istersen iki yol var. İkisinde de kurallar ve kontroller güncellenir; senin ilerleme, ders ve harita dosyalarına **dokunulmaz.**
 

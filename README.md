@@ -33,10 +33,12 @@ Waypoint puts a rule and a check on each of these. The rules aren't requests: th
 |---|---|
 | 🎯 **One task** | The plan is split into small tasks and only one is worked on at a time. New ideas are parked as one line in a "later" list; details of longer ideas go to `FIKIRLER.md`. |
 | 🧱 **Small steps** | Each change does one thing and is its own save point. A step that breaks something can be undone on its own. |
+| 🛠️ **Bugs get fixed** | When you say something is broken, the AI fixes it right away instead of asking or parking it. Small, safe bugs it finds itself are fixed too, and you're told in one line. |
+| 🔎 **Research before planning** | After the goal is clear, the AI looks up what it doesn't know yet (current docs, existing solutions, risks) and bases the plan on it. Technical choices are its job; it tells you only what they mean for you. Findings are saved as short reports and reused instead of researched again. |
 | ☁️ **Automatic backup** | If the project has a GitHub remote, every commit is pushed automatically. Experiments and parallel work live on separate branches. |
 | 🧪 **Automatic tests** | Important features get tests, and they run before every commit. If the tests fail, the commit is **refused**. Until a test command is set, every commit that changes code warns that no tests ran. |
-| 🖱️ **Live check** | Before you try a site or web app, the AI opens it in its own browser and clicks through it. If it has no browser, it says so instead of claiming it works. |
-| 📒 **Progress log** | Goal, plan, decisions and a daily log in one file. On a day the code changes, the commit is **refused** until the log is written. Old entries move to an archive, so the log stays short. |
+| 🖱️ **Live check** | Before you try it, the AI starts the project the way you will, with the same double-click launcher (`baslat.bat`). A site or web app it also opens in its own browser and clicks through. If it can't check, it says so instead of claiming it works. |
+| 📒 **Progress log** | Goal, plan, decisions and a daily log in one file. Each session starts with where you left off, and unsaved or unrecorded work from a cut-off session is pointed out. On a day the code changes, the commit is **refused** until the log is written. Old entries move to an archive, so the log stays short. |
 | 🗺️ **Project map** | Important functions and how they connect, as a diagram that shows up as a picture in Obsidian. When a new function isn't on the map, the AI is reminded to add it if it matters (in common languages like JavaScript/TypeScript, Python, Go, Rust, Java, C#, Kotlin, Swift, PHP, Ruby). A function deleted from the code or listed under the wrong file **can't stay** in the map. When a mapped function changes, the AI is reminded to check its connections. |
 | 📝 **Lessons** | Rules learned from the AI's mistakes. |
 | 🚨 **No hidden errors** | When something fails, the app tells you in plain words what happened and what to do, and writes the details to a log file the AI reads first. A commit that adds an empty `except` / `catch` (an error silently swallowed) gets a warning. |
@@ -68,7 +70,7 @@ That's it. Now open your AI tool in the same folder and say what you want to bui
 
 ### Updating
 
-You don't need to watch for new versions. Waypoint checks once a day. If there is one, the AI tells you what's new and asks whether to install it. Nothing is installed without your OK. The installed version is in `.waypoint/VERSION`, and what's new is in [CHANGELOG.md](CHANGELOG.md).
+You don't need to watch for new versions. Waypoint checks once a day. If there is one, the AI tells you at the start of your next session what's new and asks whether to install it. Nothing is installed without your OK. The installed version is in `.waypoint/VERSION`, and what's new is in [CHANGELOG.md](CHANGELOG.md).
 
 To update right away there are two ways. Both update the rules and checks; your progress, lessons and map files are **never touched.**
 
