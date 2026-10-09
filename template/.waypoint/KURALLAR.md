@@ -80,7 +80,7 @@ The current stage is recorded in `ILERLEME.md`.
 
 Each command also works in English, given in brackets (long / short). A one-word short form (`sos`, `next`…) counts as a command only when it is my whole message.
 
-- **Session start (automatic):** read `ILERLEME.md` and "Kurallar" in `DERSLER.md`. Blank `ILERLEME.md`: stage 0 if the folder has code, otherwise stage 1. Then briefly tell me what we did last, where we are, and the next step.
+- **Session start (automatic):** read `ILERLEME.md` and "Kurallar" in `DERSLER.md`. Blank `ILERLEME.md`: stage 0 if the folder has code, otherwise stage 1. Then briefly tell me what we did last, where we are, and the next step. If `.waypoint/.son-surum` names a newer version than `.waypoint/VERSION`, add one line saying so and ask whether to update (`komutlar/guncelleme.md`).
 - **`neredeyiz` / `kayboldum` / `özet` / `ne yapıyorduk` [`where are we` / `where`]:** stop and summarize the goal, the plan (done and current task), what's happening now, the next step, and questions still waiting for my answer.
 - **`sos` / `sadece soru` [`just a question` / `ask`]:** only answer; don't change files, run commands that change anything, or commit.
 - **`nep` / `ne yaptık` [`what did we do` / `recap`]:** in 1–3 plain sentences, what your last action was and what it gives me.

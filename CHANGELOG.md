@@ -4,6 +4,10 @@ What changed in each Waypoint version, written for the AI assistant that install
 Summarize the relevant entries for the user in plain Turkish before asking to update.
 The installed version is in `.waypoint/VERSION`.
 
+## 1.20 — 2026-10-09
+
+- **Update notice at session start:** the daily "Waypoint güncellemesi var" line was easy to miss in commit output, so some projects stayed many versions behind. Now, when a session starts, the AI also checks the last seen version in `.waypoint/.son-surum` and, if it is newer than the installed one, says so in one line and asks whether to update.
+
 ## 1.19 — 2026-10-09
 
 - **Fix bugs without asking:** when the user says something is broken, the AI no longer treats it as a new topic to park; it fixes it right away. Small, safe fixes (including bugs the AI finds itself) are made without asking and reported in one line. It still asks first if the fix is risky, irreversible or changes how the product works.
