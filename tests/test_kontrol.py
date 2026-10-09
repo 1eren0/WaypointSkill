@@ -465,18 +465,25 @@ class YeniFonksiyonTestleri(unittest.TestCase):
     def test_not_mapped_files_yeterli(self):
         text = "## Not mapped files\n- src/utils.js\n## External dependencies\n"
         self.assertEqual(kontrol.harita_kapsami(text, [("src/utils.js", "kucuk")]), ([], []))
-        self.assertEqual(len(kontrol.harita_kapsami(text, [("src/app.js", "kucuk")])[0]), 1)
+        self.assertEqual(len(kontrol.harita_kapsami(text, [("src/app.js", "kucuk")])[1]), 1)
 
-    def test_haritada_yoksa_hata(self):
-        errors, _ = kontrol.harita_kapsami("## Not mapped (small helpers)\n", [("a.js", "foo")])
-        self.assertEqual(len(errors), 1)
-        self.assertIn("a.js::foo", errors[0])
+    def test_haritada_yoksa_tek_uyari_kayit_durmaz(self):
+        errors, warnings = kontrol.harita_kapsami("## Not mapped (small helpers)\n", [("a.js", "foo"), ("b.js", "bar")])
+        self.assertEqual(errors, [])
+        self.assertEqual(len(warnings), 1)
+        self.assertIn("a.js::foo", warnings[0])
+        self.assertIn("b.js::bar", warnings[0])
+
+    def test_test_klasoru_test_dosyasi_sayilir(self):
+        self.assertTrue(kontrol._is_test_file("tests/smoke_management_https.py"))
+        self.assertTrue(kontrol._is_test_file("src/__tests__/app.js"))
+        self.assertFalse(kontrol._is_test_file("src/app.js"))
 
     def test_ad_baska_yerde_gecmesi_yetmez(self):
         text = "## Key functions / components\n### validate() — auth/login.py\n- uses: foo()\n"
         self.assertEqual(kontrol.harita_kapsami(text, [("auth/login.py", "validate")]), ([], []))
-        self.assertEqual(len(kontrol.harita_kapsami(text, [("payments/pay.py", "validate")])[0]), 1)
-        self.assertEqual(len(kontrol.harita_kapsami(text, [("auth/login.py", "foo")])[0]), 1)
+        self.assertEqual(len(kontrol.harita_kapsami(text, [("payments/pay.py", "validate")])[1]), 1)
+        self.assertEqual(len(kontrol.harita_kapsami(text, [("auth/login.py", "foo")])[1]), 1)
 
 
 class DegisenFonksiyonTestleri(unittest.TestCase):

@@ -4,6 +4,10 @@ What changed in each Waypoint version, written for the AI assistant that install
 Summarize the relevant entries for the user in plain Turkish before asking to update.
 The installed version is in `.waypoint/VERSION`.
 
+## 1.21 — 2026-10-09
+
+- **Gentler map check:** a new function missing from `HARITA.md` no longer blocks the commit. It is now one warning listing all of them; the AI adds the important ones and ignores small helpers. Files in `tests/`, `test/`, `__tests__/` or `spec/` folders count as test files, so their functions are never asked for. Real map errors (a box in the diagram but not in the list, a mapped function that no longer exists) still block. Real use showed this check caused most blocked commits and slowed work down.
+
 ## 1.20 — 2026-10-09
 
 - **Update notice at session start:** the daily "Waypoint güncellemesi var" line was easy to miss in commit output, so some projects stayed many versions behind. Now, when a session starts, the AI also checks the last seen version in `.waypoint/.son-surum` and, if it is newer than the installed one, says so in one line and asks whether to update.

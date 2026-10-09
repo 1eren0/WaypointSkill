@@ -343,7 +343,11 @@ def _is_code_file(name: str) -> bool:
 
 
 def _is_test_file(name: str) -> bool:
-    return _is_code_file(name) and bool(re.search(r"test|spec", name.rsplit("/", 1)[-1], re.IGNORECASE))
+    normalized = name.replace("\\", "/")
+    return _is_code_file(name) and bool(
+        re.search(r"test|spec", normalized.rsplit("/", 1)[-1], re.IGNORECASE)
+        or re.search(r"(^|/)(tests?|__tests__|specs?)/", normalized, re.IGNORECASE)
+    )
 
 
 def kayit_turu(message_text: str, staged_names: list[str], test_komutu_var: bool) -> tuple[list[str], list[str]]:
@@ -523,7 +527,7 @@ def degisen_harita_fonksiyonlari(harita_text: str, diff_text: str) -> tuple[list
 
 
 def harita_kapsami(harita_text: str, pairs: list[tuple[str, str]]) -> tuple[list[str], list[str]]:
-    """Her yeni fonksiyon kendi dosyasıyla haritada, yardımcı listesinde ya da yardımcı dosyada olmalı."""
+    """Haritada, yardımcı listesinde ya da yardımcı dosyada olmayan yeni fonksiyonlar için tek bir uyarı verir; kaydı durdurmaz."""
     mapped = {(path, _kimlik(name)) for name, path in _harita_girdileri(harita_text)}
     helpers = set(re.findall(r"[A-Za-z_$][\w$]*", _without_html_comments(_section(harita_text, "Not mapped ("))))
     helper_files = {
@@ -531,23 +535,28 @@ def harita_kapsami(harita_text: str, pairs: list[tuple[str, str]]) -> tuple[list
         for line in _without_html_comments(_section(harita_text, "Not mapped files")).splitlines()
         if line.strip()
     }
-    return [
-        f".waypoint/HARITA.md: yeni fonksiyon '{path}::{name}' haritada yok. Önemliyse '### {name}() — {path}' girdisini ve "
-        "şema kutusunu ekleyin; küçük bir yardımcıysa adını '## Not mapped (small helpers)' satırına, dosyanın tamamı "
-        "yardımcıysa yolunu '## Not mapped files' bölümüne yazın."
+    missing = [
+        f"{path}::{name}"
         for path, name in pairs
         if (path, name) not in mapped and name not in helpers and path not in helper_files
-    ], []
+    ]
+    if not missing:
+        return [], []
+    shown = ", ".join(missing[:8]) + (f" ve {len(missing) - 8} tane daha" if len(missing) > 8 else "")
+    return [], [
+        f".waypoint/HARITA.md: haritada olmayan {len(missing)} yeni fonksiyon: {shown}. Önemli olanları ('### ad() — dosya' "
+        "girdisi ve şema kutusuyla) haritaya ekleyin; küçük yardımcılar için bir şey yapmanız gerekmez."
+    ]
 
 
 def harita_diff_denetimi(harita_text: str, read_diff) -> tuple[list[str], list[str]]:
-    """Kod diff'ine göre yeni fonksiyon kapsamını ve değişen fonksiyon uyarılarını üretir; diff okunamazsa kaydı durdurur."""
+    """Kod diff'ine göre haritada olmayan yeni fonksiyon ve değişen fonksiyon uyarılarını üretir; diff okunamazsa kaydı durdurur."""
     try:
         diff_text = read_diff()
     except (subprocess.CalledProcessError, OSError) as exc:
         return [f".waypoint/hooks/kontrol.py: kod değişiklikleri okunamadı, harita denetlenemediği için kayıt engellendi; tekrar deneyin. ({exc})"], []
-    errors, _ = harita_kapsami(harita_text, yeni_fonksiyonlar_dosyali(diff_text))
-    return errors, degisen_harita_fonksiyonlari(harita_text, diff_text)[1]
+    _, warnings = harita_kapsami(harita_text, yeni_fonksiyonlar_dosyali(diff_text))
+    return [], warnings + degisen_harita_fonksiyonlari(harita_text, diff_text)[1]
 
 
 def ders_hatirlatma(message_text: str) -> tuple[list[str], list[str]]:
